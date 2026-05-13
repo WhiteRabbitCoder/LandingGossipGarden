@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gossip Garden — Tu planta por fin te habla</title>
+  <link rel="icon" type="image/png" href="assets/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+
+    /* Paper grain — warmer, more granular */
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+    /* Subtle warm fiber overlay (paper texture) */
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+
+    /* Crayon texture on headings — warm tint, no grey */
+    h1, h2, h3, h4 {
+      text-shadow: 0.5px 0 0 currentColor, -0.5px 0 0 currentColor, 0 0.4px 0 currentColor, 0 -0.4px 0 currentColor;
+      letter-spacing: -0.3px;
+    }
+    h1::after, h2::after { content: ''; }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes floatB{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+    @keyframes bounce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+    @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+    @media(max-width:900px){
+      .gg-story-grid{grid-template-columns:1fr!important;text-align:center!important;gap:24px!important}
+      .gg-story-grid>div:nth-child(1){order:2}Gossip Garden Landing v2
+      .gg-story-grid>div:nth-child(2){order:1}
+      .gg-story-grid>div:nth-child(3){order:3;justify-content:center!important}
+    }
+    @media(max-width:768px){
+      .gg-nav-d{display:none!important}
+      .gg-nav-m{display:block!important}
+    }
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+
+    #root > div { position: relative; z-index: 2; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="components/crayon-v3.jsx"></script>
+  <script type="text/babel" src="components/sections-v3.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "hf": "Quicksand",
+      "bf": "Nunito"
+    }/*EDITMODE-END*/;
+
+    const App = () => {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      const t = { hf: tweaks.hf, bf: tweaks.bf };
+      return (
+        <div style={{ fontFamily: tweaks.bf, position: 'relative' }}>
+          <CrayonDefs/>
+          <Nav t={t}/>
+          <ScrollStory t={t}/>
+          <Features t={t}/>
+          <Personalities t={t}/>
+          <Variants t={t}/>
+          <CTA t={t}/>
+          <Footer t={t}/>
+
+          <TweaksPanel>
+            <TweakSection title="Tipografía">
+              <TweakSelect label="Títulos" value={tweaks.hf} options={['Nunito','Quicksand','Caveat']} onChange={v=>setTweak('hf',v)}/>
+              <TweakSelect label="Cuerpo" value={tweaks.bf} options={['Quicksand','Nunito']} onChange={v=>setTweak('bf',v)}/>
+            </TweakSection>
+          </TweaksPanel>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gossip Garden — Tu planta por fin te habla</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #FDF6EC;
+      color: #3A2F26;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Animations */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+    @keyframes leafFall {
+      0% { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+    }
+    @keyframes drawIn {
+      from { stroke-dashoffset: 200; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Paper texture overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Section dividers — crayon-style wavy */
+    .section-divider {
+      width: 100%; height: 40px; position: relative; overflow: hidden;
+    }
+    .section-divider svg { width: 100%; height: 100%; filter: url(#crayon-jitter); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+      .hero-grid > div:first-child { order: 2; }
+      .hero-grid > div:last-child { order: 1; }
+      .nav-links-desktop { display: none !important; }
+      .nav-hamburger { display: block !important; }
+    }
+    @media (min-width: 769px) {
+      .nav-hamburger { display: none !important; }
+      .nav-mobile-menu { display: none !important; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #FDF6EC; }
+    ::-webkit-scrollbar-thumb { background: #D4C4A0; border-radius: 4px; }
+
+    /* Crayon dashed line divider */
+    .crayon-divider {
+      width: 80%; max-width: 600px; height: 4px; margin: 0 auto;
+      background: repeating-linear-gradient(90deg, #E8D5B7 0px, #E8D5B7 8px, transparent 8px, transparent 14px);
+      filter: url(#crayon-jitter);
+      opacity: 0.5;
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="components/crayon-effects.jsx"></script>
+  <script type="text/babel" src="components/plant-3d.jsx"></script>
+  <script type="text/babel" src="components/sections.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accentColor": "#5B8C5A",
+      "headingFont": "Nunito",
+      "bodyFont": "Quicksand",
+      "showLeaves": true,
+      "darkFooter": false
+    }/*EDITMODE-END*/;
+
+    const App = () => {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      const [scrollY, setScrollY] = React.useState(0);
+
+      React.useEffect(() => {
+        let ticking = false;
+        const handleScroll = () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              setScrollY(window.scrollY);
+              ticking = false;
+            });
+            ticking = true;
+          }
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      return (
+        <div style={{ fontFamily: tweaks.bodyFont, position: 'relative' }}>
+          <CrayonFilter/>
+          {tweaks.showLeaves && <FloatingLeaves/>}
+          <Navbar tweaks={tweaks}/>
+          <HeroSection scrollY={scrollY} tweaks={tweaks}/>
+          <div className="crayon-divider"></div>
+          <FeaturesSection tweaks={tweaks}/>
+          <div className="crayon-divider"></div>
+          <PersonalitiesSection tweaks={tweaks}/>
+          <div className="crayon-divider"></div>
+          <VariantsSection tweaks={tweaks}/>
+          <CTASection tweaks={tweaks}/>
+          <FooterSection tweaks={tweaks}/>
+
+          <TweaksPanel>
+            <TweakSection title="Colores">
+              <TweakColor label="Color acento" value={tweaks.accentColor}
+                options={['#5B8C5A','#E8804C','#6BABCF','#E88098','#8B7355']}
+                onChange={v => setTweak('accentColor', v)}/>
+            </TweakSection>
+            <TweakSection title="Tipografía">
+              <TweakSelect label="Títulos" value={tweaks.headingFont}
+                options={['Nunito','Quicksand']}
+                onChange={v => setTweak('headingFont', v)}/>
+              <TweakSelect label="Cuerpo" value={tweaks.bodyFont}
+                options={['Quicksand','Nunito']}
+                onChange={v => setTweak('bodyFont', v)}/>
+            </TweakSection>
+            <TweakSection title="Efectos">
+              <TweakToggle label="Hojas flotantes" value={tweaks.showLeaves}
+                onChange={v => setTweak('showLeaves', v)}/>
+            </TweakSection>
+          </TweaksPanel>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

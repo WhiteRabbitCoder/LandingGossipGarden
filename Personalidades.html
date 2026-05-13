@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personalidades — Gossip Garden</title>
+  <link rel="icon" type="image/png" href="assets/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+    h1,h2,h3,h4{text-shadow:.5px 0 0 currentColor,-.5px 0 0 currentColor,0 .4px 0 currentColor,0 -.4px 0 currentColor;letter-spacing:-.3px}
+    @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @media(max-width:768px){.gg-nav-d{display:none!important}.gg-nav-m{display:block!important}}
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+    #root>div{position:relative;z-index:2}
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="components/crayon-v3.jsx"></script>
+  <script type="text/babel" src="components/sections-v3.jsx"></script>
+  <script type="text/babel">
+    const t = { hf: 'Quicksand', bf: 'Nunito' };
+    const P = window.PALETTE;
+
+    const PageNav = () => {
+      const [s, setS] = React.useState(false);
+      const [o, setO] = React.useState(false);
+      React.useEffect(() => {
+        const h = () => setS(window.scrollY > 40);
+        window.addEventListener('scroll', h, {passive:true});
+        return () => window.removeEventListener('scroll', h);
+      }, []);
+      const links = [
+        {l:'Inicio', href:'index.html'},
+        {l:'Cómo funciona', href:'Como funciona.html'},
+        {l:'Personalidades', href:'Personalidades.html'},
+        {l:'Tienda', href:'Tienda.html'},
+      ];
+      return (
+        <nav style={{position:'fixed',top:0,left:0,right:0,zIndex:100,height:72,
+          display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 clamp(16px,4vw,48px)',
+          background: s ? 'rgba(250,241,218,0.92)' : 'rgba(250,241,218,0.6)',backdropFilter:'blur(10px)',transition:'all 0.3s'}}>
+          <a href="index.html" style={{display:'flex',alignItems:'center',gap:10,textDecoration:'none'}}>
+            <img src="assets/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
+            <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
+          </a>
+          <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
+            {links.map(({l,href})=>(
+              <a key={l} href={href} style={{color:P.ink,textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,position:'relative',padding:'4px 2px'}}>
+                {l}
+                {l==='Personalidades' && <div style={{position:'absolute',left:0,right:0,bottom:-4}}><CrayonUnderline color={P.heart} w="100%" h={3}/></div>}
+              </a>
+            ))}
+            <a href="Tienda.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Comprar</CrayonButton></a>
+          </div>
+          <button className="gg-nav-m" onClick={()=>setO(!o)} style={{display:'none',background:'none',border:'none',fontSize:24,cursor:'pointer',color:P.ink}}>{o?'×':'≡'}</button>
+          {o && <div style={{position:'absolute',top:72,left:0,right:0,background:'rgba(250,241,218,0.98)',padding:24,display:'flex',flexDirection:'column',gap:18,borderBottom:`2px solid ${P.ink}33`}}>
+            {links.map(({l,href})=><a key={l} href={href} onClick={()=>setO(false)} style={{color:P.ink,textDecoration:'none',fontSize:18,fontWeight:600,fontFamily:t.bf}}>{l}</a>)}
+          </div>}
+        </nav>
+      );
+    };
+
+    /* Full personality card with traits, messages and cta */
+    const PersonalityDetail = ({ name, plant, color, bg, photo, tagline, desc, traits, messages, index }) => (
+      <Reveal delay={index * 120}>
+        <CrayonCard fill={bg} stroke={P.ink} sw={2.5} radius={28} padding={0} style={{overflow:'visible'}}>
+          <div style={{display:'grid',gridTemplateColumns:'280px 1fr',minHeight:360}} className="gg-pers-grid">
+            {/* Left — plant image + type + name */}
+            <div style={{background:`${color}55`,borderRadius:'26px 0 0 26px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'clamp(24px,3vw,40px)',position:'relative'}}>
+              <div style={{animation:'floatB 3.5s ease-in-out infinite',animationDelay:`${index*0.7}s`}}>
+                <img src={photo} alt={name} style={{height:165,width:'auto',objectFit:'contain',
+                  filter:'drop-shadow(0 6px 16px rgba(61,40,23,0.2))'}}/>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:5,marginTop:14}}>
+                <HandIcon type="leaf" size={14} color={P.inkSoft}/>
+                <span style={{fontFamily:t.bf,fontSize:11,fontWeight:700,letterSpacing:'1.5px',color:P.inkSoft,textTransform:'uppercase'}}>{plant}</span>
+              </div>
+              <h3 style={{fontFamily:t.hf,fontWeight:900,fontSize:26,color:P.ink,marginTop:6,filter:'url(#cr-text)'}}>{name}</h3>
+              <div style={{fontFamily:t.bf,fontSize:12,color:P.inkSoft,marginTop:4,fontStyle:'italic',opacity:.8,textAlign:'center'}}>{tagline}</div>
+            </div>
+            {/* Right — details */}
+            <div style={{padding:'clamp(24px,3vw,40px)'}}>
+              <p style={{fontFamily:t.bf,fontSize:15,color:P.inkSoft,lineHeight:1.65,marginBottom:24}}>{desc}</p>
+              <div style={{marginBottom:22}}>
+                <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,letterSpacing:'1.5px',color:P.ink,opacity:.6,marginBottom:10}}>CARACTERÍSTICAS</div>
+                <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+                  {traits.map((tr,i)=>(
+                    <span key={i} style={{fontFamily:t.bf,fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:20,
+                      background:`${color}80`,border:`1.5px solid ${P.ink}`,color:P.ink}}>{tr}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{marginBottom:26}}>
+                <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,letterSpacing:'1.5px',color:P.ink,opacity:.6,marginBottom:10}}>ASÍ TE ESCRIBE</div>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  {messages.map((m,i)=>(
+                    <div key={i} style={{display:'flex',alignItems:'flex-start',gap:8}}>
+                      <div style={{width:8,height:8,borderRadius:'50%',background:color,border:`1.5px solid ${P.ink}`,marginTop:5,flexShrink:0}}></div>
+                      <div style={{fontFamily:t.bf,fontSize:13.5,color:P.inkSoft,lineHeight:1.4,fontStyle:'italic'}}>"{m}"</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <a href="Tienda.html" style={{textDecoration:'none'}}>
+                <CrayonButton fill={color} stroke={P.ink}>Quiero esta planta</CrayonButton>
+              </a>
+            </div>
+          </div>
+        </CrayonCard>
+      </Reveal>
+    );
+
+    const personalities = [
+      {
+        name:'Alegre', plant:'Girasol', color:'#A8D5A2', bg:'#F0FAF0',
+        photo:'assets/FelizGirasol.png',
+        tagline:'Extrovertida · Luminosa · Activa',
+        desc:'Un girasol vive mirando al sol. Extrovertido por naturaleza, siempre orientado hacia la luz y dispuesto a compartir cómo se siente. Si plantas un girasol, espera mensajes frecuentes llenos de energía — la maceta es su hogar, el carácter es suyo.',
+        traits:['Muy comunicativa','Amante del sol','Agradecida','Tolerante','Social'],
+        messages:[
+          '¡Buenos días! El sol de hoy me tiene felicísima. ¿Ya despertaste?',
+          'Gracias por el agua de ayer. ¡Estoy creciendo!',
+          'Hoy hace tanto calor... ¿me puedes mover a la sombra un rato?',
+        ]
+      },
+      {
+        name:'Dormilona', plant:'Suculenta', color:'#B8C9E8', bg:'#EEF2FA',
+        photo:'assets/Dramatica.png',
+        tagline:'Tranquila · Paciente · Discreta',
+        desc:'Una suculenta acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque realmente lo necesita. No exige atención constante — perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
+        traits:['Poco exigente','Sombra-friendly','Mensajes breves','Tranquila','Independiente'],
+        messages:[
+          '...tengo un poco de sed. Cuando puedas.',
+          'Estoy bien. Solo necesitaba que lo supieras.',
+          'El silencio de hoy estuvo muy bien. Gracias.',
+        ]
+      },
+      {
+        name:'Dramática', plant:'Orquídea', color:'#E0B8E0', bg:'#FAF0FA',
+        photo:'assets/TristeOrquidea.png',
+        tagline:'Sensible · Intensa · Espectacular',
+        desc:'Una orquídea es caprichosa con la luz, la temperatura y el riego. Cualquier cambio lo nota y lo comunica al instante. No entiende las medias tintas. Pero cuando está bien cuidada, florece de una manera que no tiene rival.',
+        traits:['Muy expresiva','Alta demanda','Emocional','Fiel','Entretenida'],
+        messages:[
+          '¿Llevas 3 horas sin mirarme?! ¡Esto es un abandono!',
+          'Me acabo de dar cuenta... te quiero mucho. No lo merezco.',
+          'EL AGUA. Necesito EL AGUA. Por favor. Ya.',
+        ]
+      },
+      {
+        name:'Exigente', plant:'Cactus', color:'#F5C2C2', bg:'#FDF0F0',
+        photo:'assets/BravaCactus.png',
+        tagline:'Directa · Resiliente · Independiente',
+        desc:'Un cactus no necesita que lo mimen, pero sí que lo respeten. Sabe exactamente qué condiciones necesita y lo comunica sin rodeos. No pide más de lo necesario — pero cuando pide algo, va completamente en serio.',
+        traits:['Directa','Constante','Alta autoestima','Sin rodeos','Leal'],
+        messages:[
+          '¿Ya me diste agua? Pregunto por las dudas.',
+          'La temperatura está 2 grados por debajo de lo óptimo. Solo lo comento.',
+          'Bien. Todo está bien. Continúa.',
+        ]
+      },
+    ];
+
+    const App = () => (
+      <div style={{fontFamily:t.bf,position:'relative'}}>
+        <CrayonDefs/>
+        <PageNav/>
+        <section style={{padding:'120px clamp(20px,5vw,80px) 50px',textAlign:'center'}}>
+          <Reveal>
+            <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.heart,marginBottom:14}}>CUATRO CARACTERES</div>
+            <h1 style={{fontFamily:t.hf,fontSize:'clamp(36px,6vw,68px)',fontWeight:900,color:P.ink,lineHeight:1.04,filter:'url(#cr-text)'}}>
+              ¿Con quién<br/>te identificas?
+            </h1>
+            <CrayonUnderline color={P.heart} w="300px" delay={300} h={6}/>
+            <p style={{fontFamily:t.bf,fontSize:'clamp(15px,1.5vw,18px)',color:P.inkSoft,marginTop:18,maxWidth:540,marginLeft:'auto',marginRight:'auto',lineHeight:1.55}}>
+              Un girasol no se comporta igual que un cactus. El tipo de planta define el carácter — la maceta es solo su hogar.
+              Elige la que va contigo.
+            </p>
+          </Reveal>
+        </section>
+        <section style={{padding:'0 clamp(20px,5vw,60px) 80px',maxWidth:1140,margin:'0 auto'}}>
+          <style>{`.gg-pers-grid{grid-template-columns:300px 1fr!important}@media(max-width:740px){.gg-pers-grid{grid-template-columns:1fr!important}.gg-pers-grid>div:first-child{border-radius:26px 26px 0 0!important}}`}</style>
+          <div style={{display:'flex',flexDirection:'column',gap:32}}>
+            {personalities.map((p,i)=><PersonalityDetail key={i} {...p} index={i}/>)}
+          </div>
+        </section>
+        <section style={{padding:'0 clamp(20px,5vw,80px) 80px',textAlign:'center'}}>
+          <Reveal>
+            <CrayonCard fill={`${P.leaf}25`} stroke={P.ink} sw={3} radius={28} padding={40} style={{maxWidth:660,margin:'0 auto'}}>
+              <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.leafDk,marginBottom:10}}>PASO SIGUIENTE</div>
+              <h2 style={{fontFamily:t.hf,fontSize:'clamp(24px,3.2vw,38px)',fontWeight:800,color:P.ink,marginBottom:8}}>Elige tu planta.</h2>
+              <CrayonUnderline color={P.leafDk} w="160px" delay={200} h={4}/>
+              <p style={{fontFamily:t.bf,fontSize:15,color:P.inkSoft,marginTop:14,lineHeight:1.5}}>
+                Cada maceta viene con la personalidad que elijas + semilla + sensores + acceso a la app*.
+              </p>
+              <p style={{fontFamily:t.bf,fontSize:11,color:P.inkSoft,marginTop:6,opacity:.6}}>*Algunas funciones avanzadas pueden cobrarse por separado.</p>
+              <div style={{display:'flex',gap:14,justifyContent:'center',marginTop:22,flexWrap:'wrap'}}>
+                <a href="Tienda.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir a la tienda</CrayonButton></a>
+                <a href="Como funciona.html" style={{textDecoration:'none'}}><CrayonButton fill={P.cream} stroke={P.ink}>Cómo funciona</CrayonButton></a>
+              </div>
+            </CrayonCard>
+          </Reveal>
+        </section>
+        <Footer t={t}/>
+      </div>
+    );
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

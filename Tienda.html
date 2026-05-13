@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tienda — Gossip Garden</title>
+  <link rel="icon" type="image/png" href="assets/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+
+    h1, h2, h3, h4 {
+      text-shadow: 0.5px 0 0 currentColor, -0.5px 0 0 currentColor, 0 0.4px 0 currentColor, 0 -0.4px 0 currentColor;
+      letter-spacing: -0.3px;
+    }
+
+    @media(max-width:768px){
+      .gg-nav-d{display:none!important}
+      .gg-nav-m{display:block!important}
+    }
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+
+    #root > div { position: relative; z-index: 2; }
+
+    @keyframes floatA{0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)}}
+    @keyframes floatB{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-5px) rotate(2deg)}}
+    @keyframes fadeSwap{from{opacity:0;transform:scale(0.96)} to{opacity:1;transform:scale(1)}}
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="components/crayon-v3.jsx"></script>
+  <script type="text/babel" src="components/sections-v3.jsx"></script>
+
+  <script type="text/babel">
+    const t = { hf: 'Quicksand', bf: 'Nunito' };
+    const P = window.PALETTE;
+
+    /* ─── Nav ─── */
+    const ShopNav = () => {
+      const [s, setS] = React.useState(false);
+      React.useEffect(() => {
+        const h = () => setS(window.scrollY > 40);
+        window.addEventListener('scroll', h, {passive:true});
+        return () => window.removeEventListener('scroll', h);
+      }, []);
+      const links = [
+        {l:'Inicio', href:'index.html'},
+        {l:'Cómo funciona', href:'Como funciona.html'},
+        {l:'Personalidades', href:'Personalidades.html'},
+        {l:'Tienda', href:'#', active:true},
+      ];
+      return (
+        <nav style={{position:'fixed',top:0,left:0,right:0,zIndex:100,height:72,
+          display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 clamp(16px,4vw,48px)',
+          background: s ? 'rgba(250,241,218,0.92)' : 'rgba(250,241,218,0.6)', backdropFilter:'blur(10px)',
+          transition:'all 0.3s'}}>
+          <a href="index.html" style={{display:'flex',alignItems:'center',gap:10,textDecoration:'none'}}>
+            <img src="assets/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
+            <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
+          </a>
+          <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
+            {links.map(({l,href,active})=>(
+              <a key={l} href={href} style={{color:P.ink,textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,
+                position:'relative',padding:'4px 2px'}}>
+                {l}
+                {active && <div style={{position:'absolute',left:0,right:0,bottom:-4}}><CrayonUnderline color={P.heart} w="100%" h={3}/></div>}
+              </a>
+            ))}
+          </div>
+        </nav>
+      );
+    };
+
+    /* ─── Hero ─── */
+    const ShopHero = () => (
+      <section style={{padding:'120px clamp(20px,5vw,80px) 48px',textAlign:'center'}}>
+        <Reveal>
+          <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.heart,marginBottom:14}}>TIENDA OFICIAL</div>
+          <h1 style={{fontFamily:t.hf,fontSize:'clamp(40px,6.5vw,76px)',fontWeight:900,color:P.ink,lineHeight:1.0,filter:'url(#cr-text)'}}>
+            Arma tu maceta.
+          </h1>
+          <CrayonUnderline color={P.heart} w="300px" delay={300} h={6}/>
+          <p style={{fontFamily:t.bf,fontSize:'clamp(15px,1.6vw,18px)',color:P.inkSoft,marginTop:18,maxWidth:500,marginLeft:'auto',marginRight:'auto',lineHeight:1.55}}>
+            Elige el color y el carácter. Tu planta, exactamente como la quieres.
+          </p>
+        </Reveal>
+        <div style={{marginTop:28}}>
+          <a href="#configurador" style={{textDecoration:'none'}}>
+            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Empezar a armar</CrayonButton>
+          </a>
+        </div>
+      </section>
+    );
+
+    /* ─── Step label ─── */
+    const StepLabel = ({ n, label }) => (
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
+        <div style={{width:28,height:28,borderRadius:'50%',background:P.ink,
+          display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+          <span style={{fontFamily:t.bf,fontSize:13,fontWeight:800,color:P.cream}}>{n}</span>
+        </div>
+        <span style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'1.5px',color:P.inkSoft}}>{label}</span>
+      </div>
+    );
+
+    /* ─── Configurator ─── */
+    const PotConfigurator = () => {
+      const [colorId, setColorId] = React.useState('verde');
+      const [charId,  setCharId]  = React.useState('alegre');
+
+      const pots = [
+        { id:'verde',   label:'Verde',   img:'assets/VERDE2.png',   accent:'#A8D5A2' },
+        { id:'azul',    label:'Azul',    img:'assets/AZUL2.png',    accent:'#B8C9E8' },
+        { id:'rosado',  label:'Rosado',  img:'assets/ROSADO2.png',  accent:'#F0C0C8' },
+        { id:'naranja', label:'Naranja', img:'assets/NARANJA2.png', accent:'#F0C090' },
+      ];
+
+      const chars = [
+        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/FELIZ.png',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
+        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/DORMILON.png', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
+        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/TRISTE.png',   speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
+        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/BRAVA.png',    speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
+      ];
+
+      const pot = pots.find(p => p.id === colorId);
+      const ch  = chars.find(c => c.id === charId);
+
+      return (
+        <section id="configurador" style={{padding:'0 clamp(20px,5vw,80px) 80px'}}>
+          <div style={{maxWidth:1120,margin:'0 auto',display:'grid',gridTemplateColumns:'1fr 1fr',gap:48,alignItems:'start'}}
+            className="conf-grid">
+
+            {/* ── Left: steps ── */}
+            <div>
+
+              {/* Step 1: color */}
+              <div style={{marginBottom:32}}>
+                <StepLabel n="1" label="COLOR DE MACETA"/>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
+                  {pots.map(p => (
+                    <button key={p.id} onClick={() => setColorId(p.id)}
+                      style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
+                      <CrayonCard fill={colorId===p.id ? `${p.accent}55` : P.cream}
+                        stroke={P.ink} sw={colorId===p.id ? 3 : 1.5}
+                        radius={18} padding={10}>
+                        <img src={p.img}
+                          style={{height:78,width:'auto',objectFit:'contain',display:'block',margin:'0 auto 6px',
+                            filter:'drop-shadow(0 3px 7px rgba(61,40,23,0.14))'}}/>
+                        <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,textAlign:'center',color:P.ink,marginBottom:colorId===p.id?4:0}}>
+                          {p.label}
+                        </div>
+                        {colorId===p.id && (
+                          <div style={{display:'flex',justifyContent:'center'}}>
+                            <svg width="16" height="16" viewBox="0 0 20 20">
+                              <circle cx="10" cy="10" r="9" fill={p.accent} stroke={P.ink} strokeWidth="1.5" filter="url(#cr)"/>
+                              <path d="M5,10 L9,14 L15,7" stroke={P.ink} strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+                            </svg>
+                          </div>
+                        )}
+                      </CrayonCard>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step 2: personality */}
+              <div style={{marginBottom:32}}>
+                <StepLabel n="2" label="PERSONALIDAD"/>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  {chars.map(c => (
+                    <button key={c.id} onClick={() => setCharId(c.id)}
+                      style={{background:'none',border:'none',cursor:'pointer',padding:0,textAlign:'left'}}>
+                      <CrayonCard fill={charId===c.id ? `${c.accent}50` : P.cream}
+                        stroke={P.ink} sw={charId===c.id ? 3 : 1.5}
+                        radius={18} padding={14}>
+                        <div style={{display:'flex',alignItems:'center',gap:10}}>
+                          <img src={c.img}
+                            style={{height:58,width:'auto',objectFit:'contain',flexShrink:0,
+                              filter:'drop-shadow(0 3px 6px rgba(61,40,23,0.15))'}}/>
+                          <div>
+                            <div style={{fontFamily:t.hf,fontWeight:800,fontSize:15,color:P.ink,lineHeight:1.2,marginBottom:3}}>
+                              {c.label}
+                            </div>
+                            <div style={{fontFamily:t.bf,fontSize:10,color:P.inkSoft,lineHeight:1.3}}>
+                              {c.trait}
+                            </div>
+                          </div>
+                        </div>
+                      </CrayonCard>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step 3: summary + CTA */}
+              <div>
+                <StepLabel n="3" label="CONFIRMAR PEDIDO"/>
+                <CrayonCard fill={`${ch.accent}28`} stroke={P.ink} sw={2.5} radius={22} padding={24}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14,gap:12}}>
+                    <div>
+                      <div style={{fontFamily:t.hf,fontSize:18,fontWeight:800,color:P.ink,lineHeight:1.2,marginBottom:4}}>
+                        Maceta {pot.label} · {ch.label}
+                      </div>
+                      <div style={{display:'flex',flexDirection:'column',gap:3}}>
+                        {['Sensores integrados','Semilla seleccionada','Acceso a la app'].map(item => (
+                          <div key={item} style={{display:'flex',alignItems:'center',gap:6}}>
+                            <svg width="12" height="12" viewBox="0 0 16 16">
+                              <circle cx="8" cy="8" r="6" fill={ch.accent} stroke={P.ink} strokeWidth="1.2" filter="url(#cr)"/>
+                              <path d="M4,8 L7,11 L12,5" stroke={P.ink} strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+                            </svg>
+                            <span style={{fontFamily:t.bf,fontSize:12,color:P.inkSoft}}>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{textAlign:'right',flexShrink:0}}>
+                      <div style={{fontFamily:t.hf,fontSize:36,fontWeight:900,color:P.ink,lineHeight:1}}>$49</div>
+                      <div style={{fontFamily:t.bf,fontSize:12,color:P.inkSoft,textDecoration:'line-through',opacity:.55}}>$69</div>
+                    </div>
+                  </div>
+                  <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>
+                    Añadir al carrito
+                  </CrayonButton>
+                  <div style={{fontFamily:t.bf,fontSize:11,color:P.inkSoft,marginTop:10,opacity:.7}}>
+                    Envío gratis · Garantía 1 año · 30 días de devolución
+                  </div>
+                </CrayonCard>
+              </div>
+
+            </div>
+
+            {/* ── Right: preview ── */}
+            <div style={{position:'sticky',top:96}}>
+              <CrayonCard fill={`${pot.accent}20`} stroke={P.ink} sw={2.5} radius={28} padding={'44px 36px 28px'}>
+
+                <div style={{position:'relative',display:'flex',justifyContent:'center',alignItems:'flex-end',minHeight:320,marginBottom:22}}>
+
+                  {/* speech bubble */}
+                  <div style={{position:'absolute',top:0,right:8,zIndex:4,animation:'floatB 3.5s ease-in-out infinite'}}>
+                    <SpeechBubble fill={P.cream} color={P.ink}>
+                      <span style={{fontFamily:t.bf,fontSize:11,fontWeight:700,color:P.ink,whiteSpace:'nowrap'}}>
+                        {ch.speech}
+                      </span>
+                    </SpeechBubble>
+                  </div>
+
+                  {/* pot */}
+                  <img key={'pot-'+colorId} src={pot.img}
+                    style={{height:'clamp(230px,28vw,310px)',width:'auto',objectFit:'contain',
+                      filter:'drop-shadow(0 10px 26px rgba(61,40,23,0.18))',
+                      animation:'floatA 4s ease-in-out infinite, fadeSwap 0.35s ease both'}}/>
+
+                  {/* emotion face */}
+                  <img key={'ch-'+charId} src={ch.img}
+                    style={{position:'absolute',bottom:-4,right:-10,
+                      height:'clamp(82px,10vw,108px)',width:'auto',objectFit:'contain',
+                      filter:'drop-shadow(0 4px 10px rgba(61,40,23,0.22))',
+                      transform:'rotate(5deg)',
+                      animation:'fadeSwap 0.3s ease both'}}/>
+                </div>
+
+                <div style={{textAlign:'center',borderTop:`1.5px dashed ${P.ink}28`,paddingTop:18}}>
+                  <div style={{fontFamily:t.hf,fontWeight:800,fontSize:20,color:P.ink,marginBottom:2}}>
+                    Maceta {pot.label}
+                  </div>
+                  <div style={{fontFamily:t.bf,fontSize:13,color:P.inkSoft}}>
+                    Personalidad {ch.label} · {ch.trait}
+                  </div>
+                </div>
+
+              </CrayonCard>
+            </div>
+
+          </div>
+
+          <style>{`
+            @media(max-width:780px){
+              .conf-grid{grid-template-columns:1fr!important;gap:28px!important}
+              .conf-grid > div:first-child{order:2}
+              .conf-grid > div:last-child{order:1;position:relative!important;top:0!important}
+            }
+          `}</style>
+        </section>
+      );
+    };
+
+    /* ─── Reassurance row ─── */
+    const Promises = () => {
+      const items = [
+        {t:'Envío gratis', d:'En pedidos sobre $40, en 3-5 días.', icon:'M8,22 L40,22 L36,14 L12,14 Z M8,22 L8,32 L14,32 M40,22 L40,32 L34,32 M14,32 A4,4 0 0,1 22,32 M28,32 A4,4 0 0,1 36,32'},
+        {t:'30 días de prueba', d:'Si no te enamoras, te devolvemos el dinero.', icon:'M24,8 A16,16 0 1,1 8,24 M8,24 L4,20 M8,24 L12,20 M22,16 L22,26 L30,30'},
+        {t:'Semilla incluida', d:'Seleccionamos la semilla perfecta para tu personalidad.', icon:'M24,40 L24,22 M24,22 Q14,18 12,28 Q18,30 24,22 M24,22 Q34,18 36,28 Q30,30 24,22'},
+        {t:'Garantía 1 año', d:'Sensores y app cubiertos sin letra chica.', icon:'M24,8 L36,14 L36,26 Q36,36 24,42 Q12,36 12,26 L12,14 Z M18,24 L22,28 L30,18'},
+      ];
+      return (
+        <section style={{padding:'20px clamp(20px,5vw,80px) 60px'}}>
+          <div style={{maxWidth:1080,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:18}}>
+            {items.map((it,i)=>(
+              <Reveal key={i} delay={i*80}>
+                <CrayonCard fill={P.cream} stroke={P.ink} sw={2} radius={18} padding={20}>
+                  <svg width="40" height="40" viewBox="0 0 48 48" style={{filter:'url(#cr)',marginBottom:10}}>
+                    <path d={it.icon} stroke={P.ink} strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <div style={{fontFamily:t.hf,fontWeight:800,fontSize:15,color:P.ink,marginBottom:4}}>{it.t}</div>
+                  <div style={{fontFamily:t.bf,fontSize:13,color:P.inkSoft,lineHeight:1.45,opacity:.85}}>{it.d}</div>
+                </CrayonCard>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      );
+    };
+
+    /* ─── FAQ ─── */
+    const FAQ = () => {
+      const [open, setOpen] = React.useState(0);
+      const qs = [
+        {q:'¿Qué incluye la maceta?', a:'Cada maceta viene con sensores integrados (humedad, temperatura, luz), una semilla seleccionada según tu personalidad y sustrato premium. Incluye acceso a la app*; algunas funciones avanzadas pueden cobrarse por separado.'},
+        {q:'¿Necesito Wi-Fi?', a:'Sí, la maceta se conecta a tu red Wi-Fi para enviarte mensajes. Funciona con redes 2.4 GHz, las mismas que cualquier dispositivo smart-home.'},
+        {q:'¿Cuánto dura la batería?', a:'Aproximadamente 6 meses con uso normal. Te avisamos por la app cuando sea momento de cargarla — vía USB-C, en 2 horas queda lista.'},
+        {q:'¿Puedo cambiar la planta después?', a:'Por supuesto. La maceta funciona con cualquier planta de interior pequeña-mediana. Si la cambias, vuelve a vincularla en la app y aprenderá su nuevo perfil.'},
+        {q:'¿Cómo funciona el envío?', a:'Envío gratis en pedidos sobre $40, en 3-5 días hábiles. La semilla viaja protegida en empaque hermético — lista para germinar desde el primer día.'},
+      ];
+      return (
+        <section id="faq" style={{padding:'40px clamp(20px,5vw,80px) 80px'}}>
+          <div style={{maxWidth:760,margin:'0 auto'}}>
+            <Reveal>
+              <div style={{textAlign:'center',marginBottom:36}}>
+                <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.pot,marginBottom:12}}>PREGUNTAS</div>
+                <h2 style={{fontFamily:t.hf,fontSize:'clamp(28px,4vw,42px)',fontWeight:800,color:P.ink}}>Lo que todos preguntan</h2>
+                <CrayonUnderline color={P.pot} w="200px" delay={300} h={5}/>
+              </div>
+            </Reveal>
+            <div style={{display:'flex',flexDirection:'column',gap:14}}>
+              {qs.map((it,i)=>(
+                <Reveal key={i} delay={i*60}>
+                  <CrayonCard fill={open===i ? `${P.leaf}25` : P.cream} stroke={P.ink} sw={2} radius={18} padding={0}>
+                    <button onClick={()=>setOpen(open===i?-1:i)} style={{
+                      width:'100%',background:'none',border:'none',cursor:'pointer',
+                      padding:'18px 22px',textAlign:'left',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,
+                      fontFamily:t.hf,fontWeight:800,fontSize:16,color:P.ink}}>
+                      <span>{it.q}</span>
+                      <span style={{fontSize:22,transition:'transform 0.3s',transform:open===i?'rotate(45deg)':'none',color:P.heart,fontWeight:300}}>+</span>
+                    </button>
+                    <div style={{maxHeight:open===i?200:0,overflow:'hidden',transition:'max-height 0.4s ease'}}>
+                      <div style={{padding:'0 22px 20px',fontFamily:t.bf,fontSize:14,color:P.inkSoft,lineHeight:1.6}}>{it.a}</div>
+                    </div>
+                  </CrayonCard>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const App = () => (
+      <div style={{fontFamily:t.bf,position:'relative'}}>
+        <CrayonDefs/>
+        <ShopNav/>
+        <ShopHero/>
+        <PotConfigurator/>
+        <Promises/>
+        <FAQ/>
+        <Footer t={t}/>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

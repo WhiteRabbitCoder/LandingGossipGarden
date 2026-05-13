@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gossip Garden — Tu planta por fin te habla</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FDF6EC;color:#3A2F26;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+    /* Paper grain overlay */
+    body::before{content:'';position:fixed;inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events:none;z-index:0}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes floatB{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+    @keyframes leafDrift{0%{transform:translateY(-40px) rotate(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(105vh) rotate(360deg);opacity:0}}
+
+    .crayon-divider{width:75%;max-width:500px;height:3px;margin:0 auto;
+      background:repeating-linear-gradient(90deg,#E8D5B7 0px,#E8D5B7 8px,transparent 8px,transparent 14px);
+      filter:url(#crayon);opacity:.45}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .gg-hero-grid{grid-template-columns:1fr!important;text-align:center!important;gap:24px!important}
+      .gg-hero-grid>div:nth-child(1){order:2}
+      .gg-hero-grid>div:nth-child(2){order:1}
+      .gg-hero-grid>div:nth-child(3){order:3;justify-content:center!important}
+    }
+    @media(max-width:768px){
+      .gg-nav-desk{display:none!important}
+      .gg-nav-mob{display:block!important}
+    }
+    @media(min-width:769px){
+      .gg-nav-mob{display:none!important}
+    }
+
+    ::-webkit-scrollbar{width:7px}
+    ::-webkit-scrollbar-track{background:#FDF6EC}
+    ::-webkit-scrollbar-thumb{background:#D4C4A0;border-radius:4px}
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="components/crayon-v2.jsx"></script>
+  <script type="text/babel" src="components/sections-v2.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accent": "#5B8C5A",
+      "hf": "Nunito",
+      "bf": "Quicksand",
+      "leaves": true
+    }/*EDITMODE-END*/;
+
+    const App = () => {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      const [scrollY, setScrollY] = React.useState(0);
+
+      React.useEffect(() => {
+        let tick = false;
+        const onScroll = () => {
+          if (!tick) { requestAnimationFrame(() => { setScrollY(window.scrollY); tick = false; }); tick = true; }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      const t = { accent: tweaks.accent, hf: tweaks.hf, bf: tweaks.bf };
+
+      return (
+        <div style={{ fontFamily: tweaks.bf, position: 'relative' }}>
+          <CrayonFilter/>
+          {tweaks.leaves && <Leaves/>}
+          <Navbar t={t}/>
+          <Hero scrollY={scrollY} t={t}/>
+          <div className="crayon-divider"></div>
+          <Features t={t}/>
+          <div className="crayon-divider"></div>
+          <Personalities t={t}/>
+          <div className="crayon-divider"></div>
+          <Variants t={t}/>
+          <CTA t={t}/>
+          <Footer t={t}/>
+
+          <TweaksPanel>
+            <TweakSection title="Colores">
+              <TweakColor label="Acento" value={tweaks.accent}
+                options={['#5B8C5A','#E8804C','#6BABCF','#E88098','#8B7355']}
+                onChange={v => setTweak('accent', v)}/>
+            </TweakSection>
+            <TweakSection title="Tipografía">
+              <TweakSelect label="Títulos" value={tweaks.hf}
+                options={['Nunito','Quicksand']}
+                onChange={v => setTweak('hf', v)}/>
+              <TweakSelect label="Cuerpo" value={tweaks.bf}
+                options={['Quicksand','Nunito']}
+                onChange={v => setTweak('bf', v)}/>
+            </TweakSection>
+            <TweakSection title="Efectos">
+              <TweakToggle label="Hojas flotantes" value={tweaks.leaves}
+                onChange={v => setTweak('leaves', v)}/>
+            </TweakSection>
+          </TweaksPanel>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
