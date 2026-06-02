@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tienda — Gossip Garden</title>
-  <link rel="icon" type="image/png" href="assets/icon-crayon.png"/>
+  <link rel="icon" type="image/png" href="assets/icons/icon-crayon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -73,7 +73,7 @@
           background: s ? 'rgba(250,241,218,0.92)' : 'rgba(250,241,218,0.6)', backdropFilter:'blur(10px)',
           transition:'all 0.3s'}}>
           <a href="index.html" style={{display:'flex',alignItems:'center',gap:10,textDecoration:'none'}}>
-            <img src="assets/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
+            <img src="assets/icons/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
             <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
           </a>
           <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
@@ -127,17 +127,17 @@
       const [charId,  setCharId]  = React.useState('alegre');
 
       const pots = [
-        { id:'verde',   label:'Verde',   img:'assets/VERDE2.png',   accent:'#A8D5A2' },
-        { id:'azul',    label:'Azul',    img:'assets/AZUL2.png',    accent:'#B8C9E8' },
-        { id:'rosado',  label:'Rosado',  img:'assets/ROSADO2.png',  accent:'#F0C0C8' },
-        { id:'naranja', label:'Naranja', img:'assets/NARANJA2.png', accent:'#F0C090' },
+        { id:'verde',   label:'Verde',   img:'assets/materas/VERDE2.png',   accent:'#A8D5A2' },
+        { id:'azul',    label:'Azul',    img:'assets/materas/AZUL2.png',    accent:'#B8C9E8' },
+        { id:'rosado',  label:'Rosado',  img:'assets/materas/ROSADO2.png',  accent:'#F0C0C8' },
+        { id:'naranja', label:'Naranja', img:'assets/materas/NARANJA2.png', accent:'#F0C090' },
       ];
 
       const chars = [
-        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/FELIZ.png',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
-        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/DORMILON.png', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
-        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/TRISTE.png',   speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
-        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/BRAVA.png',    speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
+        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/personalidades/FELIZ.png',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
+        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/personalidades/DORMILON.png', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
+        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/personalidades/TRISTE.png',   speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
+        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/personalidades/BRAVA.png',    speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
       ];
 
       const pot = pots.find(p => p.id === colorId);

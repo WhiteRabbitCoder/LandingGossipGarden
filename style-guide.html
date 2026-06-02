@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gossip Garden — Guía de Estilo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #FAF1DA;
+      --bgDark:   #F0E2C0;
+      --ink:      #3D2817;
+      --inkSoft:  #6B4A2E;
+      --pot:      #E8A95C;
+      --potDk:    #C68A40;
+      --leaf:     #8AC553;
+      --leafDk:   #5FA037;
+      --heart:    #E85D52;
+      --cream:    #FFF8E7;
+      --shadow:   rgba(61,40,23,0.08);
+    }
+
+    body {
+      background: #fff;
+      color: var(--ink);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 50px;
+    }
+
+    @media print {
+      .page { padding: 30px 40px; }
+      .no-break { page-break-inside: avoid; }
+      h2 { page-break-before: auto; }
+      .section { page-break-inside: avoid; }
+    }
+
+    /* ── COVER ── */
+    .cover {
+      background: var(--bg);
+      border-radius: 24px;
+      padding: 60px 50px;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid var(--ink);
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: var(--leaf);
+      opacity: 0.12;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: var(--heart);
+      opacity: 0.09;
+    }
+    .cover-tag {
+      display: inline-block;
+      background: var(--heart);
+      color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 2px solid var(--ink);
+      margin-bottom: 20px;
+    }
+    .cover h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.0;
+      margin-bottom: 6px;
+    }
+    .cover h1 span { color: var(--leafDk); }
+    .cover-sub {
+      font-size: 16px;
+      color: var(--inkSoft);
+      margin-top: 14px;
+      max-width: 520px;
+    }
+    .cover-meta {
+      margin-top: 32px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .cover-meta-item {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--inkSoft);
+      letter-spacing: .5px;
+    }
+    .cover-meta-item strong {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .underline-deco {
+      display: block;
+      width: 200px;
+      height: 6px;
+      background: var(--leafDk);
+      border-radius: 3px;
+      margin-top: 8px;
+      opacity: 0.7;
+    }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 52px; }
+    .section-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title .num {
+      width: 32px; height: 32px;
+      background: var(--ink);
+      color: var(--cream);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+      flex-shrink: 0;
+    }
+    .section-divider {
+      height: 2px;
+      background: var(--ink);
+      opacity: 0.12;
+      margin: 12px 0 24px;
+      border-radius: 1px;
+    }
+    .section-intro {
+      font-size: 14.5px;
+      color: var(--inkSoft);
+      line-height: 1.7;
+      max-width: 740px;
+      margin-bottom: 28px;
+    }
+
+    /* ── PHILOSOPHY BOX ── */
+    .philosophy-box {
+      background: var(--bg);
+      border: 2.5px solid var(--ink);
+      border-radius: 18px;
+      padding: 30px 32px;
+      margin-bottom: 16px;
+    }
+    .philosophy-box h3 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .philosophy-box p {
+      font-size: 13.5px;
+      color: var(--inkSoft);
+      line-height: 1.7;
+    }
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 600px) { .philosophy-grid { grid-template-columns: 1fr; } }
+
+    /* ── COLOR PALETTE TABLE ── */
+    .palette-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    .palette-table th {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .palette-table th:first-child { border-radius: 10px 0 0 0; }
+    .palette-table th:last-child  { border-radius: 0 10px 0 0; }
+    .palette-table td {
+      padding: 11px 14px;
+      font-size: 13px;
+      color: var(--ink);
+      border-bottom: 1px solid rgba(61,40,23,0.08);
+      vertical-align: middle;
+    }
+    .palette-table tr:nth-child(even) td { background: var(--bg); }
+    .palette-table tr:last-child td { border-bottom: none; }
+    .swatch {
+      display: inline-block;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 2px solid rgba(61,40,23,0.25);
+      vertical-align: middle;
+    }
+    .hex-chip {
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      background: rgba(61,40,23,0.06);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--ink);
+    }
+    .use-tag {
+      display: inline-block;
+      background: rgba(61,40,23,0.07);
+      border-radius: 12px;
+      padding: 2px 9px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--inkSoft);
+      margin: 2px 3px 2px 0;
+    }
+
+    /* ── PERSONALITY COLORS ── */
+    .personality-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 8px;
+    }
+    @media (max-width: 600px) { .personality-grid { grid-template-columns: 1fr 1fr; } }
+    .personality-card {
+      border-radius: 16px;
+      border: 2px solid var(--ink);
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .personality-card .p-swatch {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 2.5px solid var(--ink);
+      margin: 0 auto 10px;
+    }
+    .personality-card h4 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px; font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .personality-card .p-hex {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: var(--inkSoft);
+    }
+    .personality-card .p-plant {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--inkSoft);
+      letter-spacing: .5px;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .type-specimen {
+      background: var(--bg);
+      border: 2px solid var(--ink);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 14px;
+    }
+    .type-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--inkSoft);
+      margin-bottom: 8px;
+    }
+    .type-specimen .sample-h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 36px; font-weight: 800;
+      color: var(--ink); line-height: 1.05;
+    }
+    .type-specimen .sample-h2 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 26px; font-weight: 800;
+      color: var(--ink); line-height: 1.1;
+    }
+    .type-specimen .sample-body {
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: var(--inkSoft);
+      line-height: 1.6;
+    }
+    .type-specimen .sample-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--heart);
+    }
+    .type-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .type-table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--inkSoft);
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(61,40,23,0.12);
+    }
+    .type-table td {
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--ink);
+      border-bottom: 1px solid rgba(61,40,23,0.07);
+    }
+
+    /* ── BUTTON SPECS ── */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) { .btn-grid { grid-template-columns: 1fr; } }
+    .btn-spec-card {
+      border: 2px solid var(--ink);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .btn-spec-preview {
+      padding: 28px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-preview {
+      display: inline-block;
+      padding: 12px 32px;
+      border-radius: 999px;
+      border: 2.5px solid var(--ink);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      cursor: default;
+    }
+    .btn-spec-body {
+      background: var(--cream);
+      padding: 14px 18px;
+      border-top: 1.5px solid rgba(61,40,23,0.12);
+    }
+    .btn-spec-body h4 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--inkSoft);
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(61,40,23,0.06);
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-row span:last-child {
+      font-family: 'Courier New', monospace;
+      color: var(--ink);
+      font-size: 11.5px;
+    }
+
+    /* ── COMPONENT ANATOMY ── */
+    .anatomy-box {
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      padding: 28px;
+      background: var(--cream);
+      margin-bottom: 16px;
+    }
+    .anatomy-box h3 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .anatomy-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .anatomy-list li {
+      font-size: 13px;
+      color: var(--inkSoft);
+      padding-left: 18px;
+      position: relative;
+    }
+    .anatomy-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--leafDk);
+      font-weight: 800;
+    }
+    .anatomy-list li strong { color: var(--ink); }
+
+    /* ── ANIMATION SPECS ── */
+    .anim-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .anim-table th {
+      background: var(--bgDark);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--inkSoft);
+      padding: 9px 12px;
+      text-align: left;
+    }
+    .anim-table td {
+      padding: 9px 12px;
+      font-size: 12.5px;
+      color: var(--ink);
+      border-bottom: 1px solid rgba(61,40,23,0.08);
+    }
+    .anim-table tr:nth-child(even) td { background: var(--bg); }
+
+    /* ── PILL TAGS ── */
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: 1.5px solid var(--ink);
+      margin: 2px 3px 2px 0;
+    }
+
+    /* ── FOOTER ── */
+    .guide-footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 2px dashed rgba(61,40,23,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .guide-footer span {
+      font-size: 12px;
+      color: var(--inkSoft);
+    }
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 6px 16px 6px 10px;
+    }
+    .brand-dot {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--leafDk);
+      border: 2px solid var(--ink);
+    }
+    .brand-pill span {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    /* ── PRINT BUTTON ── */
+    .print-btn {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      border-radius: 999px;
+      padding: 13px 26px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(61,40,23,0.28);
+      transition: transform 0.2s;
+      z-index: 999;
+    }
+    .print-btn:hover { transform: translateY(-2px); }
+    @media print { .print-btn { display: none; } }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 4px solid var(--leafDk);
+      background: rgba(138,197,83,0.08);
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+      font-size: 13.5px;
+      color: var(--inkSoft);
+      line-height: 1.6;
+    }
+    .callout strong { color: var(--ink); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">Exportar PDF</button>
+
+<div class="page">
+
+  <!-- ══════════════════════════════════ COVER ══════════════════════════════════ -->
+  <div class="cover">
+    <div class="cover-tag">GUÍA DE ESTILO — V1.0</div>
+    <h1>Gossip<br/><span>Garden</span></h1>
+    <span class="underline-deco"></span>
+    <p class="cover-sub">
+      Documentación completa del sistema visual de la landing page: paleta de colores, tipografía,
+      componentes, botones, animaciones y filosofía de diseño.
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <strong>Producto</strong>
+        Gossip Garden IoT
+      </div>
+      <div class="cover-meta-item">
+        <strong>Versión</strong>
+        Landing v3
+      </div>
+      <div class="cover-meta-item">
+        <strong>Estilo</strong>
+        Crayon / Hand-drawn
+      </div>
+      <div class="cover-meta-item">
+        <strong>Fecha</strong>
+        Mayo 2026
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 1. FILOSOFÍA ══════════════════════════════════ -->
+  <div class="section no-break">
+    <div class="section-title">
+      <div class="num">1</div>
+      Por qué diseñamos así — Filosofía visual
+    </div>
+    <div class="section-divider"></div>
+
+    <p class="section-intro">
+      Gossip Garden no es un gadget tecnológico más. Es un compañero con personalidad.
+      El diseño tiene que transmitir eso desde el primer vistazo: calidez, juego,
+      relación emocional. El estilo visual que elegimos se llama <strong>Crayon aesthetic</strong> —
+      una estética que imita los trazos a mano, el papel con textura y los dibujos a crayón.
+    </p>
+
+    <div class="philosophy-grid">
+      <div class="philosophy-box">
+        <h3>La decisión de diseño raíz</h3>
+        <p>
+          La mayoría de los productos IoT usan interfaces frías: azules de alta tecnología,
+          fuentes sans-serif geométricas, gráficas de dashboard. Eso comunica "herramienta",
+          no "amigo". Gossip Garden trata de convencerte de que tu planta tiene sentimientos
+          y personalidad propia, así que el diseño tenía que hacer exactamente lo mismo:
+          sentirse vivo, imperfecto y cálido — como si lo hubiera dibujado alguien con
+          mucho cariño.
+        </p>
+      </div>
+      <div class="philosophy-box">
+        <h3>Por qué "crayón" y no otro estilo</h3>
+        <p>
+          El crayón evoca inmediatez emocional: así dibujan los niños sus plantas favoritas,
+          sus mascotas, las cosas que quieren. También tiene una connotación de handmade —
+          lo contrario de lo industrial. Eso crea la paradoja correcta para Gossip Garden:
+          tecnología sofisticada (ESP32, sensores, IA) vestida con el lenguaje visual más
+          humano posible. La tensión entre esas dos cosas genera curiosidad y ternura a la vez.
+        </p>
+      </div>
+      <div class="philosophy-box">
+        <h3>Papel y textura como base</h3>
+        <p>
+          El fondo no es blanco puro ni gris neutro — es <strong>#FAF1DA</strong>, un crema
+          cálido que imita papel artesanal. Sobre ese fondo se aplican dos capas de ruido SVG
+          (fractalNoise) que añaden grano de papel y fibras visibles. Resultado: la pantalla
+          "pesa", tiene textura física, invita a tocar. El usuario percibe algo orgánico, no digital.
+        </p>
+      </div>
+      <div class="philosophy-box">
+        <h3>Imperfección intencional</h3>
+        <p>
+          Todos los trazos SVG pasan por el filtro <code>feTurbulence</code>
+          (<code>baseFrequency="0.025"</code>, <code>scale=0.9</code>). Eso deforma
+          ligeramente líneas y rectángulos para que nunca sean perfectamente rectos.
+          Una línea perfecta grita "máquina". Una línea con jitter grita "persona".
+          Ese detalle es el alma del sistema gráfico.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Principio rector:</strong> "Una planta que habla merece una web que se sienta viva."
+      Cada decisión visual — colores, tipografía, animaciones — refuerza la idea de que
+      Gossip Garden es un ser con carácter propio, no un sensor envuelto en plástico.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 2. PALETA DE COLORES ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">2</div>
+      Paleta de colores
+    </div>
+    <div class="section-divider"></div>
+
+    <p class="section-intro">
+      La paleta está definida en <code>PALETTE</code> dentro de <code>components/crayon-v3.jsx</code>.
+      Es la única fuente de verdad para todos los colores del sitio. Nunca se usan valores hex
+      directamente en el código — siempre se referencia <code>PALETTE.nombre</code>.
+    </p>
+
+    <table class="palette-table">
+      <thead>
+        <tr>
+          <th>Muestra</th>
+          <th>Nombre</th>
+          <th>Hex / Valor</th>
+          <th>Uso principal</th>
+          <th>Dónde aparece</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="swatch" style="background:#FAF1DA;"></span></td>
+          <td><strong>bg</strong></td>
+          <td><span class="hex-chip">#FAF1DA</span></td>
+          <td>Fondo global del sitio</td>
+          <td>
+            <span class="use-tag">body</span>
+            <span class="use-tag">Nav (scroll)</span>
+            <span class="use-tag">scrollbar track</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#F0E2C0;"></span></td>
+          <td><strong>bgDark</strong></td>
+          <td><span class="hex-chip">#F0E2C0</span></td>
+          <td>Fondos secundarios, hover states</td>
+          <td>
+            <span class="use-tag">radial gradients</span>
+            <span class="use-tag">tabla anim</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#3D2817;"></span></td>
+          <td><strong>ink</strong></td>
+          <td><span class="hex-chip">#3D2817</span></td>
+          <td>Color de texto principal y contornos</td>
+          <td>
+            <span class="use-tag">todos los bordes SVG</span>
+            <span class="use-tag">body text</span>
+            <span class="use-tag">Nav links</span>
+            <span class="use-tag">headings</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#6B4A2E;"></span></td>
+          <td><strong>inkSoft</strong></td>
+          <td><span class="hex-chip">#6B4A2E</span></td>
+          <td>Texto secundario y descripctivo</td>
+          <td>
+            <span class="use-tag">párrafos</span>
+            <span class="use-tag">subtítulos</span>
+            <span class="use-tag">etiquetas</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#E8A95C;"></span></td>
+          <td><strong>pot</strong></td>
+          <td><span class="hex-chip">#E8A95C</span></td>
+          <td>Color de la maceta, acento cálido</td>
+          <td>
+            <span class="use-tag">maceta SVG</span>
+            <span class="use-tag">sección Variantes (kicker)</span>
+            <span class="use-tag">scrollbar thumb</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#C68A40;"></span></td>
+          <td><strong>potDk</strong></td>
+          <td><span class="hex-chip">#C68A40</span></td>
+          <td>Sombra y detalles de la maceta</td>
+          <td>
+            <span class="use-tag">rayado de textura en maceta</span>
+            <span class="use-tag">scrollbar hover</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#8AC553;"></span></td>
+          <td><strong>leaf</strong></td>
+          <td><span class="hex-chip">#8AC553</span></td>
+          <td>Verde primario — hojas y naturaleza</td>
+          <td>
+            <span class="use-tag">hojas SVG maceta</span>
+            <span class="use-tag">botón "Descargar app"</span>
+            <span class="use-tag">fondo CTA card (30% opacidad)</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#5FA037;"></span></td>
+          <td><strong>leafDk</strong></td>
+          <td><span class="hex-chip">#5FA037</span></td>
+          <td>Verde oscuro — énfasis y subrayados</td>
+          <td>
+            <span class="use-tag">kicker ScrollStory</span>
+            <span class="use-tag">subrayados h1</span>
+            <span class="use-tag">sección Personalidades</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#E85D52;"></span></td>
+          <td><strong>heart</strong></td>
+          <td><span class="hex-chip">#E85D52</span></td>
+          <td>Acento coral/rojo — acción y emoción</td>
+          <td>
+            <span class="use-tag">botón "Comprar"</span>
+            <span class="use-tag">botón "Comprar maceta"</span>
+            <span class="use-tag">mejillas del pot SVG</span>
+            <span class="use-tag">kicker Features & CTA</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:#FFF8E7;border-color:rgba(61,40,23,0.25);"></span></td>
+          <td><strong>cream</strong></td>
+          <td><span class="hex-chip">#FFF8E7</span></td>
+          <td>Superficies elevadas — cards y bubbles</td>
+          <td>
+            <span class="use-tag">CrayonCard (default fill)</span>
+            <span class="use-tag">SpeechBubble</span>
+            <span class="use-tag">botón "Ver la tienda"</span>
+            <span class="use-tag">texto sobre heart</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="swatch" style="background:rgba(61,40,23,0.08);border-color:rgba(61,40,23,0.15);"></span></td>
+          <td><strong>shadow</strong></td>
+          <td><span class="hex-chip">rgba(61,40,23,0.08)</span></td>
+          <td>Sombras sutiles, fondos con transparencia</td>
+          <td>
+            <span class="use-tag">drop-shadows de imágenes de plantas</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Regla de oro:</strong> Los tres colores de acento tienen roles fijos.
+      <strong style="color:#E85D52;">Heart (coral)</strong> = acciones de compra y urgencia emocional.
+      <strong style="color:#5FA037;">LeafDk (verde)</strong> = navegación, secciones informativas, naturaleza.
+      <strong style="color:#C68A40;">Pot/PotDk (naranja)</strong> = variantes de producto y maceta física.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 3. COLORES DE PERSONALIDADES ══════════════════════════════════ -->
+  <div class="section no-break">
+    <div class="section-title">
+      <div class="num">3</div>
+      Colores de personalidades de planta
+    </div>
+    <div class="section-divider"></div>
+
+    <p class="section-intro">
+      Cada personalidad tiene su propio color de acento, usado en el fondo de la card (40% opacidad)
+      y en el subrayado decorativo. Estos no son parte de PALETTE — son colores específicos
+      de cada carácter.
+    </p>
+
+    <div class="personality-grid">
+      <div class="personality-card">
+        <div class="p-swatch" style="background:#F4D06F;"></div>
+        <h4>Alegre</h4>
+        <div class="p-plant">Girasol</div>
+        <div class="p-hex">#F4D06F</div>
+        <div style="font-size:11px;color:#6B4A2E;margin-top:5px;">Amarillo cálido · solar</div>
+      </div>
+      <div class="personality-card">
+        <div class="p-swatch" style="background:#B8C9E8;"></div>
+        <h4>Dormilona</h4>
+        <div class="p-plant">Suculenta</div>
+        <div class="p-hex">#B8C9E8</div>
+        <div style="font-size:11px;color:#6B4A2E;margin-top:5px;">Azul perla · tranquilo</div>
+      </div>
+      <div class="personality-card">
+        <div class="p-swatch" style="background:#E0B8E0;"></div>
+        <h4>Dramática</h4>
+        <div class="p-plant">Orquídea</div>
+        <div class="p-hex">#E0B8E0</div>
+        <div style="font-size:11px;color:#6B4A2E;margin-top:5px;">Malva · intenso</div>
+      </div>
+      <div class="personality-card">
+        <div class="p-swatch" style="background:#A8C88A;"></div>
+        <h4>Exigente</h4>
+        <div class="p-plant">Cactus</div>
+        <div class="p-hex">#A8C88A</div>
+        <div style="font-size:11px;color:#6B4A2E;margin-top:5px;">Verde oliva · directo</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <p style="font-size:13px;color:#6B4A2E;line-height:1.7;">
+        <strong style="color:#3D2817;">Regla de aplicación:</strong> el color de personalidad
+        siempre va con 40% de opacidad como fondo de la card
+        (<code>fill={`${p.color}40`}</code> en hex). Al 100% sería demasiado saturado
+        y rompería la armonía con el fondo crema. Las variantes de maceta física
+        (Verde, Azul, Naranja, Rosado) usan versiones aún más desaturadas y claras
+        para los fondos de card en la sección de tienda.
+      </p>
+    </div>
+
+    <div style="margin-top:20px;">
+      <strong style="font-size:13px;color:#3D2817;">Colores de fondo de variantes de maceta:</strong>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
+        <div style="background:#E8F5E8;border:2px solid #3D2817;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:12px;font-weight:800;color:#3D2817;">Verde</div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:#6B4A2E;">#E8F5E8</div>
+        </div>
+        <div style="background:#EEF2FA;border:2px solid #3D2817;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:12px;font-weight:800;color:#3D2817;">Azul</div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:#6B4A2E;">#EEF2FA</div>
+        </div>
+        <div style="background:#FDF3E8;border:2px solid #3D2817;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:12px;font-weight:800;color:#3D2817;">Naranja</div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:#6B4A2E;">#FDF3E8</div>
+        </div>
+        <div style="background:#FDF0F0;border:2px solid #3D2817;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:12px;font-weight:800;color:#3D2817;">Rosado</div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:#6B4A2E;">#FDF0F0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 4. TIPOGRAFÍA ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">4</div>
+      Tipografía
+    </div>
+    <div class="section-divider"></div>
+
+    <p class="section-intro">
+      El sistema usa dos fuentes de Google Fonts, más una fuente alternativa optativa.
+      Ambas son redondeadas y amigables — nunca geométricas frías. La elección de cada
+      fuente refuerza el tono conversacional y cercano de la marca.
+    </p>
+
+    <div class="type-specimen">
+      <div class="type-label">HEADING FONT — QUICKSAND (peso 700–800)</div>
+      <div class="sample-h1">Tu planta por fin te habla.</div>
+      <div class="sample-h2" style="margin-top:10px;">Cuatro sensores, una planta tranquila.</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-label">BODY FONT — NUNITO (peso 400–800)</div>
+      <div class="sample-body">Por primera vez, puedo contarte cómo me siento. No solo me riegues — escúchame.</div>
+      <div class="sample-label" style="margin-top:12px;">HOLA, SOY TU PLANTA · LABEL UPPERCASE</div>
+    </div>
+
+    <table class="type-table" style="margin-top:20px;border:1.5px solid rgba(61,40,23,0.12);border-radius:12px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th>Elemento</th>
+          <th>Fuente</th>
+          <th>Peso</th>
+          <th>Tamaño</th>
+          <th>Color</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>H1 — Hero</strong></td>
+          <td>Quicksand</td>
+          <td>800</td>
+          <td>clamp(30px, 3.8vw, 54px)</td>
+          <td><span class="hex-chip">#3D2817</span></td>
+        </tr>
+        <tr>
+          <td><strong>H2 — Sección</strong></td>
+          <td>Quicksand</td>
+          <td>800</td>
+          <td>clamp(28px, 4vw, 46px)</td>
+          <td><span class="hex-chip">#3D2817</span></td>
+        </tr>
+        <tr>
+          <td><strong>H3 — Card title</strong></td>
+          <td>Quicksand</td>
+          <td>800</td>
+          <td>17–20px</td>
+          <td><span class="hex-chip">#3D2817</span></td>
+        </tr>
+        <tr>
+          <td><strong>Kicker label</strong></td>
+          <td>Nunito</td>
+          <td>700</td>
+          <td>12–13px, tracking 2px</td>
+          <td><span class="hex-chip">#E85D52</span> o <span class="hex-chip">#5FA037</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cuerpo de texto</strong></td>
+          <td>Nunito</td>
+          <td>400–500</td>
+          <td>clamp(13px, 1.1vw, 16px)</td>
+          <td><span class="hex-chip">#6B4A2E</span></td>
+        </tr>
+        <tr>
+          <td><strong>Nav links</strong></td>
+          <td>Nunito</td>
+          <td>600</td>
+          <td>14px</td>
+          <td><span class="hex-chip">#3D2817</span></td>
+        </tr>
+        <tr>
+          <td><strong>Botones</strong></td>
+          <td>Nunito (inherit)</td>
+          <td>700</td>
+          <td>15px, tracking 0.3px</td>
+          <td>variable por botón</td>
+        </tr>
+        <tr>
+          <td><strong>Precio hero</strong></td>
+          <td>Quicksand</td>
+          <td>900</td>
+          <td>clamp(34px, 5vw, 52px)</td>
+          <td><span class="hex-chip">#3D2817</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top:18px;">
+      <strong>Por qué Quicksand + Nunito:</strong> Quicksand tiene terminaciones redondeadas que
+      imitan el grosor uniforme de un crayón. Nunito tiene la misma calidez para cuerpo de texto
+      pero con mayor legibilidad a tamaños pequeños. Juntas crean una jerarquía clara sin perder
+      el tono cálido. La tercera opción disponible, <strong>Caveat</strong>, es una fuente
+      de escritura a mano — se ofrece como alternativa máxima para el efecto "notas de libreta".
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 5. BOTONES ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">5</div>
+      Sistema de botones
+    </div>
+    <div class="section-divider"></div>
+
+    <p class="section-intro">
+      Todos los botones usan el componente <code>CrayonButton</code>. Nunca hay botones
+      HTML estándar con estilos CSS — el botón es un SVG con forma de píldora que
+      pasa por el filtro de jitter, más un span de texto encima. Esto garantiza que
+      el borde siempre tenga el efecto de trazo a mano.
+    </p>
+
+    <div class="btn-grid">
+      <div class="btn-spec-card">
+        <div class="btn-spec-preview" style="background:#FAF1DA;">
+          <span class="btn-preview" style="background:#E85D52;color:#FFF8E7;">Comprar maceta</span>
+        </div>
+        <div class="btn-spec-body">
+          <h4>Botón primario — Acción de compra</h4>
+          <div class="spec-row"><span>Fill (fondo)</span><span>#E85D52 (heart)</span></div>
+          <div class="spec-row"><span>Stroke (borde)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Color (texto)</span><span>#FFF8E7 (cream)</span></div>
+          <div class="spec-row"><span>Padding</span><span>12px 28px</span></div>
+          <div class="spec-row"><span>Border-radius</span><span>999px (píldora)</span></div>
+          <div class="spec-row"><span>Font-weight</span><span>700</span></div>
+          <div class="spec-row"><span>Font-size</span><span>15px</span></div>
+          <div class="spec-row"><span>Hover</span><span>translateY(-2px) rotate(-0.5deg)</span></div>
+          <div class="spec-row"><span>Usos</span><span>Nav "Comprar", CTA "Comprar maceta"</span></div>
+        </div>
+      </div>
+
+      <div class="btn-spec-card">
+        <div class="btn-spec-preview" style="background:#FAF1DA;">
+          <span class="btn-preview" style="background:#FFF8E7;color:#3D2817;">Ver la tienda</span>
+        </div>
+        <div class="btn-spec-body">
+          <h4>Botón secundario — Acción alternativa</h4>
+          <div class="spec-row"><span>Fill (fondo)</span><span>#FFF8E7 (cream)</span></div>
+          <div class="spec-row"><span>Stroke (borde)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Color (texto)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Padding</span><span>12px 28px</span></div>
+          <div class="spec-row"><span>Border-radius</span><span>999px (píldora)</span></div>
+          <div class="spec-row"><span>Font-weight</span><span>700</span></div>
+          <div class="spec-row"><span>Font-size</span><span>15px</span></div>
+          <div class="spec-row"><span>Hover</span><span>translateY(-2px) rotate(-0.5deg)</span></div>
+          <div class="spec-row"><span>Usos</span><span>CTA "Ver la tienda"</span></div>
+        </div>
+      </div>
+
+      <div class="btn-spec-card">
+        <div class="btn-spec-preview" style="background:#FAF1DA;">
+          <span class="btn-preview" style="background:#8AC553;color:#3D2817;">Descargar app</span>
+        </div>
+        <div class="btn-spec-body">
+          <h4>Botón de acción secundaria — CTA suave</h4>
+          <div class="spec-row"><span>Fill (fondo)</span><span>#8AC553 (leaf)</span></div>
+          <div class="spec-row"><span>Stroke (borde)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Color (texto)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Padding</span><span>12px 28px</span></div>
+          <div class="spec-row"><span>Hover</span><span>translateY(-2px) rotate(-0.5deg)</span></div>
+          <div class="spec-row"><span>Usos</span><span>ScrollStory beat 1 (hero)</span></div>
+        </div>
+      </div>
+
+      <div class="btn-spec-card">
+        <div class="btn-spec-preview" style="background:#FAF1DA;">
+          <span class="btn-preview" style="background:#E8A95C;color:#3D2817;">Explorar variantes</span>
+        </div>
+        <div class="btn-spec-body">
+          <h4>Botón acento naranja — Default CrayonButton</h4>
+          <div class="spec-row"><span>Fill (fondo)</span><span>#E8A95C (pot) — default</span></div>
+          <div class="spec-row"><span>Stroke (borde)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Color (texto)</span><span>#3D2817 (ink)</span></div>
+          <div class="spec-row"><span>Padding</span><span>12px 28px</span></div>
+          <div class="spec-row"><span>Hover</span><span>translateY(-2px) rotate(-0.5deg)</span></div>
+          <div class="spec-row"><span>Usos</span><span>Uso genérico si no se especifica fill</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Comportamiento de hover universal:</strong> todos los botones se elevan
+      <code>translateY(-2px)</code> y rotan ligeramente <code>rotate(-0.5deg)</code> al hover.
+      Esta micro-rotación es el detalle que refuerza el efecto "objeto dibujado a mano" —
+      como si la pegatina no estuviera perfectamente pegada. La transición dura <code>0.2s</code> ease.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 6. COMPONENTES ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="num">6</div>
+      Componentes del sistema de diseño
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="anatomy-box">
+      <h3>CrayonCard — Tarjeta con borde dibujado</h3>
+      <ul class="anatomy-list">
+        <li><strong>Fondo:</strong> cream (#FFF8E7) por defecto, configurable por prop <code>fill</code></li>
+        <li><strong>Borde:</strong> SVG rect con <code>filter="url(#cr)"</code> — borde jitter café oscuro</li>
+        <li><strong>Grosor de borde:</strong> 2.5px estándar, 3px en CTA principal</li>
+        <li><strong>Border-radius:</strong> 20–24px para cards de contenido, 32px para el CTA grande</li>
+        <li><strong>Hover:</strong> <code>translateY(-4px)</code> con transición <code>0.3s cubic-bezier(.4,0,.2,1)</code></li>
+        <li><strong>Contenido:</strong> siempre en un div con <code>position:relative; z-index:1</code> sobre el SVG de fondo</li>
+      </ul>
+    </div>
+
+    <div class="anatomy-box">
+      <h3>CrayonUnderline — Subrayado animado a mano</h3>
+      <ul class="anatomy-list">
+        <li><strong>Forma:</strong> path SVG curvado (no línea recta) que pasa por el filtro #cr</li>
+        <li><strong>Animación:</strong> stroke-dashoffset de 220→0 al entrar en viewport (IntersectionObserver)</li>
+        <li><strong>Duración:</strong> 0.9s con <code>cubic-bezier(.4,0,.2,1)</code></li>
+        <li><strong>Delay configurable:</strong> prop <code>delay</code> en ms para efectos encadenados</li>
+        <li><strong>Colores usados:</strong> leafDk (verde) en secciones info, heart (coral) en CTAs y Features</li>
+        <li><strong>Uso:</strong> siempre debajo del H1 o H2 de cada sección para dar énfasis</li>
+      </ul>
+    </div>
+
+    <div class="anatomy-box">
+      <h3>SpeechBubble — Burbuja de diálogo</h3>
+      <ul class="anatomy-list">
+        <li><strong>Forma:</strong> SVG con path de nube irregular + cola de bocadillo apuntando hacia abajo</li>
+        <li><strong>Fondo:</strong> cream (#FFF8E7), borde ink (#3D2817)</li>
+        <li><strong>Filtro:</strong> <code>url(#cr)</code> para el jitter de borde</li>
+        <li><strong>Animación:</strong> <code>floatB</code> — oscillación vertical 0→-10px con rotación -3°→3°, 4s infinito</li>
+        <li><strong>Uso:</strong> frases de las plantas encima de las fotos en ScrollStory y cards de personalidades</li>
+      </ul>
+    </div>
+
+    <div class="anatomy-box">
+      <h3>HandIcon — Iconos dibujados a mano</h3>
+      <ul class="anatomy-list">
+        <li><strong>Sistema:</strong> SVG paths únicos, nunca iconfonts ni emoji</li>
+        <li><strong>Íconos disponibles:</strong> drop (agua), thermo (temperatura), sun (luz), cloud (aire), chat (conversación), heart (amor), bell (alerta), sensor (sensor), leaf (hoja)</li>
+        <li><strong>Fill:</strong> cream por defecto, color personalizable por prop</li>
+        <li><strong>Stroke:</strong> siempre ink (#3D2817), strokeWidth 2–2.5px</li>
+        <li><strong>Uso:</strong> cards de features, sensor grid en DormilonaCard</li>
+      </ul>
+    </div>
+
+    <div class="anatomy-box">
+      <h3>Reveal — Animación de entrada por scroll</h3>
+      <ul class="anatomy-list">
+        <li><strong>Tecnología:</strong> IntersectionObserver con threshold 0.12</li>
+        <li><strong>Animación:</strong> opacity 0→1 + translateY(24px)→0</li>
+        <li><strong>Duración:</strong> 0.8s con <code>cubic-bezier(.4,0,.2,1)</code></li>
+        <li><strong>Delay:</strong> prop configurable en ms — se usa escalonado (0, 100, 200, 300ms) en grids</li>
+        <li><strong>Uso:</strong> envuelve todos los títulos de sección y las cards en grids</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 7. FILTROS Y TEXTURAS ══════════════════════════════════ -->
+  <div class="section no-break">
+    <div class="section-title">
+      <div class="num">7</div>
+      Filtros SVG y sistema de texturas
+    </div>
+    <div class="section-divider"></div>
+
+    <p class="section-intro">
+      El efecto "dibujado a mano" es técnico: no hay imágenes de textura cargadas desde servidor,
+      todo es SVG filters generados en el navegador. Esto garantiza cero latencia extra y
+      escala perfecta a cualquier resolución.
+    </p>
+
+    <table class="anim-table" style="border:1.5px solid rgba(61,40,23,0.12);border-radius:12px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th>ID de filtro</th>
+          <th>Técnica SVG</th>
+          <th>Efecto visual</th>
+          <th>Se aplica a</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>#cr</code></td>
+          <td>feTurbulence + feDisplacementMap<br/><small>baseFrequency=0.025, scale=0.9</small></td>
+          <td>Jitter de borde — desplaza píxeles ligeramente para que ninguna línea sea perfectamente recta</td>
+          <td>Bordes de cards, botones, iconos, subrayados, elementos SVG decorativos</td>
+        </tr>
+        <tr>
+          <td><code>#cr-text</code></td>
+          <td>fractalNoise + feColorMatrix<br/><small>baseFrequency=2.4, opacidad 0.55</small></td>
+          <td>Grano de crayón sobre texto — añade textura granulada sin distorsionar la forma de las letras</td>
+          <td>Logo "Gossip Garden", indicador de scroll, precio en CTA, h1/h2/h3/h4 vía CSS text-shadow</td>
+        </tr>
+        <tr>
+          <td><code>#crayon-fill</code></td>
+          <td>fractalNoise + feBlend multiply<br/><small>baseFrequency=0.9, opacidad 0.4</small></td>
+          <td>Textura de trazo de crayón en rellenos — simula la irregularidad de presión al colorear</td>
+          <td>Capa overlay de los botones CrayonButton (30% opacidad)</td>
+        </tr>
+        <tr>
+          <td><em>body::before</em></td>
+          <td>fractalNoise inline SVG URI<br/><small>baseFrequency=1.4, seed=5, opacidad 0.55</small></td>
+          <td>Grano de papel — textura de arena fina en todo el fondo de página</td>
+          <td>Fondo global del body, position:fixed, pointer-events:none</td>
+        </tr>
+        <tr>
+          <td><em>body::after</em></td>
+          <td>fractalNoise inline SVG URI<br/><small>baseFrequency=0.6, seed=12, opacidad 0.22</small></td>
+          <td>Fibras de papel — nervios orgánicos más grandes y cálidos sobre el grano base</td>
+          <td>Segunda capa de textura del body, position:fixed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 8. ANIMACIONES ══════════════════════════════════ -->
+  <div class="section no-break">
+    <div class="section-title">
+      <div class="num">8</div>
+      Animaciones y microinteracciones
+    </div>
+    <div class="section-divider"></div>
+
+    <table class="anim-table" style="border:1.5px solid rgba(61,40,23,0.12);border-radius:12px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Duración / Curva</th>
+          <th>Descripción</th>
+          <th>Elemento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ScrollStory</strong></td>
+          <td>Scroll-driven</td>
+          <td>400vh de scroll = 4 beats</td>
+          <td>Contenedor sticky de 100vh. El progreso de scroll (0→1) mueve entre 4 beats con crossfade de texto, foto de planta y card lateral simultáneamente</td>
+          <td>Hero section</td>
+        </tr>
+        <tr>
+          <td><strong>Plant crossfade</strong></td>
+          <td>Opacity + transform</td>
+          <td>Easing cuadrático ease-in-out</td>
+          <td>La foto de planta del beat siguiente sube desde Y+200px mientras la actual baja en opacidad. Inicia cuando el progreso pasa 45% de cada beat</td>
+          <td>Foto central ScrollStory</td>
+        </tr>
+        <tr>
+          <td><strong>floatB</strong></td>
+          <td>CSS keyframe infinita</td>
+          <td>4s ease-in-out</td>
+          <td>La SpeechBubble flota: translateY(0)→(-10px) con rotación -3°→3°. Crea la ilusión de que la burbuja "respira"</td>
+          <td>Burbujas de diálogo</td>
+        </tr>
+        <tr>
+          <td><strong>bounce</strong></td>
+          <td>CSS keyframe infinita</td>
+          <td>2s ease-in-out</td>
+          <td>El indicador de scroll "DESLIZA" rebota translateY(0)→(8px) con translate(-50%) fijo</td>
+          <td>Indicador scroll</td>
+        </tr>
+        <tr>
+          <td><strong>fadeUp</strong></td>
+          <td>CSS keyframe / Reveal</td>
+          <td>0.8s cubic-bezier(.4,0,.2,1)</td>
+          <td>Elemento aparece con opacity 0→1 + translateY(14px→0). Se activa con IntersectionObserver al entrar en viewport</td>
+          <td>Cards, titulos de sección</td>
+        </tr>
+        <tr>
+          <td><strong>CrayonUnderline</strong></td>
+          <td>stroke-dashoffset</td>
+          <td>0.9s cubic-bezier(.4,0,.2,1)</td>
+          <td>El subrayado curvo "se dibuja" de izquierda a derecha al entrar en viewport. Dashoffset 220→0</td>
+          <td>Subrayados de H1/H2</td>
+        </tr>
+        <tr>
+          <td><strong>Card hover lift</strong></td>
+          <td>CSS transform</td>
+          <td>0.3s cubic-bezier(.4,0,.2,1)</td>
+          <td>CrayonCard se eleva translateY(-4px) al hover. Feedback táctil que indica interactividad</td>
+          <td>Todas las cards</td>
+        </tr>
+        <tr>
+          <td><strong>Button hover</strong></td>
+          <td>CSS transform</td>
+          <td>0.2s ease</td>
+          <td>CrayonButton: translateY(-2px) + rotate(-0.5deg). La micro-rotación refuerza el efecto hand-drawn</td>
+          <td>Todos los botones</td>
+        </tr>
+        <tr>
+          <td><strong>PlantRotator</strong></td>
+          <td>Opacity + scale</td>
+          <td>0.7s cubic-bezier, cada 2.8s</td>
+          <td>Las 4 variantes de maceta rotan con crossfade. La que sale hace scale(0.94) + translateY(6px) mientras la entrante sube a scale(1)</td>
+          <td>CTA rotator</td>
+        </tr>
+        <tr>
+          <td><strong>DramaticaCard msgs</strong></td>
+          <td>setTimeout escalonado</td>
+          <td>+400ms, +1400ms, +2600ms</td>
+          <td>Los mensajes de chat aparecen uno a uno con animación fadeUp, simulando una conversación en tiempo real</td>
+          <td>Card personalidad Dramática</td>
+        </tr>
+        <tr>
+          <td><strong>Nav blur</strong></td>
+          <td>CSS backdrop-filter</td>
+          <td>0.3s ease</td>
+          <td>La nav pasa de transparent a rgba(250,241,218,0.92) + blur(10px) cuando el scroll supera 40px</td>
+          <td>Barra de navegación</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 9. LAYOUT Y ESTRUCTURA ══════════════════════════════════ -->
+  <div class="section no-break">
+    <div class="section-title">
+      <div class="num">9</div>
+      Layout y estructura de páginas
+    </div>
+    <div class="section-divider"></div>
+
+    <table class="anim-table" style="border:1.5px solid rgba(61,40,23,0.12);border-radius:12px;overflow:hidden;margin-bottom:20px;">
+      <thead>
+        <tr>
+          <th>Archivo</th>
+          <th>Secciones</th>
+          <th>Propósito</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>index.html</strong></td>
+          <td>Nav → ScrollStory → Features → Personalities → Variants → CTA → Footer</td>
+          <td>Landing principal — punto de entrada</td>
+        </tr>
+        <tr>
+          <td><strong>Personalidades.html</strong></td>
+          <td>Detalle de los 4 caracteres de planta</td>
+          <td>Página informativa de personalidades</td>
+        </tr>
+        <tr>
+          <td><strong>Tienda.html</strong></td>
+          <td>Catálogo + carrito de compra</td>
+          <td>Página de conversión / e-commerce</td>
+        </tr>
+        <tr>
+          <td><strong>Como funciona.html</strong></td>
+          <td>Explicación técnica del producto</td>
+          <td>Página educativa / trust-builder</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="philosophy-box">
+      <h3>Espaciado y breakpoints</h3>
+      <p>
+        El espaciado usa <code>clamp()</code> en todas partes — nunca valores fijos para padding de secciones.
+        Ejemplo: <code>padding: clamp(60px, 9vh, 120px) clamp(20px, 5vw, 80px)</code>.
+        El breakpoint principal es <strong>900px</strong> (gg-story-grid colapsa a 1 columna)
+        y <strong>768px</strong> (nav desktop → hamburger).
+        La grid de ScrollStory es <code>1fr auto 1fr</code> en desktop y colapsa a <code>1fr</code>
+        en móvil con reorden: texto abajo, planta arriba, card abajo.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ 10. REGLAS DE DISEÑO ══════════════════════════════════ -->
+  <div class="section no-break">
+    <div class="section-title">
+      <div class="num">10</div>
+      Reglas de diseño — Lo que nunca se hace
+    </div>
+    <div class="section-divider"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div style="background:#FDF0F0;border:2px solid #E85D52;border-radius:14px;padding:20px;">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:#E85D52;margin-bottom:12px;">NUNCA</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            Usar emoji — todos los íconos son SVG dibujados a mano
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            Hardcodear colores hex — siempre usar PALETTE.nombre
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            Usar SVG sin el filtro #cr — todos los elementos gráficos necesitan jitter
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            Fuentes geométricas frías (Inter, Roboto, etc.)
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            Bordes perfectamente rectos en cards o botones
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            Colores fríos (azules tecnológicos, grises) en elementos de marca
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#E85D52;">✕</span>
+            ES modules — todo se expone vía window con Object.assign
+          </li>
+        </ul>
+      </div>
+      <div style="background:#F0F8E8;border:2px solid #5FA037;border-radius:14px;padding:20px;">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:#5FA037;margin-bottom:12px;">SIEMPRE</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Cargar crayon-v3.jsx primero — contiene CrayonDefs que inyecta los filtros
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Renderizar &lt;CrayonDefs/&gt; una vez en la raíz de la app
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Pasar el objeto <code>t</code> (tipografía) a todos los componentes de sección
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Usar clamp() para todos los tamaños de fuente y paddings de sección
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Envolver entradas de viewport con el componente Reveal para fade-in
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Usar HandIcon en lugar de cualquier ícono de librería externa
+          </li>
+          <li style="font-size:13px;color:#3D2817;padding-left:16px;position:relative;">
+            <span style="position:absolute;left:0;color:#5FA037;">✓</span>
+            Cualquier texto con filtro crayon usa <code>filter="url(#cr-text)"</code>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════ FOOTER ══════════════════════════════════ -->
+  <div class="guide-footer">
+    <div class="brand-pill">
+      <div class="brand-dot"></div>
+      <span>Gossip Garden</span>
+    </div>
+    <span>Guía de Estilo — Landing v3 · Mayo 2026</span>
+    <span>Fuente de verdad: <code>components/crayon-v3.jsx</code></span>
+  </div>
+
+</div>
+</body>
+</html>

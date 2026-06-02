@@ -44,13 +44,25 @@ Each page loads React 18 + Babel from CDN, then includes JSX files as `<script t
 - Beat-specific cards: `IntroCard`, `NameCard`, `SensorsCard`, `ChatCard`, `HistoryCard`, `SocialCard`
 - Standard sections: `Nav`, `Features`, `Personalities`, `Variants`, `CTA`, `Footer`
 
-**`tweaks-panel.jsx`** — Floating design-tweak panel. Loaded by every page. Provides:
+**`components/tweaks-panel.jsx`** — Floating design-tweak panel (loaded by `index.html`). Provides:
 - `useTweaks(defaults)` hook — syncs values with host via `postMessage` (`__edit_mode_set_keys`) and persists to the `/*EDITMODE-BEGIN*/…/*EDITMODE-END*/` JSON block in the HTML file
 - `TweaksPanel` shell + controls: `TweakSelect`, `TweakSlider`, `TweakToggle`, `TweakColor`, `TweakNumber`, `TweakText`, `TweakRadio`
 
 ### Module system
 
-There are **no ES modules**. Every file ends with `Object.assign(window, { ... })` to expose its exports globally. Load order in the HTML `<script>` tags matters: `crayon-v3.jsx` → `sections-v3.jsx` → `tweaks-panel.jsx` → inline app.
+There are **no ES modules**. Every file ends with `Object.assign(window, { ... })` to expose its exports globally. Load order in the HTML `<script>` tags matters: `components/crayon-v3.jsx` → `components/sections-v3.jsx` → `components/tweaks-panel.jsx` → inline app.
+
+### Folder layout
+
+```
+index.html, Personalidades.html, Tienda.html, Como funciona.html, style-guide.html
+components/   crayon-v3.jsx, sections-v3.jsx, tweaks-panel.jsx
+assets/
+  icons/           icon-crayon.png (logo)
+  materas/         pot product photos + color variants (pot-real, pot-hero, verde, azul, morado, naranja, VERDE2, AZUL2, NARANJA2, ROSADO2)
+  personalidades/  personality / mood renders (FELIZ, TRISTE, BRAVA, DORMILON, FelizGirasol, TristeOrquidea, BravaCactus, Dramatica)
+docs/         DESIGN-SYSTEM.md + product docs (marketing / technical)
+```
 
 ### Typography tweaks
 
@@ -61,7 +73,7 @@ Each page wires `useTweaks(TWEAK_DEFAULTS)` with `hf` (heading font) and `bf` (b
 - **No emojis** — all icons are hand-drawn SVGs via `HandIcon` or inline paths with `filter="url(#cr)"` for the crayon jitter effect
 - **Crayon filters must be in scope** — any new SVG element that needs the hand-drawn look needs `filter="url(#cr)"` (shapes) or `filter="url(#cr-text)"` (type); these filters are injected by `<CrayonDefs/>` at the app root
 - **PALETTE** is the single source of truth for all colors; never hardcode hex values that exist there
-- The `pot-real.png` asset is a photo used as the hero; `icon-crayon.png` is the logo icon
+- The `assets/materas/pot-real.png` asset is a photo used as the hero; `assets/icons/icon-crayon.png` is the logo icon
 
 ## Product context
 

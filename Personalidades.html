@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Personalidades — Gossip Garden</title>
-  <link rel="icon" type="image/png" href="assets/icon-crayon.png"/>
+  <link rel="icon" type="image/png" href="assets/icons/icon-crayon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -54,7 +54,7 @@
           display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 clamp(16px,4vw,48px)',
           background: s ? 'rgba(250,241,218,0.92)' : 'rgba(250,241,218,0.6)',backdropFilter:'blur(10px)',transition:'all 0.3s'}}>
           <a href="index.html" style={{display:'flex',alignItems:'center',gap:10,textDecoration:'none'}}>
-            <img src="assets/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
+            <img src="assets/icons/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
             <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
           </a>
           <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
@@ -127,7 +127,7 @@
     const personalities = [
       {
         name:'Alegre', plant:'Girasol', color:'#A8D5A2', bg:'#F0FAF0',
-        photo:'assets/FelizGirasol.png',
+        photo:'assets/personalidades/FelizGirasol.png',
         tagline:'Extrovertida · Luminosa · Activa',
         desc:'Un girasol vive mirando al sol. Extrovertido por naturaleza, siempre orientado hacia la luz y dispuesto a compartir cómo se siente. Si plantas un girasol, espera mensajes frecuentes llenos de energía — la maceta es su hogar, el carácter es suyo.',
         traits:['Muy comunicativa','Amante del sol','Agradecida','Tolerante','Social'],
@@ -139,7 +139,7 @@
       },
       {
         name:'Dormilona', plant:'Suculenta', color:'#B8C9E8', bg:'#EEF2FA',
-        photo:'assets/Dramatica.png',
+        photo:'assets/personalidades/Dramatica.png',
         tagline:'Tranquila · Paciente · Discreta',
         desc:'Una suculenta acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque realmente lo necesita. No exige atención constante — perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
         traits:['Poco exigente','Sombra-friendly','Mensajes breves','Tranquila','Independiente'],
@@ -151,7 +151,7 @@
       },
       {
         name:'Dramática', plant:'Orquídea', color:'#E0B8E0', bg:'#FAF0FA',
-        photo:'assets/TristeOrquidea.png',
+        photo:'assets/personalidades/TristeOrquidea.png',
         tagline:'Sensible · Intensa · Espectacular',
         desc:'Una orquídea es caprichosa con la luz, la temperatura y el riego. Cualquier cambio lo nota y lo comunica al instante. No entiende las medias tintas. Pero cuando está bien cuidada, florece de una manera que no tiene rival.',
         traits:['Muy expresiva','Alta demanda','Emocional','Fiel','Entretenida'],
@@ -163,7 +163,7 @@
       },
       {
         name:'Exigente', plant:'Cactus', color:'#F5C2C2', bg:'#FDF0F0',
-        photo:'assets/BravaCactus.png',
+        photo:'assets/personalidades/BravaCactus.png',
         tagline:'Directa · Resiliente · Independiente',
         desc:'Un cactus no necesita que lo mimen, pero sí que lo respeten. Sabe exactamente qué condiciones necesita y lo comunica sin rodeos. No pide más de lo necesario — pero cuando pide algo, va completamente en serio.',
         traits:['Directa','Constante','Alta autoestima','Sin rodeos','Leal'],

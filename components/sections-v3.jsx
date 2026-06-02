@@ -20,7 +20,7 @@ const Nav = ({ t }) => {
       background: s ? 'rgba(250,241,218,0.92)' : 'transparent', backdropFilter: s ? 'blur(10px)' : 'none',
       transition:'all 0.3s'}}>
       <div style={{display:'flex',alignItems:'center',gap:10}}>
-        <img src="assets/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
+        <img src="assets/icons/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
         <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:PALETTE.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
       </div>
       <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
@@ -120,10 +120,10 @@ const ScrollStory = ({ t }) => {
   }, []);
 
   const beats = [
-    { kicker:'HOLA, SOY TU PLANTA',       title:'Hola.\nSoy tu planta.',  body:'Por primera vez, puedo contarte cómo me siento. No solo me riegues — escúchame.',                            card:'alegre',    photo:'assets/verde.png',   speech:'¡Soy feliz contigo!', personality:'Alegre'    },
-    { kicker:'CUATRO SENTIDOS',            title:'Cuatro\nsensores.',      body:'Humedad del suelo, humedad del aire, temperatura y luz. Los mido en silencio, cada minuto.',              card:'dormilona', photo:'assets/azul.png',    speech:'Déjame dormir...',    personality:'Dormilona' },
-    { kicker:'YO INICIO LA CONVERSACIÓN', title:'Te toco\nla puerta.',    body:'Cuando tengo sed, frío o demasiada sombra, te lo digo. Sin abrir la app — yo hablo primero.',             card:'dramatica', photo:'assets/morado.png',  speech:'¡Esto es un drama!',  personality:'Dramática' },
-    { kicker:'MEMORIA DE PLANTA',          title:'Recuerdo\ntodo.',        body:'Guardo 30 días de mi vida. Cada mes, un informe de cómo crecí y qué tan feliz estuve contigo.',           card:'exigente',  photo:'assets/naranja.png', speech:'¿Ya me diste agua?',  personality:'Exigente'  },
+    { kicker:'HOLA, SOY TU PLANTA',       title:'Hola.\nSoy tu planta.',  body:'Por primera vez, puedo contarte cómo me siento. No solo me riegues — escúchame.',                            card:'alegre',    photo:'assets/materas/verde.png',   speech:'¡Soy feliz contigo!', personality:'Alegre'    },
+    { kicker:'CUATRO SENTIDOS',            title:'Cuatro\nsensores.',      body:'Humedad del suelo, humedad del aire, temperatura y luz. Los mido en silencio, cada minuto.',              card:'dormilona', photo:'assets/materas/azul.png',    speech:'Déjame dormir...',    personality:'Dormilona' },
+    { kicker:'YO INICIO LA CONVERSACIÓN', title:'Te toco\nla puerta.',    body:'Cuando tengo sed, frío o demasiada sombra, te lo digo. Sin abrir la app — yo hablo primero.',             card:'dramatica', photo:'assets/materas/morado.png',  speech:'¡Esto es un drama!',  personality:'Dramática' },
+    { kicker:'MEMORIA DE PLANTA',          title:'Recuerdo\ntodo.',        body:'Guardo 30 días de mi vida. Cada mes, un informe de cómo crecí y qué tan feliz estuve contigo.',           card:'exigente',  photo:'assets/materas/naranja.png', speech:'¿Ya me diste agua?',  personality:'Exigente'  },
   ];
 
   const FADE_START = 0.45;
@@ -340,28 +340,28 @@ const Personalities = ({ t }) => {
   const ppl = [
     {
       name:'Alegre', plant:'Girasol', color:'#F4D06F',
-      photo:'assets/FELIZ.png',
+      photo:'assets/personalidades/FELIZ.png',
       speech:'¡Mira, salió el sol!',
       trait:'Extrovertida · Luminosa · Activa',
       desc:'Extrovertida y luminosa. Te saluda cada mañana con energía y comparte su buen humor contigo. Siempre orientada hacia la luz, siempre lista para contarte cómo se siente.',
     },
     {
       name:'Dormilona', plant:'Suculenta', color:'#B8C9E8',
-      photo:'assets/DORMILON.png',
+      photo:'assets/personalidades/DORMILON.png',
       speech:'Cinco minutitos más...',
       trait:'Tranquila · Paciente · Discreta',
       desc:'Acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque de verdad lo necesita. Perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
     },
     {
       name:'Dramática', plant:'Orquídea', color:'#E0B8E0',
-      photo:'assets/TRISTE.png',
+      photo:'assets/personalidades/TRISTE.png',
       speech:'¡Llevo horas sin luz!',
       trait:'Sensible · Exigente · Espectacular',
       desc:'Sensible e intensa. Cualquier cambio en su entorno lo nota al instante y no tarda en comunicártelo. Pero cuando está bien cuidada, no tiene rival en espectacularidad.',
     },
     {
       name:'Exigente', plant:'Cactus', color:'#A8C88A',
-      photo:'assets/BRAVA.png',
+      photo:'assets/personalidades/BRAVA.png',
       speech:'Agua justa. Nada más.',
       trait:'Directa · Resiliente · Independiente',
       desc:'Sabe exactamente qué necesita y lo pide sin rodeos. Sin excesos ni contemplaciones. No exige más de lo necesario — pero cuando pide algo, va completamente en serio.',
@@ -409,10 +409,10 @@ const Personalities = ({ t }) => {
 /* ═══ VARIANTS ═══ */
 const Variants = ({ t }) => {
   const vars = [
-    {name:'Verde',  photo:'assets/VERDE2.png',  bg:'#E8F5E8'},
-    {name:'Azul',   photo:'assets/AZUL2.png',   bg:'#EEF2FA'},
-    {name:'Naranja',photo:'assets/NARANJA2.png', bg:'#FDF3E8'},
-    {name:'Rosado', photo:'assets/ROSADO2.png',  bg:'#FDF0F0'},
+    {name:'Verde',  photo:'assets/materas/VERDE2.png',  bg:'#E8F5E8'},
+    {name:'Azul',   photo:'assets/materas/AZUL2.png',   bg:'#EEF2FA'},
+    {name:'Naranja',photo:'assets/materas/NARANJA2.png', bg:'#FDF3E8'},
+    {name:'Rosado', photo:'assets/materas/ROSADO2.png',  bg:'#FDF0F0'},
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center'}}>
@@ -444,10 +444,10 @@ const Variants = ({ t }) => {
 
 /* ═══ CTA ═══ */
 const ROTATOR_IMGS = [
-  'assets/verde.png',
-  'assets/azul.png',
-  'assets/morado.png',
-  'assets/naranja.png',
+  'assets/materas/verde.png',
+  'assets/materas/azul.png',
+  'assets/materas/morado.png',
+  'assets/materas/naranja.png',
 ];
 
 const PlantRotator = () => {
@@ -520,7 +520,7 @@ const Footer = ({ t }) => (
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:28,maxWidth:1080,margin:'0 auto'}}>
       <div>
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-          <img src="assets/icon-crayon.png" alt="" style={{width:42,height:42,objectFit:'contain'}}/>
+          <img src="assets/icons/icon-crayon.png" alt="" style={{width:42,height:42,objectFit:'contain'}}/>
           <span style={{fontFamily:t.hf,fontWeight:800,fontSize:16,color:PALETTE.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
         </div>
         <p style={{fontFamily:t.bf,fontSize:12.5,color:PALETTE.inkSoft,lineHeight:1.5,opacity:.8}}>No solo la riegues, escúchala.</p>
