@@ -40,33 +40,119 @@ const Nav = ({ t }) => {
   );
 };
 
-const BeatPlantVisual = ({ curBeat, nextBeat, tE, t }) => (
-  <div style={{position:'relative',width:'100%'}}>
-    <div style={{position:'absolute',bottom:'-4%',left:'50%',transform:'translateX(-50%)',
-      width:'78%',height:'8%',
-      background:'radial-gradient(ellipse at center,rgba(61,40,23,0.28) 0%,rgba(61,40,23,0) 70%)',
-      filter:'blur(4px)',zIndex:-1}}/>
-    <img src={curBeat.photo} alt={curBeat.personality}
-      style={{width:'100%',height:'auto',display:'block',
-        filter:'drop-shadow(0 8px 14px rgba(61,40,23,0.15)) drop-shadow(0 22px 36px rgba(61,40,23,0.22))',
-        opacity: 1 - tE, transition:'none'}}/>
-    {curBeat !== nextBeat && (
-      <img src={nextBeat.photo} alt={nextBeat.personality}
-        style={{position:'absolute',inset:0,width:'100%',height:'auto',
-          filter:'drop-shadow(0 8px 14px rgba(61,40,23,0.15)) drop-shadow(0 22px 36px rgba(61,40,23,0.22))',
-          opacity: tE,
-          transform:`translateY(${(1 - tE) * 200}px)`,
-          transition:'none'}}/>
-    )}
-    <div style={{position:'absolute',top:'-4%',right:'-14%',animation:'floatB 4s ease-in-out infinite'}}>
-      <SpeechBubble fill={PALETTE.cream} color={PALETTE.ink}>
-        <span style={{fontFamily:t.bf,fontSize:11,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>
-          {tE > 0.5 ? nextBeat.speech : curBeat.speech}
-        </span>
-      </SpeechBubble>
+/* ── Scroll-driven 360° turntable of the real pot ─────────────────────────────
+   120 pre-rendered WebP frames in assets/materas/maceta360/ are scrubbed to scroll
+   position via GSAP ScrollTrigger and painted to a <canvas>. Falls back to the
+   React `progress` value if GSAP (loaded from CDN) is unavailable. */
+const MACETA_FRAMES = 100;                  // clean 360° turntable (dup/frozen source frames removed)
+const MACETA_ASPECT = '318 / 353';          // matches the cropped frame size
+const macetaFrameSrc = i => `assets/materas/maceta360/${String(i + 1).padStart(3, '0')}.webp`;
+
+const Maceta360 = ({ containerRef, curBeat, nextBeat, tE, t, progress }) => {
+  const canvasRef  = React.useRef(null);
+  const imagesRef  = React.useRef([]);
+  const setFrameRef = React.useRef(() => {});
+  const gsapActive = React.useRef(false);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let frame = 0;
+
+    const draw = () => {
+      const cw = canvas.width, ch = canvas.height;
+      if (!cw || !ch) return;
+      ctx.clearRect(0, 0, cw, ch);
+      const img = imagesRef.current[frame];
+      if (!img || !img.complete || !img.naturalWidth) return;
+      ctx.imageSmoothingEnabled = true;     // re-set each draw: changing canvas.width resets ctx state
+      ctx.imageSmoothingQuality = 'high';
+      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+      const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+    };
+    const setFrame = (i) => {
+      frame = Math.max(0, Math.min(MACETA_FRAMES - 1, i | 0));
+      draw();
+    };
+    setFrameRef.current = setFrame;
+
+    const sizeCanvas = () => {
+      const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width  = Math.round(rect.width  * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      draw();
+    };
+
+    // Preload every frame; size the canvas once the first one decodes.
+    let firstLoaded = false;
+    imagesRef.current = [];
+    for (let i = 0; i < MACETA_FRAMES; i++) {
+      const img = new Image();
+      img.onload = () => { if (!firstLoaded) { firstLoaded = true; sizeCanvas(); } };
+      img.src = macetaFrameSrc(i);
+      imagesRef.current.push(img);
+    }
+    sizeCanvas();
+    window.addEventListener('resize', sizeCanvas);
+
+    // Scrub the frame to scroll position with GSAP ScrollTrigger.
+    let gctx;
+    if (window.gsap && window.ScrollTrigger && containerRef.current) {
+      const { gsap, ScrollTrigger } = window;
+      gsap.registerPlugin(ScrollTrigger);
+      gsapActive.current = true;
+      const fo = { f: 0 };
+      gctx = gsap.context(() => {
+        gsap.to(fo, {
+          f: MACETA_FRAMES - 1,
+          snap: 'f',            // keep the frame property on integer values
+          ease: 'none',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.4,
+          },
+          onUpdate: () => setFrame(fo.f),
+        });
+        ScrollTrigger.refresh();
+      });
+    }
+
+    return () => {
+      window.removeEventListener('resize', sizeCanvas);
+      if (gctx) gctx.revert();
+      gsapActive.current = false;
+    };
+  }, [containerRef]);
+
+  // Fallback driver: when GSAP isn't present, follow the React scroll progress.
+  React.useEffect(() => {
+    if (!gsapActive.current) setFrameRef.current(Math.round(progress * (MACETA_FRAMES - 1)));
+  }, [progress]);
+
+  return (
+    <div style={{position:'relative',width:'100%'}}>
+      <div style={{position:'absolute',bottom:'-4%',left:'50%',transform:'translateX(-50%)',
+        width:'78%',height:'8%',
+        background:'radial-gradient(ellipse at center,rgba(61,40,23,0.28) 0%,rgba(61,40,23,0) 70%)',
+        filter:'blur(4px)',zIndex:-1}}/>
+      <canvas ref={canvasRef} aria-label={curBeat.personality}
+        style={{width:'100%',aspectRatio:MACETA_ASPECT,display:'block',
+          filter:'drop-shadow(0 8px 14px rgba(61,40,23,0.15)) drop-shadow(0 22px 36px rgba(61,40,23,0.22))'}}/>
+      <div style={{position:'absolute',top:'2%',right:'-4%',animation:'floatB 4s ease-in-out infinite'}}>
+        <SpeechBubble fill={PALETTE.cream} color={PALETTE.ink} style={{padding:'13px 20px'}}>
+          <span style={{fontFamily:t.bf,fontSize:14,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>
+            {tE > 0.5 ? nextBeat.speech : curBeat.speech}
+          </span>
+        </SpeechBubble>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* Lives at module scope — NOT inside ScrollStory — so React never remounts it on scroll re-renders */
 const StoryTextContent = ({ beat, isFirst, t }) => {
@@ -119,6 +205,56 @@ const ScrollStory = ({ t }) => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Story-telling snap: ONE scroll gesture advances exactly one beat (Apple-style).
+  // While the story fills the viewport we hijack the wheel and animate the scroll
+  // to the next/prev beat; the maceta scrub follows the animated scroll. At the
+  // first/last beat we let the native scroll through so the page can exit normally.
+  const NBEATS = 4;
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let animating = false, cooldownUntil = 0;
+
+    const snapPx = () => {
+      const start = el.getBoundingClientRect().top + window.scrollY;
+      const range = el.offsetHeight - window.innerHeight;
+      return Array.from({ length: NBEATS }, (_, i) => start + (i / (NBEATS - 1)) * range);
+    };
+    const nearestBeat = () => {
+      const pts = snapPx(), y = window.scrollY;
+      let best = 0, bd = Infinity;
+      pts.forEach((p, i) => { const d = Math.abs(p - y); if (d < bd) { bd = d; best = i; } });
+      return best;
+    };
+    const animateTo = (y) => {
+      animating = true;
+      const startY = window.scrollY, dist = y - startY, dur = 700;
+      const ease = p => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+      let t0 = null;
+      const step = (ts) => {
+        if (t0 === null) t0 = ts;
+        const p = Math.min(1, (ts - t0) / dur);
+        window.scrollTo(0, startY + dist * ease(p));
+        if (p < 1) requestAnimationFrame(step);
+        else { animating = false; cooldownUntil = performance.now() + 220; }
+      };
+      requestAnimationFrame(step);
+    };
+    const onWheel = (e) => {
+      const r = el.getBoundingClientRect();
+      const active = r.top <= 1 && r.bottom > window.innerHeight + 1;  // story fills viewport
+      if (!active) return;
+      if (animating || performance.now() < cooldownUntil) { e.preventDefault(); return; }
+      const dir = e.deltaY > 0 ? 1 : -1;
+      const next = nearestBeat() + dir;
+      if (next < 0 || next > NBEATS - 1) return;   // at an edge → let native scroll exit
+      e.preventDefault();
+      animateTo(snapPx()[next]);
+    };
+    window.addEventListener('wheel', onWheel, { passive: false });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, []);
+
   const beats = [
     { kicker:'HOLA, SOY TU PLANTA',       title:'Hola.\nSoy tu planta.',  body:'Por primera vez, puedo contarte cómo me siento. No solo me riegues — escúchame.',                            card:'alegre',    photo:'assets/materas/verde.png',   speech:'¡Soy feliz contigo!', personality:'Alegre'    },
     { kicker:'CUATRO SENTIDOS',            title:'Cuatro\nsensores.',      body:'Humedad del suelo, humedad del aire, temperatura y luz. Los mido en silencio, cada minuto.',              card:'dormilona', photo:'assets/materas/azul.png',    speech:'Déjame dormir...',    personality:'Dormilona' },
@@ -151,18 +287,20 @@ const ScrollStory = ({ t }) => {
 
           {/* LEFT — text, always render both layers so CrayonUnderline never remounts */}
           <div style={{maxWidth:440,position:'relative',height:'clamp(260px,38vh,360px)'}}>
+            {/* Fade through blank: outgoing text clears before incoming appears,
+                so the two never overlap and letters never superimpose. */}
             <div style={{position:'absolute',inset:0,
-              opacity:1-tE, transition:'none',
+              opacity:Math.max(0,1-tE*2), transition:'none',
               pointerEvents:tE>0.5?'none':'auto'}}>
               <StoryTextContent beat={curBeat} isFirst={curIdx===0} t={t}/>
             </div>
             <div style={{position:'absolute',inset:0,
-              opacity:tE, transition:'none',
+              opacity:Math.max(0,tE*2-1), transition:'none',
               pointerEvents:tE<0.5?'none':'auto'}}>
               <StoryTextContent beat={nextBeat} isFirst={nextIdx===0} t={t}/>
             </div>
             {/* Progress dots */}
-            <div style={{position:'absolute',bottom:0,left:0,display:'flex',gap:6}}>
+            <div style={{position:'absolute',bottom:'-36px',left:0,display:'flex',gap:6}}>
               {beats.map((_,i)=>{
                 const dist=Math.abs(rawBeat-i);
                 const w=dist<1?8+20*Math.max(0,1-dist):8;
@@ -175,19 +313,20 @@ const ScrollStory = ({ t }) => {
           {/* CENTER — plant drifts vertically between beats */}
           <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
             <div style={{
-              width:'clamp(220px,26vw,360px)',
+              width:'clamp(320px,42vw,560px)',
               transform:'none',
               transition:'none',
             }}>
-              <BeatPlantVisual curBeat={curBeat} nextBeat={nextBeat} tE={tE} t={t}/>
+              <Maceta360 containerRef={containerRef} curBeat={curBeat} nextBeat={nextBeat} tE={tE} t={t} progress={progress}/>
             </div>
           </div>
 
-          {/* RIGHT — cards */}
+          {/* RIGHT — cards. Fade through blank (like the left text) so two
+              different cards never overlap mid-transition. */}
           <div style={{display:'flex',justifyContent:'flex-start',position:'relative'}}>
             <div style={{
               position:curIdx===nextIdx?'relative':'absolute',
-              opacity:1-tE, transition:'none',
+              opacity:Math.max(0,1-tE*2), transition:'none',
               pointerEvents:tE>0.5?'none':'auto'}}>
               {curBeat.card==='alegre'    && <AlegreCard    key={'c'+curIdx} t={t}/>}
               {curBeat.card==='dormilona' && <DormilonaCard key={'c'+curIdx} t={t}/>}
@@ -196,7 +335,7 @@ const ScrollStory = ({ t }) => {
             </div>
             {curIdx !== nextIdx && (
               <div style={{
-                opacity:tE, transition:'none',
+                opacity:Math.max(0,tE*2-1), transition:'none',
                 pointerEvents:tE<0.5?'none':'auto'}}>
                 {nextBeat.card==='alegre'    && <AlegreCard    key={'n'+nextIdx} t={t}/>}
                 {nextBeat.card==='dormilona' && <DormilonaCard key={'n'+nextIdx} t={t}/>}
