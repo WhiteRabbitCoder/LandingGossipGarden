@@ -215,15 +215,13 @@ const ScrollStory = ({ t }) => {
     if (!el) return;
     let animating = false, cooldownUntil = 0;
 
-    // Progress at which each beat is fully settled (tE≈0). The beats fade out in
-    // the latter half of their 1/4 segment (FADE_START), so we land just INSIDE
-    // each segment — not at the 1/3 marks, which fall mid-transition and render
-    // the text/cards half-faded (grey).
-    const BEAT_PROGRESS = [0.06, 0.31, 0.56, 0.81];
+    // Evenly spaced snap points: 0, 1/3, 2/3, 1 (even rotation per scroll, and the
+    // last beat sits at the very end so one more scroll exits — no dead zone).
+    // FADE_START (raised to 0.75) keeps every beat fully solid at these marks.
     const snapPx = () => {
       const start = el.getBoundingClientRect().top + window.scrollY;
       const range = el.offsetHeight - window.innerHeight;
-      return BEAT_PROGRESS.map(p => start + p * range);
+      return Array.from({ length: NBEATS }, (_, i) => start + (i / (NBEATS - 1)) * range);
     };
     const nearestBeat = () => {
       const pts = snapPx(), y = window.scrollY;
@@ -267,7 +265,7 @@ const ScrollStory = ({ t }) => {
     { kicker:'MEMORIA DE PLANTA',          title:'Recuerdo\ntodo.',        body:'Guardo 30 días de mi vida. Cada mes, un informe de cómo crecí y qué tan feliz estuve contigo.',           card:'exigente',  photo:'assets/materas/naranja.png', speech:'¿Ya me diste agua?',  personality:'Exigente'  },
   ];
 
-  const FADE_START = 0.45;
+  const FADE_START = 0.75;   // beats stay solid across most of each segment; transition only in the last 25% (so the 1/3, 2/3 snap marks land solid, not grey)
   const rawBeat  = progress * beats.length * 0.9999;
   const curIdx   = Math.min(beats.length - 1, Math.floor(rawBeat));
   const nextIdx  = Math.min(beats.length - 1, curIdx + 1);
