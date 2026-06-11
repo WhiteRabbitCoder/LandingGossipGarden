@@ -488,7 +488,7 @@ const Personalities = ({ t }) => {
       desc:'Extrovertida y luminosa. Te saluda cada mañana con energía y comparte su buen humor contigo. Siempre orientada hacia la luz, siempre lista para contarte cómo se siente.',
     },
     {
-      name:'Dormilona', plant:'Suculenta', color:'#B8C9E8',
+      name:'Dormilona', plant:'Suculenta', color:'#8FBEEE',
       photo:'assets/personalidades/dormilona.webp',
       speech:'Cinco minutitos más...',
       trait:'Tranquila · Paciente · Discreta',
@@ -525,8 +525,8 @@ const Personalities = ({ t }) => {
         {ppl.map((p,i)=>(
           <Reveal key={i} delay={i*120}>
             <CrayonCard fill={`${p.color}40`} stroke={PALETTE.ink} sw={2.5} radius={24} padding={20}
-              style={{position:'relative',marginTop:28}}>
-              <div style={{position:'absolute',top:-24,left:'50%',transform:'translateX(-50%)',zIndex:2}}>
+              style={{position:'relative',marginTop:48}}>
+              <div style={{position:'absolute',top:-44,left:'50%',transform:'translateX(-50%)',zIndex:2}}>
                 <SpeechBubble fill={PALETTE.cream} color={PALETTE.ink}>
                   <span style={{fontFamily:t.bf,fontSize:11,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>{p.speech}</span>
                 </SpeechBubble>
