@@ -586,10 +586,10 @@ const Variants = ({ t }) => {
 
 /* ═══ CTA ═══ */
 const ROTATOR_IMGS = [
-  'assets/materas/verde.png',
-  'assets/materas/azul.png',
-  'assets/materas/morado.png',
-  'assets/materas/naranja.png',
+  'assets/materas/animadas/1.webp',   // rosada · feliz
+  'assets/materas/animadas/2.webp',   // lila · dramática
+  'assets/materas/animadas/3.webp',   // azul · dormilona
+  'assets/materas/animadas/4.webp',   // amarilla · exigente
 ];
 
 const PlantRotator = () => {
