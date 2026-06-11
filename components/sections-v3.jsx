@@ -551,10 +551,10 @@ const Personalities = ({ t }) => {
 /* ═══ VARIANTS ═══ */
 const Variants = ({ t }) => {
   const vars = [
-    {name:'Verde',  photo:'assets/materas/VERDE2.png',  bg:'#E8F5E8'},
-    {name:'Azul',   photo:'assets/materas/AZUL2.png',   bg:'#EEF2FA'},
-    {name:'Naranja',photo:'assets/materas/NARANJA2.png', bg:'#FDF3E8'},
-    {name:'Rosado', photo:'assets/materas/ROSADO2.png',  bg:'#FDF0F0'},
+    {name:'Rosado',  photo:'assets/materas/sincara/1.webp', bg:'#FBE9EC'},
+    {name:'Azul',    photo:'assets/materas/sincara/2.webp', bg:'#E9F1F6'},
+    {name:'Lila',    photo:'assets/materas/sincara/3.webp', bg:'#F1EAF7'},
+    {name:'Amarillo',photo:'assets/materas/sincara/4.webp', bg:'#FBF5DC'},
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center'}}>
