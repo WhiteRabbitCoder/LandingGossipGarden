@@ -215,10 +215,15 @@ const ScrollStory = ({ t }) => {
     if (!el) return;
     let animating = false, cooldownUntil = 0;
 
+    // Progress at which each beat is fully settled (tE≈0). The beats fade out in
+    // the latter half of their 1/4 segment (FADE_START), so we land just INSIDE
+    // each segment — not at the 1/3 marks, which fall mid-transition and render
+    // the text/cards half-faded (grey).
+    const BEAT_PROGRESS = [0.06, 0.31, 0.56, 0.81];
     const snapPx = () => {
       const start = el.getBoundingClientRect().top + window.scrollY;
       const range = el.offsetHeight - window.innerHeight;
-      return Array.from({ length: NBEATS }, (_, i) => start + (i / (NBEATS - 1)) * range);
+      return BEAT_PROGRESS.map(p => start + p * range);
     };
     const nearestBeat = () => {
       const pts = snapPx(), y = window.scrollY;
