@@ -551,10 +551,10 @@ const Personalities = ({ t }) => {
 /* ═══ VARIANTS ═══ */
 const Variants = ({ t }) => {
   const vars = [
-    {name:'Rosado',  photo:'assets/materas/sincara/1.webp', bg:'#FBE9EC'},
-    {name:'Azul',    photo:'assets/materas/sincara/2.webp', bg:'#E9F1F6'},
-    {name:'Lila',    photo:'assets/materas/sincara/3.webp', bg:'#F1EAF7'},
-    {name:'Amarillo',photo:'assets/materas/sincara/4.webp', bg:'#FBF5DC'},
+    {name:'Coral',   photo:'assets/materas/sincara/1.webp', bg:'#FBE9EC'},
+    {name:'Cielo',   photo:'assets/materas/sincara/2.webp', bg:'#E9F1F6'},
+    {name:'Lavanda', photo:'assets/materas/sincara/3.webp', bg:'#F1EAF7'},
+    {name:'Sunny',   photo:'assets/materas/sincara/4.webp', bg:'#FBF5DC'},
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center'}}>
@@ -573,7 +573,7 @@ const Variants = ({ t }) => {
               <div style={{margin:'0 auto 10px',display:'flex',justifyContent:'center'}}>
                 <img src={v.photo} alt={v.name}
                   style={{height:120,width:'auto',objectFit:'contain',
-                    filter:'drop-shadow(0 4px 10px rgba(61,40,23,0.18))'}}/>
+                    filter:'saturate(0.82) drop-shadow(0 4px 10px rgba(61,40,23,0.18))'}}/>
               </div>
               <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:17,color:PALETTE.ink,marginBottom:8}}>{v.name}</h3>
             </CrayonCard>
