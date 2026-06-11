@@ -478,39 +478,54 @@ const Features = ({ t }) => {
 };
 
 /* ═══ PERSONALITIES ═══ */
+// Mismatched, hand-drawn speech-bubble shapes — each personality gets its own.
+const _star = (pts, rxO, ryO, rxI, ryI, cx=50, cy=30) => {
+  let d='';
+  for (let i=0;i<pts*2;i++){
+    const out=i%2===0, a=Math.PI/pts*i-Math.PI/2;
+    const x=cx+Math.cos(a)*(out?rxO:rxI), y=cy+Math.sin(a)*(out?ryO:ryI);
+    d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+  }
+  return d+'Z';
+};
+const BUBBLE = {
+  oval:    { pad:'11px 22px', d:'M50,4 C76,4 97,14 97,28 C97,42 76,51 50,51 C24,51 3,42 3,28 C3,14 24,4 50,4 Z M44,49 L50,63 L57,49 Z' },
+  burst:   { pad:'15px 26px', d:_star(9, 49,29, 39,22) },
+  spike:   { pad:'15px 27px', d:_star(14, 49,31, 33,18) },
+  rect:    { pad:'11px 20px', d:'M7,7 L93,7 L93,45 L57,45 L50,61 L43,45 L7,45 Z' },
+  rounded: { pad:'10px 16px', d:'M10,8 Q4,8 4,18 L4,38 Q4,48 14,48 L24,48 L20,58 L32,48 L86,48 Q96,48 96,38 L96,18 Q96,8 86,8 Z' },
+};
+const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, children }) => {
+  const b = BUBBLE[shape] || BUBBLE.rounded;
+  return (
+    <div style={{position:'relative',display:'inline-block',padding:b.pad}}>
+      <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:0}} viewBox="0 0 100 64" preserveAspectRatio="none">
+        <path d={b.d} fill={fill} stroke={color} strokeWidth="2" filter="url(#cr)"/>
+      </svg>
+      <span style={{position:'relative',zIndex:1}}>{children}</span>
+    </div>
+  );
+};
+
 const Personalities = ({ t }) => {
+  // w = ancho de tarjeta (tamaños distintos), dy = baja la tarjeta (regadas),
+  // rot = inclinación, bubble = forma de la burbuja.
   const ppl = [
-    {
-      name:'Alegre', plant:'Girasol', color:'#F4D06F',
-      photo:'assets/personalidades/alegre.webp',
-      speech:'¡Mira, salió el sol!',
-      trait:'Extrovertida · Luminosa · Activa',
-      desc:'Extrovertida y luminosa. Te saluda cada mañana con energía y comparte su buen humor contigo. Siempre orientada hacia la luz, siempre lista para contarte cómo se siente.',
-    },
-    {
-      name:'Dormilona', plant:'Suculenta', color:'#8FBEEE',
-      photo:'assets/personalidades/dormilona.webp',
-      speech:'Cinco minutitos más...',
-      trait:'Tranquila · Paciente · Discreta',
-      desc:'Acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque de verdad lo necesita. Perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
-    },
-    {
-      name:'Dramática', plant:'Orquídea', color:'#E0B8E0',
-      photo:'assets/personalidades/dramatica.webp',
-      speech:'¡Llevo horas sin luz!',
-      trait:'Sensible · Exigente · Espectacular',
-      desc:'Sensible e intensa. Cualquier cambio en su entorno lo nota al instante y no tarda en comunicártelo. Pero cuando está bien cuidada, no tiene rival en espectacularidad.',
-    },
-    {
-      name:'Exigente', plant:'Cactus', color:'#A8C88A',
-      photo:'assets/personalidades/exigente.webp',
-      speech:'Agua justa. Nada más.',
-      trait:'Directa · Resiliente · Independiente',
-      desc:'Sabe exactamente qué necesita y lo pide sin rodeos. Sin excesos ni contemplaciones. No exige más de lo necesario — pero cuando pide algo, va completamente en serio.',
-    },
+    { name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/alegre.webp',
+      speech:'¡Salió el sol!',       trait:'Luminosa', desc:'Te saluda cada mañana con buen humor.',
+      bubble:'burst', w:296, dy:18,  rot:-3 },
+    { name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/dormilona.webp',
+      speech:'Cinco minutos más...',  trait:'Tranquila', desc:'Calladita; rara vez pide algo.',
+      bubble:'oval',  w:214, dy:104, rot:3.5 },
+    { name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/dramatica.webp',
+      speech:'¡Esto es un drama!',    trait:'Intensa', desc:'Lo siente todo y te lo cuenta.',
+      bubble:'spike', w:252, dy:4,   rot:-2 },
+    { name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/exigente.webp',
+      speech:'Agua justa. Nada más.', trait:'Directa', desc:'Sabe lo que quiere y lo pide.',
+      bubble:'rect',  w:224, dy:72,  rot:2.5 },
   ];
   return (
-    <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center'}}>
+    <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center',overflow:'hidden'}}>
       <Reveal>
         <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:PALETTE.leafDk,marginBottom:12}}>EL CARÁCTER DE TU PLANTA</div>
         <h2 style={{fontFamily:t.hf,fontSize:'clamp(28px,4vw,46px)',fontWeight:800,color:PALETTE.ink}}>
@@ -521,26 +536,29 @@ const Personalities = ({ t }) => {
           Cada maceta desarrolla su propio carácter. ¿Cuál va contigo?
         </p>
       </Reveal>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:28,maxWidth:1040,margin:'56px auto 0'}}>
+      <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start',
+        gap:'clamp(16px,2.2vw,34px)',maxWidth:1080,margin:'80px auto 0'}}>
         {ppl.map((p,i)=>(
           <Reveal key={i} delay={i*120}>
-            <CrayonCard fill={`${p.color}40`} stroke={PALETTE.ink} sw={2.5} radius={24} padding={20}
-              style={{position:'relative',marginTop:48}}>
-              <div style={{position:'absolute',top:-44,left:'50%',transform:'translateX(-50%)',zIndex:2}}>
-                <SpeechBubble fill={PALETTE.cream} color={PALETTE.ink}>
-                  <span style={{fontFamily:t.bf,fontSize:11,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>{p.speech}</span>
-                </SpeechBubble>
-              </div>
-              <div style={{margin:'16px auto 10px',display:'flex',justifyContent:'center'}}>
-                <img src={p.photo} alt={p.name}
-                  style={{height:140,width:'auto',objectFit:'contain',
-                    filter:'drop-shadow(0 4px 10px rgba(61,40,23,0.18))'}}/>
-              </div>
-              <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:20,color:PALETTE.ink,marginBottom:4}}>{p.name}</h3>
-              <CrayonUnderline color={`${p.color}`} w="50%" delay={200+i*100} h={3}/>
-              <div style={{fontFamily:t.bf,fontSize:11,color:PALETTE.inkSoft,marginTop:8,marginBottom:8,letterSpacing:'.5px'}}>{p.trait}</div>
-              <p style={{fontFamily:t.bf,fontSize:12.5,color:PALETTE.inkSoft,lineHeight:1.55,marginTop:4}}>{p.desc}</p>
-            </CrayonCard>
+            <div style={{width:p.w,maxWidth:'82vw',marginTop:p.dy,transform:`rotate(${p.rot}deg)`}}>
+              <CrayonCard fill={`${p.color}40`} stroke={PALETTE.ink} sw={2.5} radius={24} padding={20}
+                style={{position:'relative'}}>
+                <div style={{position:'absolute',top:-46,left:'50%',transform:'translateX(-50%)',zIndex:2}}>
+                  <FancyBubble shape={p.bubble} fill={PALETTE.cream} color={PALETTE.ink}>
+                    <span style={{fontFamily:t.bf,fontSize:11,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>{p.speech}</span>
+                  </FancyBubble>
+                </div>
+                <div style={{margin:'14px auto 8px',display:'flex',justifyContent:'center'}}>
+                  <img src={p.photo} alt={p.name}
+                    style={{height:128,width:'auto',objectFit:'contain',
+                      filter:'drop-shadow(0 4px 10px rgba(61,40,23,0.18))'}}/>
+                </div>
+                <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:20,color:PALETTE.ink,marginBottom:4}}>{p.name}</h3>
+                <CrayonUnderline color={`${p.color}`} w="46%" delay={200+i*100} h={3}/>
+                <div style={{fontFamily:t.bf,fontSize:11,color:PALETTE.inkSoft,marginTop:8,letterSpacing:'.5px',fontWeight:700}}>{p.trait}</div>
+                <p style={{fontFamily:t.bf,fontSize:12.5,color:PALETTE.inkSoft,lineHeight:1.5,marginTop:6}}>{p.desc}</p>
+              </CrayonCard>
+            </div>
           </Reveal>
         ))}
       </div>
