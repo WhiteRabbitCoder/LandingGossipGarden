@@ -46,6 +46,15 @@
     }
     @media(min-width:769px){.gg-nav-m{display:none!important}}
 
+    /* Personalities collage: stack the mosaic on smaller screens */
+    @media(max-width:820px){
+      .gg-pers-mosaic{grid-template-columns:1fr 1fr!important;grid-template-areas:"a b" "c d"!important;height:auto!important}
+      .gg-pers-mosaic>div{min-height:300px}
+    }
+    @media(max-width:460px){
+      .gg-pers-mosaic{grid-template-columns:1fr!important;grid-template-areas:"a" "b" "c" "d"!important}
+    }
+
     ::-webkit-scrollbar{width:8px}
     ::-webkit-scrollbar-track{background:#FAF1DA}
     ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
@@ -67,9 +76,9 @@
   <!-- Block native image drag in every browser (incl. Firefox, which ignores user-drag) -->
   <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
 
-  <script type="text/babel" src="components/crayon-v3.jsx?v=20260612h"></script>
-  <script type="text/babel" src="components/sections-v3.jsx?v=20260612h"></script>
-  <script type="text/babel" src="components/tweaks-panel.jsx?v=20260612h"></script>
+  <script type="text/babel" src="components/crayon-v3.jsx?v=20260612i"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260612i"></script>
+  <script type="text/babel" src="components/tweaks-panel.jsx?v=20260612i"></script>
 
   <script type="text/babel">
     const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
