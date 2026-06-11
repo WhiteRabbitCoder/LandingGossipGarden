@@ -482,28 +482,28 @@ const Personalities = ({ t }) => {
   const ppl = [
     {
       name:'Alegre', plant:'Girasol', color:'#F4D06F',
-      photo:'assets/personalidades/FELIZ.png',
+      photo:'assets/personalidades/alegre.webp',
       speech:'¡Mira, salió el sol!',
       trait:'Extrovertida · Luminosa · Activa',
       desc:'Extrovertida y luminosa. Te saluda cada mañana con energía y comparte su buen humor contigo. Siempre orientada hacia la luz, siempre lista para contarte cómo se siente.',
     },
     {
       name:'Dormilona', plant:'Suculenta', color:'#B8C9E8',
-      photo:'assets/personalidades/DORMILON.png',
+      photo:'assets/personalidades/dormilona.webp',
       speech:'Cinco minutitos más...',
       trait:'Tranquila · Paciente · Discreta',
       desc:'Acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque de verdad lo necesita. Perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
     },
     {
       name:'Dramática', plant:'Orquídea', color:'#E0B8E0',
-      photo:'assets/personalidades/TRISTE.png',
+      photo:'assets/personalidades/dramatica.webp',
       speech:'¡Llevo horas sin luz!',
       trait:'Sensible · Exigente · Espectacular',
       desc:'Sensible e intensa. Cualquier cambio en su entorno lo nota al instante y no tarda en comunicártelo. Pero cuando está bien cuidada, no tiene rival en espectacularidad.',
     },
     {
       name:'Exigente', plant:'Cactus', color:'#A8C88A',
-      photo:'assets/personalidades/BRAVA.png',
+      photo:'assets/personalidades/exigente.webp',
       speech:'Agua justa. Nada más.',
       trait:'Directa · Resiliente · Independiente',
       desc:'Sabe exactamente qué necesita y lo pide sin rodeos. Sin excesos ni contemplaciones. No exige más de lo necesario — pero cuando pide algo, va completamente en serio.',
