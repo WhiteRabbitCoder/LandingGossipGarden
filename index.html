@@ -8,6 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    /* Stop images/canvas from being dragged (ugly ghost) or text-selected */
+    img, canvas, svg { -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; user-drag: none;
+      -webkit-user-select: none; -moz-user-select: none; user-select: none; }
     /* NOTE: no `scroll-behavior:smooth` here — it conflicts with GSAP ScrollTrigger / wheel snapping in ScrollStory */
     body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
 
@@ -60,6 +63,9 @@
 </head>
 <body>
   <div id="root"></div>
+
+  <!-- Block native image drag in every browser (incl. Firefox, which ignores user-drag) -->
+  <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
 
   <script type="text/babel" src="components/crayon-v3.jsx?v=20260612c"></script>
   <script type="text/babel" src="components/sections-v3.jsx?v=20260612c"></script>
