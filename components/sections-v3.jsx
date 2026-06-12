@@ -506,21 +506,22 @@ const Personalities = ({ t }) => {
           <div style={{position:'absolute',width:'min(560px,86%)',aspectRatio:'1 / 1',borderRadius:'50%',
             background:'#F4D06F55',top:'46%',left:'60%',transform:'translate(-50%,-50%)',zIndex:0}}/>
           <div className="gg-pers-mosaic" style={{position:'relative',zIndex:1,display:'grid',
-            gridTemplateColumns:'1.3fr 1fr 1.3fr',
+            gridTemplateColumns:'1.15fr 1fr 1.15fr',
+            gridTemplateRows:'1fr 1fr',
             gridTemplateAreas:'"a b d" "a c d"',
-            gap:16,height:'clamp(440px,48vw,540px)'}}>
+            gap:16,height:'clamp(440px,50vw,560px)'}}>
             {ppl.map((p,i)=>(
-              <div key={p.area} style={{gridArea:p.area,filter:'drop-shadow(0 12px 22px rgba(61,40,23,0.20))'}}>
-                <CrayonCard fill={`${p.color}55`} stroke={PALETTE.ink} sw={2.5} radius={24} padding={16}
+              <div key={p.area} style={{gridArea:p.area,minHeight:0,filter:'drop-shadow(0 12px 22px rgba(61,40,23,0.20))'}}>
+                <CrayonCard fill={`${p.color}55`} stroke={PALETTE.ink} sw={2.5} radius={24} padding={14}
                   style={{height:'100%',display:'flex',flexDirection:'column'}}>
                   <div style={{flex:1,minHeight:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
                     <img src={p.photo} alt={p.name}
-                      style={{maxHeight:'100%',maxWidth:'92%',width:'auto',objectFit:'contain',
+                      style={{height:'100%',width:'100%',objectFit:'contain',
                         filter:'drop-shadow(0 4px 8px rgba(61,40,23,0.18))'}}/>
                   </div>
-                  <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:'clamp(17px,1.6vw,21px)',color:PALETTE.ink,marginBottom:3}}>{p.name}</h3>
+                  <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:'clamp(16px,1.5vw,20px)',color:PALETTE.ink,margin:'4px 0 2px'}}>{p.name}</h3>
                   <div style={{fontFamily:t.bf,fontSize:11,color:PALETTE.inkSoft,fontWeight:700,letterSpacing:'.5px'}}>{p.trait}</div>
-                  <p style={{fontFamily:t.bf,fontSize:12,color:PALETTE.inkSoft,lineHeight:1.45,marginTop:5}}>{p.desc}</p>
+                  <p style={{fontFamily:t.bf,fontSize:12,color:PALETTE.inkSoft,lineHeight:1.4,margin:'4px 0 0'}}>{p.desc}</p>
                 </CrayonCard>
               </div>
             ))}
