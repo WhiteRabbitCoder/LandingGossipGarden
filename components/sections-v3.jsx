@@ -478,15 +478,44 @@ const Features = ({ t }) => {
 };
 
 /* ═══ PERSONALITIES ═══ */
+// Mismatched, hand-drawn speech-bubble shapes — one per personality.
+const _star = (pts, rxO, ryO, rxI, ryI, cx=50, cy=30) => {
+  let d='';
+  for (let i=0;i<pts*2;i++){
+    const out=i%2===0, a=Math.PI/pts*i-Math.PI/2;
+    const x=cx+Math.cos(a)*(out?rxO:rxI), y=cy+Math.sin(a)*(out?ryO:ryI);
+    d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+  }
+  return d+'Z';
+};
+const BUBBLE = {
+  oval:    { pad:'10px 18px', d:'M50,4 C76,4 97,14 97,28 C97,42 76,51 50,51 C24,51 3,42 3,28 C3,14 24,4 50,4 Z M44,49 L50,63 L57,49 Z' },
+  burst:   { pad:'13px 22px', d:_star(9, 49,29, 39,22) },
+  spike:   { pad:'13px 23px', d:_star(14, 49,31, 33,18) },
+  rect:    { pad:'10px 17px', d:'M7,7 L93,7 L93,45 L57,45 L50,61 L43,45 L7,45 Z' },
+  rounded: { pad:'9px 15px',  d:'M10,8 Q4,8 4,18 L4,38 Q4,48 14,48 L24,48 L20,58 L32,48 L86,48 Q96,48 96,38 L96,18 Q96,8 86,8 Z' },
+};
+const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, children }) => {
+  const b = BUBBLE[shape] || BUBBLE.rounded;
+  return (
+    <div style={{position:'relative',display:'inline-block',padding:b.pad}}>
+      <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:0}} viewBox="0 0 100 64" preserveAspectRatio="none">
+        <path d={b.d} fill={fill} stroke={color} strokeWidth="2" filter="url(#cr)"/>
+      </svg>
+      <span style={{position:'relative',zIndex:1}}>{children}</span>
+    </div>
+  );
+};
+
 // Moodboard collage: interlocking tiles of different sizes over a soft circle
 // accent, with depth from drop shadows.
 const Personalities = ({ t }) => {
   // area = celda en el mosaico (a/d son altas, b/c chicas apiladas en medio).
   const ppl = [
-    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.' },
-    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.' },
-    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.' },
-    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.' },
+    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'burst', rot:-4 },
+    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'oval',  rot:3 },
+    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'spike', rot:-3 },
+    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'rect',  rot:4 },
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center',overflow:'hidden'}}>
@@ -509,11 +538,17 @@ const Personalities = ({ t }) => {
             gridTemplateColumns:'1.15fr 1fr 1.15fr',
             gridTemplateRows:'1fr 1fr',
             gridTemplateAreas:'"a b d" "a c d"',
-            gap:16,height:'clamp(440px,50vw,560px)'}}>
+            gap:'clamp(24px,3vw,34px)',height:'clamp(440px,50vw,560px)'}}>
             {ppl.map((p,i)=>(
               /* Custom crayon tile (not CrayonCard) so the flex layout reaches the
                  content directly and the text can never overflow the fixed-height tile. */
-              <div key={p.area} style={{gridArea:p.area,minHeight:0,filter:'drop-shadow(0 12px 22px rgba(61,40,23,0.20))'}}>
+              <div key={p.area} style={{gridArea:p.area,minHeight:0,position:'relative',filter:'drop-shadow(0 10px 18px rgba(61,40,23,0.18))'}}>
+                {/* speech bubble peeking above the tile */}
+                <div style={{position:'absolute',top:-24,left:'50%',transform:`translateX(-50%) rotate(${p.rot}deg)`,zIndex:5,pointerEvents:'none'}}>
+                  <FancyBubble shape={p.bubble} fill={PALETTE.cream} color={PALETTE.ink}>
+                    <span style={{fontFamily:t.bf,fontSize:10.5,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>{p.speech}</span>
+                  </FancyBubble>
+                </div>
                 <div style={{position:'relative',height:'100%',borderRadius:24,padding:14,
                   display:'flex',flexDirection:'column',overflow:'hidden'}}>
                   <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:0,pointerEvents:'none'}}
