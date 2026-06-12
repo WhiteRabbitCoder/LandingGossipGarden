@@ -478,7 +478,7 @@ const Features = ({ t }) => {
 };
 
 /* ═══ PERSONALITIES ═══ */
-// Mismatched, hand-drawn speech-bubble shapes — one per personality.
+// Comic speech-bubble shapes — one per personality (cloud, spark, burst…).
 const _star = (pts, rxO, ryO, rxI, ryI, cx=50, cy=30) => {
   let d='';
   for (let i=0;i<pts*2;i++){
@@ -488,13 +488,35 @@ const _star = (pts, rxO, ryO, rxI, ryI, cx=50, cy=30) => {
   }
   return d+'Z';
 };
-const BUBBLE = {
-  oval:    { pad:'10px 18px', d:'M50,4 C76,4 97,14 97,28 C97,42 76,51 50,51 C24,51 3,42 3,28 C3,14 24,4 50,4 Z M44,49 L50,63 L57,49 Z' },
-  burst:   { pad:'13px 22px', d:_star(9, 49,29, 39,22) },
-  spike:   { pad:'13px 23px', d:_star(14, 49,31, 33,18) },
-  rect:    { pad:'10px 17px', d:'M7,7 L93,7 L93,45 L57,45 L50,61 L43,45 L7,45 Z' },
-  rounded: { pad:'9px 15px',  d:'M10,8 Q4,8 4,18 L4,38 Q4,48 14,48 L24,48 L20,58 L32,48 L86,48 Q96,48 96,38 L96,18 Q96,8 86,8 Z' },
+// Scalloped "cloud" outline (bumps around an ellipse).
+const _cloud = (bumps, rx, ry, bulge, cx=50, cy=30) => {
+  const pts=[];
+  for (let i=0;i<bumps;i++){ const a=2*Math.PI*i/bumps-Math.PI/2; pts.push([cx+Math.cos(a)*rx, cy+Math.sin(a)*ry]); }
+  let d=`M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)} `;
+  for (let i=0;i<bumps;i++){
+    const p0=pts[i], p1=pts[(i+1)%bumps];
+    const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2, a=Math.atan2(my-cy,mx-cx);
+    d+=`Q${(mx+Math.cos(a)*bulge).toFixed(1)} ${(my+Math.sin(a)*bulge).toFixed(1)} ${p1[0].toFixed(1)} ${p1[1].toFixed(1)} `;
+  }
+  return d+'Z';
 };
+const BUBBLE = {
+  cloud:     { pad:'13px 22px', d:_cloud(9, 45, 21, 7) + ' M42 50 L49 64 L57 50 Z' },
+  chispa:    { pad:'14px 25px', d:_star(13, 49,31, 32,17) },
+  explosion: { pad:'15px 26px', d:_star(9, 50,33, 26,14) },
+  sparkly:   { pad:'11px 20px', d:'M12,8 Q5,8 5,18 L5,38 Q5,47 15,47 L26,47 L21,60 L33,47 L85,47 Q95,47 95,37 L95,18 Q95,8 85,8 Z',
+               sparkles:[{s:17,t:-11,l:-7},{s:12,t:-7,r:6},{s:13,b:-9,r:-3}] },
+  oval:      { pad:'10px 18px', d:'M50,4 C76,4 97,14 97,28 C97,42 76,51 50,51 C24,51 3,42 3,28 C3,14 24,4 50,4 Z M44,49 L50,63 L57,49 Z' },
+  rect:      { pad:'10px 17px', d:'M7,7 L93,7 L93,45 L57,45 L50,61 L43,45 L7,45 Z' },
+  rounded:   { pad:'9px 15px',  d:'M10,8 Q4,8 4,18 L4,38 Q4,48 14,48 L24,48 L20,58 L32,48 L86,48 Q96,48 96,38 L96,18 Q96,8 86,8 Z' },
+};
+// Little 4-point sparkle star (same as the hero's "sparkle" icon).
+const Sparkle = ({ size=16, style }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" style={{position:'absolute',zIndex:2,pointerEvents:'none',...style}}>
+    <path d="M24,3 L27.5,20.5 L45,24 L27.5,27.5 L24,45 L20.5,27.5 L3,24 L20.5,20.5 Z"
+      fill="#F4D06F" stroke={PALETTE.ink} strokeWidth="2.5" strokeLinejoin="round" filter="url(#cr)"/>
+  </svg>
+);
 const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, children }) => {
   const b = BUBBLE[shape] || BUBBLE.rounded;
   return (
@@ -502,6 +524,9 @@ const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, c
       <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:0}} viewBox="0 0 100 64" preserveAspectRatio="none">
         <path d={b.d} fill={fill} stroke={color} strokeWidth="2" filter="url(#cr)"/>
       </svg>
+      {(b.sparkles||[]).map((sp,i)=>(
+        <Sparkle key={i} size={sp.s} style={{top:sp.t,left:sp.l,right:sp.r,bottom:sp.b}}/>
+      ))}
       <span style={{position:'relative',zIndex:1}}>{children}</span>
     </div>
   );
@@ -512,10 +537,10 @@ const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, c
 const Personalities = ({ t }) => {
   // area = celda en el mosaico (a/d son altas, b/c chicas apiladas en medio).
   const ppl = [
-    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'burst', rot:-4 },
-    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'oval',  rot:3 },
-    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'spike', rot:-3 },
-    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'rect',  rot:4 },
+    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'sparkly',   rot:-4 },
+    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'cloud',     rot:3 },
+    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion', rot:-3 },
+    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'chispa',    rot:4 },
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center',overflow:'hidden'}}>
