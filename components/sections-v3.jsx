@@ -511,18 +511,27 @@ const Personalities = ({ t }) => {
             gridTemplateAreas:'"a b d" "a c d"',
             gap:16,height:'clamp(440px,50vw,560px)'}}>
             {ppl.map((p,i)=>(
+              /* Custom crayon tile (not CrayonCard) so the flex layout reaches the
+                 content directly and the text can never overflow the fixed-height tile. */
               <div key={p.area} style={{gridArea:p.area,minHeight:0,filter:'drop-shadow(0 12px 22px rgba(61,40,23,0.20))'}}>
-                <CrayonCard fill={`${p.color}55`} stroke={PALETTE.ink} sw={2.5} radius={24} padding={14}
-                  style={{height:'100%',display:'flex',flexDirection:'column'}}>
-                  <div style={{flex:1,minHeight:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-                    <img src={p.photo} alt={p.name}
-                      style={{height:'100%',width:'100%',objectFit:'contain',
-                        filter:'drop-shadow(0 4px 8px rgba(61,40,23,0.18))'}}/>
+                <div style={{position:'relative',height:'100%',borderRadius:24,padding:14,
+                  display:'flex',flexDirection:'column',overflow:'hidden'}}>
+                  <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:0,pointerEvents:'none'}}
+                    viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="2" y="2" width="96" height="96" rx="6" ry="6" fill={`${p.color}55`}
+                      stroke={PALETTE.ink} strokeWidth="2.5" filter="url(#cr)" vectorEffect="non-scaling-stroke"/>
+                  </svg>
+                  <div style={{position:'relative',zIndex:1,flex:1,minHeight:0,display:'flex',flexDirection:'column'}}>
+                    <div style={{flex:1,minHeight:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <img src={p.photo} alt={p.name}
+                        style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain',
+                          filter:'drop-shadow(0 4px 8px rgba(61,40,23,0.18))'}}/>
+                    </div>
+                    <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:'clamp(16px,1.5vw,20px)',color:PALETTE.ink,margin:'4px 0 2px'}}>{p.name}</h3>
+                    <div style={{fontFamily:t.bf,fontSize:11,color:PALETTE.inkSoft,fontWeight:700,letterSpacing:'.5px'}}>{p.trait}</div>
+                    <p style={{fontFamily:t.bf,fontSize:12,color:PALETTE.inkSoft,lineHeight:1.4,margin:'4px 0 0'}}>{p.desc}</p>
                   </div>
-                  <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:'clamp(16px,1.5vw,20px)',color:PALETTE.ink,margin:'4px 0 2px'}}>{p.name}</h3>
-                  <div style={{fontFamily:t.bf,fontSize:11,color:PALETTE.inkSoft,fontWeight:700,letterSpacing:'.5px'}}>{p.trait}</div>
-                  <p style={{fontFamily:t.bf,fontSize:12,color:PALETTE.inkSoft,lineHeight:1.4,margin:'4px 0 0'}}>{p.desc}</p>
-                </CrayonCard>
+                </div>
               </div>
             ))}
           </div>
