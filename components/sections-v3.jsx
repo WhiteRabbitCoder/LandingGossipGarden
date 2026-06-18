@@ -259,10 +259,10 @@ const ScrollStory = ({ t }) => {
   }, []);
 
   const beats = [
-    { kicker:'HOLA, SOY TU PLANTA',       title:'Hola.\nSoy tu planta.',  body:'Por primera vez, puedo contarte cómo me siento. No solo me riegues — escúchame.',                            card:'alegre',    photo:'assets/materas/verde.png',   speech:'¡Soy feliz contigo!', personality:'Alegre'    },
-    { kicker:'CUATRO SENTIDOS',            title:'Cuatro\nsensores.',      body:'Humedad del suelo, humedad del aire, temperatura y luz. Los mido en silencio, cada minuto.',              card:'dormilona', photo:'assets/materas/azul.png',    speech:'Déjame dormir...',    personality:'Dormilona' },
-    { kicker:'YO INICIO LA CONVERSACIÓN', title:'Te toco\nla puerta.',    body:'Cuando tengo sed, frío o demasiada sombra, te lo digo. Sin abrir la app — yo hablo primero.',             card:'dramatica', photo:'assets/materas/morado.png',  speech:'¡Esto es un drama!',  personality:'Dramática' },
-    { kicker:'MEMORIA DE PLANTA',          title:'Recuerdo\ntodo.',        body:'Guardo 30 días de mi vida. Cada mes, un informe de cómo crecí y qué tan feliz estuve contigo.',           card:'exigente',  photo:'assets/materas/naranja.png', speech:'¿Ya me diste agua?',  personality:'Exigente'  },
+    { kicker:'HOLA, SOY TU PLANTA',       title:'Hola.\nSoy tu planta.',  body:'Por primera vez, puedo contarte cómo me siento. No solo me riegues — escúchame.',                            card:'alegre',    photo:'assets/materas/colores/verde.png',   speech:'¡Soy feliz contigo!', personality:'Alegre'    },
+    { kicker:'CUATRO SENTIDOS',            title:'Cuatro\nsensores.',      body:'Humedad del suelo, humedad del aire, temperatura y luz. Los mido en silencio, cada minuto.',              card:'dormilona', photo:'assets/materas/colores/azul.png',    speech:'Déjame dormir...',    personality:'Dormilona' },
+    { kicker:'YO INICIO LA CONVERSACIÓN', title:'Te toco\nla puerta.',    body:'Cuando tengo sed, frío o demasiada sombra, te lo digo. Sin abrir la app — yo hablo primero.',             card:'dramatica', photo:'assets/materas/colores/morado.png',  speech:'¡Esto es un drama!',  personality:'Dramática' },
+    { kicker:'MEMORIA DE PLANTA',          title:'Recuerdo\ntodo.',        body:'Guardo 30 días de mi vida. Cada mes, un informe de cómo crecí y qué tan feliz estuve contigo.',           card:'exigente',  photo:'assets/materas/colores/naranja.png', speech:'¿Ya me diste agua?',  personality:'Exigente'  },
   ];
 
   const FADE_START = 0.75;   // beats stay solid across most of each segment; transition only in the last 25% (so the 1/3, 2/3 snap marks land solid, not grey)
@@ -559,10 +559,10 @@ const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, d
 const Personalities = ({ t }) => {
   // area = celda en el mosaico (a/d son altas, b/c chicas apiladas en medio).
   const ppl = [
-    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'sparkly',   deco:null,    rot:-4 },
-    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'cloud',     deco:'zzz',   rot:3 },
-    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion', deco:'excl',  rot:-3 },
-    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'chispa',    deco:'anger', rot:4 },
+    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/collage/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'sparkly',   deco:null,    rot:-4 },
+    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/collage/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'cloud',     deco:'zzz',   rot:3 },
+    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/collage/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion', deco:'excl',  rot:-3 },
+    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/collage/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'chispa',    deco:'anger', rot:4 },
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center',overflow:'hidden'}}>

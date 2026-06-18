@@ -61,12 +61,16 @@ There are **no ES modules**. Every file ends with `Object.assign(window, { ... }
 index.html, Personalidades.html, Tienda.html, Como funciona.html, style-guide.html
 components/   crayon-v3.jsx, sections-v3.jsx, tweaks-panel.jsx
 assets/
-  icons/           icon-crayon.png (logo)
-  materas/         pot photos + color variants; plus subfolders:
-    maceta360/       001–100.webp — hero turntable frames (scroll-scrubbed)
-    sincara/         1–4.webp — faceless pots for the Variants section
-    animadas/        1–4.webp — face pots cycled by PlantRotator (CTA)
-  personalidades/  {alegre,dormilona,dramatica,exigente}.webp — collage pots (+ legacy FELIZ/TRISTE/BRAVA/DORMILON png)
+  icons/             icon-crayon.png (logo)
+  materas/
+    colores/           verde/azul/morado/naranja.png + VERDE2/AZUL2/ROSADO2/NARANJA2.png — color-variant pot art
+    hero/              pot-hero.png, pot-real.png — hero photo assets
+    maceta360/         001–100.webp — hero turntable frames (scroll-scrubbed)
+    sincara/           1–4.webp — faceless pots for the Variants section
+    animadas/          1–4.webp — face pots cycled by PlantRotator (CTA)
+  personalidades/
+    collage/           {alegre,dormilona,dramatica,exigente}.webp — Personalidades section moodboard collage (index.html)
+    legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by Personalidades.html and Tienda.html
 docs/         DESIGN-SYSTEM.md + product docs (marketing / technical)
 ```
 
@@ -81,7 +85,7 @@ Each page wires `useTweaks(TWEAK_DEFAULTS)` with `hf` (heading font) and `bf` (b
 - **No emojis** — all icons are hand-drawn SVGs via `HandIcon` or inline paths with `filter="url(#cr)"` for the crayon jitter effect
 - **Crayon filters must be in scope** — any new SVG element that needs the hand-drawn look needs `filter="url(#cr)"` (shapes) or `filter="url(#cr-text)"` (type); these filters are injected by `<CrayonDefs/>` at the app root
 - **PALETTE** is the single source of truth for all colors; never hardcode hex values that exist there
-- The `assets/materas/pot-real.png` asset is a photo used as the hero; `assets/icons/icon-crayon.png` is the logo icon
+- The `assets/materas/hero/pot-real.png` asset is a photo used as the hero; `assets/icons/icon-crayon.png` is the logo icon
 
 ## Product context
 
