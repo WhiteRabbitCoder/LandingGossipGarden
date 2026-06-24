@@ -19,7 +19,7 @@ const PERSONA_KEYS = ['alegre', 'dormilona', 'dramatica', 'exigente'];
 const SectionTabs = ({ t, active }) => {
   const tabs = [{ l: 'Blog', href: 'index.html', key: 'blog' }, { l: 'Foro', href: 'foro.html', key: 'foro' }];
   return (
-    <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 18 }}>
+    <div style={{ display: 'flex', gap: 10 }}>
       {tabs.map(tab => {
         const on = active === tab.key;
         return (
@@ -33,30 +33,27 @@ const SectionTabs = ({ t, active }) => {
   );
 };
 
-/* ─── Masthead único: logo al lado de "El Jardín" + pestañas + enlaces ─────── */
-const BlogMasthead = ({ t, dateText, subtitle, section }) => {
-  const MAIN = (window.MAIN_SITE_URL || '').replace(/\/$/, '');
-  const links = [
-    { l: 'Inicio', href: MAIN || '#' },
-    { l: 'Cómo funciona', href: `${MAIN}/Como funciona.html` },
-    { l: 'Personalidades', href: `${MAIN}/Personalidades.html` },
-    { l: 'Tienda', href: `${MAIN}/Tienda.html` },
-  ];
+/* ─── Masthead en 3 columnas: logo · título+subtítulo · pestañas ───────────── */
+const BlogMasthead = ({ t, subtitle, section }) => {
   return (
-    <header style={{ padding: '42px clamp(20px,5vw,48px) 0', textAlign: 'center' }}>
-      <div style={{ maxWidth: 1180, margin: '0 auto', borderBottom: `2px solid ${P.ink}`, paddingBottom: 22 }}>
-        {dateText && <div style={{ fontFamily: t.bf, fontSize: 11.5, fontWeight: 800, letterSpacing: '2px', color: P.heart, textTransform: 'uppercase', marginBottom: 12 }}>{dateText}</div>}
-        <a href="index.html" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(12px,2vw,22px)', textDecoration: 'none', flexWrap: 'wrap' }}>
-          <img src="assets/icons/icon-crayon.png" alt="Gossip Garden" style={{ width: 'clamp(58px,8vw,96px)', height: 'auto', objectFit: 'contain' }} />
-          <span style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 'clamp(34px,6vw,58px)', color: P.ink, lineHeight: .95, letterSpacing: '-1px', filter: 'url(#cr-text)' }}>El Jardín</span>
+    <header style={{ padding: '34px clamp(20px,5vw,48px) 0' }}>
+      <style>{`
+        .gg-mh{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;max-width:1180px;margin:0 auto;border-bottom:2px dashed ${P.ink}33;padding-bottom:22px}
+        .gg-mh-logo{justify-self:start}
+        .gg-mh-tabs{justify-self:end}
+        @media(max-width:760px){.gg-mh{grid-template-columns:1fr;justify-items:center;text-align:center;gap:16px}.gg-mh-logo,.gg-mh-tabs{justify-self:center}}
+      `}</style>
+      <div className="gg-mh">
+        <a className="gg-mh-logo" href="index.html" style={{ display: 'inline-block', textDecoration: 'none', lineHeight: 0 }}>
+          <img src="assets/icons/icon-crayon.png" alt="Gossip Garden" style={{ width: 'clamp(64px,8vw,104px)', height: 'auto', objectFit: 'contain' }} />
         </a>
-        {section && <SectionTabs t={t} active={section} />}
-        {subtitle && <p style={{ fontFamily: t.bf, fontSize: 'clamp(13px,1.3vw,15px)', color: P.inkSoft, marginTop: 14, opacity: .85 }}>{subtitle}</p>}
-        <nav style={{ marginTop: 14, display: 'flex', gap: 'clamp(14px,3vw,30px)', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {links.map(({ l, href }) => (
-            <a key={l} href={href} style={{ fontFamily: t.bf, fontSize: 12, fontWeight: 700, color: P.inkSoft, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '.8px', opacity: .85 }}>{l}</a>
-          ))}
-        </nav>
+        <div style={{ textAlign: 'center' }}>
+          <a href="index.html" style={{ textDecoration: 'none' }}>
+            <span style={{ display: 'inline-block', fontFamily: t.hf, fontWeight: 900, fontSize: 'clamp(34px,6vw,58px)', color: P.ink, lineHeight: .95, letterSpacing: '-1px', filter: 'url(#cr-text)' }}>El Jardín</span>
+          </a>
+          {subtitle && <p style={{ fontFamily: t.bf, fontSize: 'clamp(13px,1.3vw,15px)', color: P.inkSoft, marginTop: 10, opacity: .85 }}>{subtitle}</p>}
+        </div>
+        <div className="gg-mh-tabs"><SectionTabs t={t} active={section} /></div>
       </div>
     </header>
   );
@@ -179,6 +176,108 @@ const AuthModal = ({ t, onClose, onAuthed }) => {
             {mode === 'login' ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
             <b style={{ color: P.heart }}>{mode === 'login' ? 'Regístrate' : 'Inicia sesión'}</b>
           </button>
+        </CrayonCard>
+      </div>
+    </div>
+  );
+};
+
+/* ─── Dropdown crayón ─────────────────────────────────────────────────────── */
+const CrayonSelect = ({ t, value, options, onChange }) => {
+  const [open, setOpen] = React.useState(false);
+  const [hov, setHov] = React.useState(-1);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button type="button" onClick={() => setOpen(o => !o)} style={{
+        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+        fontFamily: t.bf, fontSize: 14.5, fontWeight: 600, color: P.ink, background: P.cream,
+        border: `2px solid ${P.ink}`, borderRadius: 14, padding: '10px 14px', cursor: 'pointer', textAlign: 'left',
+        boxShadow: open ? `2px 2px 0 ${P.ink}` : 'none' }}>
+        <span>{value}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}><path d="M6 9l6 6 6-6" fill="none" stroke={P.ink} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)" /></svg>
+      </button>
+      {open && (
+        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, zIndex: 5, background: P.cream, border: `2px solid ${P.ink}`, borderRadius: 16, overflow: 'hidden', boxShadow: `3px 4px 0 ${P.ink}22`, padding: 4 }}>
+          {options.map((opt, i) => {
+            const sel = opt === value, h = hov === i;
+            return (
+              <div key={opt} onClick={() => { onChange(opt); setOpen(false); }} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(-1)}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '9px 12px', borderRadius: 11, fontFamily: t.bf, fontSize: 14.5, fontWeight: sel ? 800 : 600, cursor: 'pointer', color: sel ? P.heart : P.ink, background: h ? `${P.pot}33` : (sel ? `${P.heart}14` : 'transparent') }}>
+                <span>{opt}</span>
+                {sel && <svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 12.5l4 4 10-10" fill="none" stroke={P.heart} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)" /></svg>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ─── Modal de contacto (envía a CONTACT_EMAIL vía FormSubmit) ─────────────── */
+const ContactModal = ({ t, onClose }) => {
+  const [nombre, setNombre] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [asunto, setAsunto] = React.useState('Soporte');
+  const [mensaje, setMensaje] = React.useState('');
+  const [hp, setHp] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
+  const [done, setDone] = React.useState(false);
+  const [err, setErr] = React.useState(null);
+  const fs = { width: '100%', fontFamily: t.bf, fontSize: 14.5, color: P.ink, background: P.cream, border: `2px solid ${P.ink}`, borderRadius: 14, padding: '10px 14px', outline: 'none' };
+  const submit = async (e) => {
+    e.preventDefault();
+    if (hp) return;
+    if (!nombre.trim() || !email.trim() || mensaje.trim().length < 5) { setErr('Completa tu nombre, correo y un mensaje.'); return; }
+    setBusy(true); setErr(null);
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${window.CONTACT_EMAIL}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ nombre, email, asunto, mensaje, _subject: `Gossip Garden — Contacto (${asunto})`, _template: 'table', _captcha: 'false' }),
+      });
+      setBusy(false);
+      if (res.ok) setDone(true); else setErr('No se pudo enviar. Inténtalo de nuevo.');
+    } catch (e) { setBusy(false); setErr('No se pudo enviar. Revisa tu conexión.'); }
+  };
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(61,40,23,.45)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 'clamp(340px,40vw,660px)', maxWidth: '94vw', maxHeight: '88vh', overflowY: 'auto' }}>
+        <CrayonCard fill={P.cream} stroke={P.ink} sw={3} radius={26} padding={'34px clamp(40px,5vw,64px)'} hoverLift={false}>
+          {done ? (
+            <div style={{ textAlign: 'center', padding: '10px 0' }}>
+              <div style={{ width: 58, height: 58, margin: '0 auto 14px' }}>
+                <svg width="58" height="58" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={`${P.leaf}55`} stroke={P.ink} strokeWidth="2" filter="url(#cr)" /><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke={P.leafDk} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)" /></svg>
+              </div>
+              <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 22, color: P.ink, marginBottom: 8 }}>¡Mensaje enviado!</h3>
+              <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, lineHeight: 1.6, marginBottom: 18 }}>Gracias por escribirnos. Te responderemos al correo que nos diste lo antes posible.</p>
+              <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={onClose}>Cerrar</CrayonButton>
+            </div>
+          ) : (
+            <>
+              <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 18, background: 'none', border: 'none', fontSize: 28, lineHeight: 1, cursor: 'pointer', color: P.inkSoft, zIndex: 2 }}>×</button>
+              <div style={{ marginBottom: 20 }}>
+                <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 26, color: P.ink }}>Contáctanos</h3>
+                <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, opacity: .85, marginTop: 8 }}>Cuéntanos en qué te ayudamos y te respondemos por correo.</p>
+              </div>
+              <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                <input style={fs} placeholder="Tu nombre" value={nombre} maxLength={60} onChange={e => setNombre(e.target.value)} />
+                <input style={fs} type="email" placeholder="Tu correo" value={email} maxLength={80} onChange={e => setEmail(e.target.value)} />
+                <CrayonSelect t={t} value={asunto} options={['Soporte', 'Ventas', 'Prensa', 'Otro']} onChange={setAsunto} />
+                <textarea style={{ ...fs, resize: 'vertical', minHeight: 100, lineHeight: 1.5 }} placeholder="Tu mensaje…" value={mensaje} maxLength={1500} onChange={e => setMensaje(e.target.value)} />
+                <input tabIndex={-1} autoComplete="off" value={hp} onChange={e => setHp(e.target.value)} style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} aria-hidden="true" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 2 }}>
+                  <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? 'Enviando…' : 'Enviar mensaje'}</CrayonButton>
+                  {err && <span style={{ fontFamily: t.bf, fontSize: 13, color: P.heart, fontWeight: 700 }}>{err}</span>}
+                </div>
+              </form>
+            </>
+          )}
         </CrayonCard>
       </div>
     </div>
@@ -355,8 +454,8 @@ const PostForm = ({ t, onCreated, user, kind }) => {
   };
 
   return (
-    <CrayonCard fill={P.cream} stroke={P.ink} sw={3} radius={24} padding={24}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+    <CrayonCard fill={P.cream} stroke={P.ink} sw={3} radius={24} padding={'30px 34px'}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
         <h3 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 20, color: P.ink }}>{kind === 'blog' ? 'Escribir artículo' : 'Comparte tu planta'}</h3>
         <span style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, opacity: .8 }}>Publicas como <b style={{ color: P.ink }}>{window.userName(user)}</b></span>
       </div>
@@ -462,6 +561,6 @@ const CommentTree = ({ comments, t, postId, onReply, user, onRequireAuth }) => {
 
 Object.assign(window, {
   PERSONA_META, PERSONA_KEYS, BlogMasthead, SectionTabs, PersonaTag, Avatar, LikeButton,
-  ConfigNotice, AuthModal, AccountControl, PostCard, PostForm, CommentForm, CommentTree, buildCommentTree,
+  ConfigNotice, AuthModal, AccountControl, ContactModal, CrayonSelect, PostCard, PostForm, CommentForm, CommentTree, buildCommentTree,
   SectionHeading, CategoryLabel, PostMeta, FeaturedCard, TrendingList,
 });

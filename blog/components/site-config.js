@@ -13,3 +13,6 @@ window.MAIN_SITE_URL = "..";
 // Correos con permiso para publicar ARTÍCULOS del blog (deben coincidir con la
 // tabla 'admins' de Supabase). El foro lo puede usar cualquier usuario con sesión.
 window.ADMIN_EMAILS = ["santigovanegas11@gmail.com"];
+
+// Correo donde llegan los mensajes del formulario de contacto del footer.
+window.CONTACT_EMAIL = "santigovanegas11@gmail.com";

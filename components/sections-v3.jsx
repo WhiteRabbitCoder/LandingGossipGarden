@@ -19,15 +19,27 @@ const Nav = ({ t }) => {
       display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 clamp(16px,4vw,48px)',
       background: s ? 'rgba(250,241,218,0.92)' : 'transparent', backdropFilter: s ? 'blur(10px)' : 'none',
       transition:'all 0.3s'}}>
-      <div style={{display:'flex',alignItems:'center',gap:10}}>
+      <style>{`
+        .gg-navlink{color:${PALETTE.ink};transition:color .2s ease, transform .2s ease}
+        .gg-navlink:hover{transform:translateY(-1px)}
+        .gg-ul{position:absolute;left:0;right:0;bottom:-3px;width:100%;height:11px;overflow:visible;pointer-events:none}
+        .gg-ul path{stroke-dasharray:240;stroke-dashoffset:240;transition:stroke-dashoffset .55s cubic-bezier(.4,0,.2,1)}
+        .gg-navlink:hover .gg-ul path{stroke-dashoffset:0}
+        .gg-navlink.is-active .gg-ul path{stroke-dashoffset:0}
+        .gg-brand{transition:transform .2s ease}
+        .gg-brand:hover{transform:translateY(-1px) rotate(-1deg)}
+      `}</style>
+      <a href="#top" className="gg-brand" style={{display:'flex',alignItems:'center',gap:10,textDecoration:'none'}}>
         <img src="assets/icons/icon-crayon.png" alt="" style={{width:46,height:46,objectFit:'contain'}}/>
         <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:PALETTE.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
-      </div>
+      </a>
       <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
-        {links.map(({l,href},i)=><a key={l} href={href} style={{color:PALETTE.ink,textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,
-          position:'relative',padding:'4px 2px'}}>
+        {links.map(({l,href},i)=><a key={l} href={href} className={i===0?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,
+          position:'relative',padding:'4px 2px 6px'}}>
           {l}
-          {i===0 && <div style={{position:'absolute',left:0,right:0,bottom:-4}}><CrayonUnderline color={PALETTE.leafDk} w="100%" h={3}/></div>}
+          <svg className="gg-ul" viewBox="0 0 200 14" preserveAspectRatio="none">
+            <path d="M3,8 Q40,2 90,9 T196,5" fill="none" stroke={PALETTE.leafDk} strokeWidth="3" strokeLinecap="round" filter="url(#cr)"/>
+          </svg>
         </a>)}
         <a href="Tienda.html" style={{textDecoration:'none'}}><CrayonButton fill={PALETTE.heart} stroke={PALETTE.ink} color={PALETTE.cream}>Comprar</CrayonButton></a>
       </div>
@@ -716,10 +728,133 @@ const CTA = ({ t }) => (
   </section>
 );
 
+/* Correo donde llegan los mensajes de contacto (cámbialo por el real). */
+const CONTACT_EMAIL = 'santigovanegas11@gmail.com';
+
+/* ═══ DROPDOWN CRAYÓN (reemplaza el <select> nativo) ═══ */
+const CrayonSelect = ({ t, value, options, onChange }) => {
+  const P = PALETTE;
+  const [open, setOpen] = React.useState(false);
+  const [hov, setHov] = React.useState(-1);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  return (
+    <div ref={ref} style={{ position:'relative' }}>
+      <button type="button" onClick={()=>setOpen(o=>!o)} style={{
+        width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', gap:10,
+        fontFamily:t.bf, fontSize:14.5, fontWeight:600, color:P.ink, background:P.cream,
+        border:`2px solid ${P.ink}`, borderRadius:14, padding:'10px 14px', cursor:'pointer', textAlign:'left',
+        boxShadow: open ? `2px 2px 0 ${P.ink}` : 'none', transition:'box-shadow .15s' }}>
+        <span>{value}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" style={{ flexShrink:0, transform: open?'rotate(180deg)':'none', transition:'transform .2s' }}>
+          <path d="M6 9l6 6 6-6" fill="none" stroke={P.ink} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)"/>
+        </svg>
+      </button>
+      {open && (
+        <div style={{ position:'absolute', top:'calc(100% + 6px)', left:0, right:0, zIndex:5, background:P.cream,
+          border:`2px solid ${P.ink}`, borderRadius:16, overflow:'hidden', boxShadow:`3px 4px 0 ${P.ink}22`, padding:4 }}>
+          {options.map((opt,i)=>{
+            const sel = opt===value, h = hov===i;
+            return (
+              <div key={opt} onClick={()=>{ onChange(opt); setOpen(false); }} onMouseEnter={()=>setHov(i)} onMouseLeave={()=>setHov(-1)}
+                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8, padding:'9px 12px', borderRadius:11,
+                  fontFamily:t.bf, fontSize:14.5, fontWeight: sel?800:600, cursor:'pointer',
+                  color: sel?P.heart:P.ink, background: h ? `${P.pot}33` : (sel ? `${P.heart}14` : 'transparent'), transition:'background .12s' }}>
+                <span>{opt}</span>
+                {sel && <svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 12.5l4 4 10-10" fill="none" stroke={P.heart} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)"/></svg>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ═══ MODAL DE CONTACTO ═══ */
+const ContactModal = ({ t, onClose }) => {
+  const P = PALETTE;
+  const [nombre, setNombre] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [asunto, setAsunto] = React.useState('Soporte');
+  const [mensaje, setMensaje] = React.useState('');
+  const [hp, setHp] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
+  const [done, setDone] = React.useState(false);
+  const [err, setErr] = React.useState(null);
+  const fs = { width:'100%', fontFamily:t.bf, fontSize:14.5, color:P.ink, background:P.cream, border:`2px solid ${P.ink}`, borderRadius:14, padding:'10px 14px', outline:'none' };
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (hp) return; // bot
+    if (!nombre.trim() || !email.trim() || mensaje.trim().length < 5) { setErr('Completa tu nombre, correo y un mensaje.'); return; }
+    setBusy(true); setErr(null);
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          nombre, email, asunto, mensaje,
+          _subject: `Gossip Garden — Contacto (${asunto})`,
+          _template: 'table', _captcha: 'false',
+        }),
+      });
+      setBusy(false);
+      if (res.ok) setDone(true);
+      else setErr('No se pudo enviar. Inténtalo de nuevo en un momento.');
+    } catch (e) { setBusy(false); setErr('No se pudo enviar. Revisa tu conexión.'); }
+  };
+
+  return (
+    <div onClick={onClose} style={{position:'fixed',inset:0,zIndex:300,background:'rgba(61,40,23,.45)',backdropFilter:'blur(2px)',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      <div onClick={e=>e.stopPropagation()} style={{width:'clamp(340px,40vw,660px)',maxWidth:'94vw',maxHeight:'88vh',overflowY:'auto'}}>
+        <CrayonCard fill={P.cream} stroke={P.ink} sw={3} radius={26} padding={'34px clamp(40px,5vw,64px)'} hoverLift={false}>
+          {done ? (
+            <div style={{textAlign:'center',padding:'10px 0'}}>
+              <div style={{width:58,height:58,margin:'0 auto 14px',position:'relative',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="58" height="58" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={`${P.leaf}55`} stroke={P.ink} strokeWidth="2" filter="url(#cr)"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke={P.leafDk} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)"/></svg>
+              </div>
+              <h3 style={{fontFamily:t.hf,fontWeight:900,fontSize:22,color:P.ink,marginBottom:8}}>¡Mensaje enviado!</h3>
+              <p style={{fontFamily:t.bf,fontSize:14.5,color:P.inkSoft,lineHeight:1.6,marginBottom:18}}>Gracias por escribirnos. Te responderemos al correo que nos diste lo antes posible.</p>
+              <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={onClose}>Cerrar</CrayonButton>
+            </div>
+          ) : (
+            <>
+              <button onClick={onClose} style={{position:'absolute',top:16,right:18,background:'none',border:'none',fontSize:28,lineHeight:1,cursor:'pointer',color:P.inkSoft,zIndex:2}}>×</button>
+              <div style={{marginBottom:20}}>
+                <h3 style={{fontFamily:t.hf,fontWeight:900,fontSize:26,color:P.ink}}>Contáctanos</h3>
+                <p style={{fontFamily:t.bf,fontSize:14.5,color:P.inkSoft,opacity:.85,marginTop:8}}>Cuéntanos en qué te ayudamos y te respondemos por correo.</p>
+              </div>
+              <form onSubmit={submit} style={{display:'flex',flexDirection:'column',gap:18}}>
+                <input style={fs} placeholder="Tu nombre" value={nombre} maxLength={60} onChange={e=>setNombre(e.target.value)}/>
+                <input style={fs} type="email" placeholder="Tu correo" value={email} maxLength={80} onChange={e=>setEmail(e.target.value)}/>
+                <CrayonSelect t={t} value={asunto} options={['Soporte','Ventas','Prensa','Otro']} onChange={setAsunto}/>
+                <textarea style={{...fs, resize:'vertical', minHeight:100, lineHeight:1.5}} placeholder="Tu mensaje…" value={mensaje} maxLength={1500} onChange={e=>setMensaje(e.target.value)}/>
+                <input tabIndex={-1} autoComplete="off" value={hp} onChange={e=>setHp(e.target.value)} style={{position:'absolute',left:'-9999px',width:1,height:1,opacity:0}} aria-hidden="true"/>
+                <div style={{display:'flex',alignItems:'center',gap:12,marginTop:2}}>
+                  <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{opacity:busy?.6:1}}>{busy?'Enviando…':'Enviar mensaje'}</CrayonButton>
+                  {err && <span style={{fontFamily:t.bf,fontSize:13,color:P.heart,fontWeight:700}}>{err}</span>}
+                </div>
+              </form>
+            </>
+          )}
+        </CrayonCard>
+      </div>
+    </div>
+  );
+};
+
 /* ═══ FOOTER ═══ */
-const Footer = ({ t }) => (
+const Footer = ({ t }) => {
+  const [contactOpen, setContactOpen] = React.useState(false);
+  return (
   <footer style={{padding:'40px clamp(20px,5vw,80px) 28px',marginTop:30,
     borderTop:`2px dashed ${PALETTE.ink}33`}}>
+    <style>{`.gg-foot-link{color:${PALETTE.inkSoft};opacity:.78;cursor:pointer;transition:color .15s ease,opacity .15s ease}.gg-foot-link:hover{color:${PALETTE.heart};opacity:1}`}</style>
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:28,maxWidth:1080,margin:'0 auto'}}>
       <div>
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
@@ -731,16 +866,19 @@ const Footer = ({ t }) => (
       {[
         {t:'Producto',l:[{n:'Cómo funciona',h:'Como funciona.html'},{n:'Personalidades',h:'Personalidades.html'},{n:'Tienda',h:'Tienda.html'}]},
         {t:'Recursos',l:[{n:'Blog',h:'blog/index.html'},{n:'Guías',h:'#'},{n:'FAQ',h:'Tienda.html#faq'}]},
-        {t:'Legal',l:[{n:'Términos',h:'Terminos.html'},{n:'Privacidad',h:'Privacidad.html'},{n:'Contacto',h:'mailto:hola@gossipgarden.co'}]}
+        {t:'Legal',l:[{n:'Términos',h:'Terminos.html'},{n:'Privacidad',h:'Privacidad.html'},{n:'Contacto',action:'contact'}]}
       ].map(col=>(
         <div key={col.t}>
           <h4 style={{fontFamily:t.hf,fontWeight:800,fontSize:13,color:PALETTE.ink,marginBottom:10,letterSpacing:'.3px'}}>{col.t}</h4>
-          {col.l.map(({n,h})=><a key={n} href={h} style={{display:'block',fontFamily:t.bf,fontSize:13,color:PALETTE.inkSoft,opacity:.75,
-            textDecoration:'none',marginBottom:6}}>{n}</a>)}
+          {col.l.map(({n,h,action})=> action==='contact'
+            ? <a key={n} href="#" className="gg-foot-link" onClick={e=>{e.preventDefault();setContactOpen(true);}} style={{display:'block',fontFamily:t.bf,fontSize:13,textDecoration:'none',marginBottom:6}}>{n}</a>
+            : <a key={n} href={h} className="gg-foot-link" style={{display:'block',fontFamily:t.bf,fontSize:13,textDecoration:'none',marginBottom:6}}>{n}</a>)}
         </div>
       ))}
     </div>
+    {contactOpen && <ContactModal t={t} onClose={()=>setContactOpen(false)}/>}
   </footer>
-);
+  );
+};
 
-Object.assign(window, { Nav, ScrollStory, Features, Personalities, Variants, CTA, Footer, AlegreCard, DormilonaCard, DramaticaCard, ExigenteCard });
+Object.assign(window, { Nav, ScrollStory, Features, Personalities, Variants, CTA, Footer, ContactModal, AlegreCard, DormilonaCard, DramaticaCard, ExigenteCard });
