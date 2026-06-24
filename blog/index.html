@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog — Gossip Garden</title>
+  <link rel="icon" type="image/png" href="assets/icons/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+    h1,h2,h3,h4{text-shadow:.5px 0 0 currentColor,-.5px 0 0 currentColor,0 .4px 0 currentColor,0 -.4px 0 currentColor;letter-spacing:-.3px}
+    input,textarea{font-family:inherit}
+    input:focus,textarea:focus{box-shadow:2px 2px 0 #3D281733}
+    @media(max-width:768px){.gg-nav-d{display:none!important}.gg-nav-m{display:block!important}}
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+    .gg-main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:40px;max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,48px) 70px}
+    .gg-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+    .gg-feat{display:grid;grid-template-columns:1.05fr .95fr}
+    .gg-feat-img{border-right:2px solid #3D2817}
+    .gg-side{position:sticky;top:90px;align-self:start}
+    @media(max-width:920px){.gg-main{grid-template-columns:1fr}.gg-side{position:static}}
+    @media(max-width:560px){.gg-cards{grid-template-columns:1fr}.gg-feat{grid-template-columns:1fr}.gg-feat-img{border-right:none;border-bottom:2px solid #3D2817}}
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+    #root>div{position:relative;z-index:2}
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="components/site-config.js"></script>
+  <script src="components/supabase-config.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
+  <script type="text/babel" src="components/crayon-v3.jsx?v=20260624h"></script>
+  <script type="text/babel" src="components/blog-footer.jsx?v=20260624h"></script>
+  <script type="text/babel" src="components/blog-data.jsx?v=20260624h"></script>
+  <script type="text/babel" src="components/blog-ui.jsx?v=20260624h"></script>
+  <script type="text/babel">
+    const t = { hf: 'Quicksand', bf: 'Nunito' };
+    const P = window.PALETTE;
+
+    const App = () => {
+      const [posts, setPosts] = React.useState(null); // null = cargando
+      const [error, setError] = React.useState(null);
+      const [filter, setFilter] = React.useState(null);
+      const [showForm, setShowForm] = React.useState(false);
+      const [authOpen, setAuthOpen] = React.useState(false);
+      const user = window.useAuth(); // undefined=cargando, null=invitado, obj=logueado
+      const admin = window.isAdmin(user);
+
+      const onWriteClick = () => { if (!user) { setAuthOpen(true); return; } setShowForm(s => !s); };
+
+      const load = React.useCallback(async (personality) => {
+        setPosts(null); setError(null);
+        const { data, error } = await window.fetchPosts({ personality, kind: 'blog' });
+        if (error) { setError(error); setPosts([]); return; }
+        // contar comentarios en paralelo
+        const withCounts = await Promise.all((data || []).map(async p => ({ ...p, comment_count: await window.countComments(p.id) })));
+        setPosts(withCounts);
+      }, []);
+
+      React.useEffect(() => { load(filter); }, [filter, load]);
+
+      const onCreated = () => { setShowForm(false); load(filter); };
+
+      const today = new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const featured = posts && posts.length ? posts[0] : null;
+      const rest = posts && posts.length ? posts.slice(1) : [];
+
+      return (
+        <div style={{ fontFamily: t.bf, position: 'relative' }}>
+          <CrayonDefs/>
+          <BlogMasthead t={t} section="blog" dateText={today} subtitle="Artículos y guías del equipo de Gossip Garden."/>
+
+          {/* Barra de acciones: filtros + (solo admin) escribir artículo */}
+          <div style={{ maxWidth: 1180, margin: '0 auto', padding: '22px clamp(20px,5vw,48px) 0', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              <span onClick={() => setFilter(null)} style={{
+                fontFamily: t.bf, fontSize: 12, fontWeight: 700, padding: '5px 13px', borderRadius: 20,
+                background: filter === null ? P.pot : `${P.pot}55`, border: `1.5px solid ${P.ink}`, color: P.ink,
+                cursor: 'pointer', userSelect: 'none', boxShadow: filter === null ? `2px 2px 0 ${P.ink}` : 'none' }}>Todas</span>
+              {window.PERSONA_KEYS.map(k => <PersonaTag key={k} k={k} active={filter === k} onClick={() => setFilter(filter === k ? null : k)} t={t}/>)}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <AccountControl t={t} user={user} onLogin={() => setAuthOpen(true)}/>
+              {admin && (
+                <CrayonButton fill={showForm ? P.cream : P.heart} stroke={P.ink} color={showForm ? P.ink : P.cream} onClick={onWriteClick}>
+                  {showForm ? 'Cerrar' : '+ Escribir artículo'}
+                </CrayonButton>
+              )}
+            </div>
+          </div>
+
+          {showForm && admin && <div style={{ maxWidth: 1180, margin: '20px auto 0', padding: '0 clamp(20px,5vw,48px)' }}><Reveal><PostForm t={t} user={user} kind="blog" onCreated={onCreated}/></Reveal></div>}
+
+          {authOpen && <AuthModal t={t} onClose={() => setAuthOpen(false)} onAuthed={() => setAuthOpen(false)}/>}
+
+          {!window.BLOG_CONFIGURED && <div style={{ maxWidth: 1180, margin: '26px auto 0', padding: '0 clamp(20px,5vw,48px)' }}><ConfigNotice t={t}/></div>}
+
+          {/* Cuerpo: principal + tendencia */}
+          <div className="gg-main" style={{ paddingTop: 34 }}>
+            <main>
+              <SectionHeading t={t}>Lo último</SectionHeading>
+
+              {posts === null && (
+                <div className="gg-cards">
+                  {[0,1,2,3].map(i => <CrayonCard key={i} fill={P.bgDark} stroke={P.ink} sw={2} radius={20} padding={24} hoverLift={false} style={{ height: 240, opacity: .5 }}><div/></CrayonCard>)}
+                </div>
+              )}
+
+              {posts && posts.length === 0 && (
+                <div style={{ padding: '20px 0 40px' }}>
+                  <p style={{ fontFamily: t.bf, fontSize: 16, color: P.inkSoft, opacity: .8 }}>
+                    {window.BLOG_CONFIGURED ? 'Aún no hay artículos publicados.' : 'Conecta Supabase para ver los artículos.'}
+                  </p>
+                </div>
+              )}
+
+              {featured && <Reveal><FeaturedCard post={featured} t={t}/></Reveal>}
+              {rest.length > 0 && (
+                <div className="gg-cards">
+                  {rest.map(p => <Reveal key={p.id}><PostCard post={p} t={t}/></Reveal>)}
+                </div>
+              )}
+            </main>
+
+            <aside className="gg-side">
+              <SectionHeading t={t}>Tendencia</SectionHeading>
+              {posts === null
+                ? <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .6 }}>Cargando…</p>
+                : <TrendingList posts={posts} t={t}/>}
+            </aside>
+          </div>
+
+          <Footer t={t}/>
+        </div>
+      );
+    };
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Términos y Condiciones — Gossip Garden</title>
+  <link rel="icon" type="image/png" href="assets/icons/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+    h1,h2,h3,h4{text-shadow:.5px 0 0 currentColor,-.5px 0 0 currentColor,0 .4px 0 currentColor,0 -.4px 0 currentColor;letter-spacing:-.3px}
+    a{color:inherit}
+    @media(max-width:768px){.gg-nav-d{display:none!important}.gg-nav-m{display:block!important}}
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+    #root>div{position:relative;z-index:2}
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
+  <script type="text/babel" src="components/crayon-v3.jsx?v=20260624g"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260624g"></script>
+  <script type="text/babel" src="components/legal.jsx?v=20260624g"></script>
+  <script type="text/babel">
+    const t = { hf: 'Quicksand', bf: 'Nunito' };
+
+    const sections = [
+      { id: 'aceptacion', title: 'Aceptación de los términos', content: (<>
+        <LP t={t}>Estos Términos y Condiciones (los "Términos") regulan el uso del kit de maceta inteligente, la aplicación móvil, el sitio web y los servicios asociados de Gossip Garden (en conjunto, el "Servicio"). Al comprar el producto, crear una cuenta o usar el Servicio, aceptas estos Términos en su totalidad.</LP>
+        <LP t={t}>Si no estás de acuerdo con ellos, por favor no utilices el Servicio.</LP>
+      </>)},
+
+      { id: 'servicio', title: 'Descripción del servicio', content: (<>
+        <LP t={t}>Gossip Garden es un sistema de monitoreo de plantas que combina hardware y software:</LP>
+        <LUL t={t} items={[
+          'Una maceta con un microcontrolador ESP32 y sensores de temperatura y humedad ambiente, luz y humedad del suelo.',
+          'Una aplicación y un servicio en la nube que reciben las lecturas de los sensores y muestran el estado de tu planta.',
+          'Una capa de inteligencia artificial que asigna a cada planta una personalidad y genera conversaciones según sus necesidades.',
+          'Una comunidad en línea donde puedes compartir publicaciones sobre tus plantas.',
+        ]}/>
+        <LP t={t}>El Servicio depende de tu conexión a internet, de una red Wi-Fi compatible y de servicios de terceros (como el broker de mensajería). Podemos actualizar, mejorar o modificar funciones del Servicio con el tiempo.</LP>
+      </>)},
+
+      { id: 'cuenta', title: 'Registro y cuenta', content: (<>
+        <LUL t={t} items={[
+          'Debes proporcionar información veraz al crear tu cuenta y mantenerla actualizada.',
+          'Eres responsable de mantener la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.',
+          'Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.',
+          'Debes ser mayor de edad para registrarte y usar el Servicio.',
+        ]}/>
+      </>)},
+
+      { id: 'hardware', title: 'Uso del dispositivo', content: (<>
+        <LP t={t}>La maceta inteligente es un dispositivo electrónico de uso doméstico. Al usarla, te comprometes a:</LP>
+        <LUL t={t} items={[
+          'Seguir las instrucciones de instalación y de uso, incluyendo las relativas al agua y la electricidad.',
+          'No manipular, abrir ni modificar el hardware ni su firmware de forma que comprometa su seguridad.',
+          'Utilizar únicamente accesorios y fuentes de alimentación compatibles.',
+        ]}/>
+        <LNote t={t} color={window.PALETTE.heart}>El dispositivo combina componentes electrónicos con agua y tierra. Un uso inadecuado puede causar daños. Manténlo fuera del alcance de niños pequeños y no sumerjas la parte electrónica.</LNote>
+      </>)},
+
+      { id: 'suscripcion', title: 'Compras, suscripciones y funciones de pago', content: (<>
+        <LP t={t}>La compra del kit incluye el dispositivo y el acceso a las funciones básicas de la app. Algunas funciones avanzadas pueden ofrecerse mediante una suscripción o un pago adicional, lo cual se te informará claramente antes de contratarlas.</LP>
+        <LUL t={t} items={[
+          'Los precios y el alcance de cada plan se indican en la tienda o en la app.',
+          'Las suscripciones pueden renovarse automáticamente salvo que las canceles antes de la fecha de renovación.',
+          'Las condiciones de reembolso se rigen por la política de la tienda y por la normativa de protección al consumidor aplicable.',
+        ]}/>
+      </>)},
+
+      { id: 'comunidad', title: 'Contenido del usuario y comunidad', content: (<>
+        <LP t={t}>La comunidad te permite publicar texto e imágenes ("Contenido de Usuario"). Al publicar:</LP>
+        <LUL t={t} items={[
+          'Declaras que tienes los derechos sobre el contenido que compartes y que no infringe derechos de terceros.',
+          'Nos concedes una licencia no exclusiva y gratuita para alojar y mostrar ese contenido dentro del Servicio, con el único fin de operar la comunidad.',
+          'Te comprometes a no publicar contenido ilegal, ofensivo, spam, datos personales de terceros sin permiso ni material que infrinja derechos de autor.',
+        ]}/>
+        <LP t={t}>Podemos moderar, ocultar o eliminar contenido que incumpla estas reglas, así como suspender cuentas que abusen del Servicio. La comunidad puede usarse de forma anónima, pero ello no exime del cumplimiento de estas normas.</LP>
+      </>)},
+
+      { id: 'propiedad', title: 'Propiedad intelectual', content: (<>
+        <LP t={t}>El Servicio, incluidos el software, el diseño, la marca "Gossip Garden", los textos, ilustraciones y las personalidades de las plantas, son propiedad de Gossip Garden o de sus licenciantes y están protegidos por la ley. No se te concede ningún derecho sobre ellos más allá del uso normal del Servicio.</LP>
+        <LP t={t}>Conservas la propiedad de tu Contenido de Usuario; solo nos otorgas la licencia descrita en la sección anterior.</LP>
+      </>)},
+
+      { id: 'ia', title: 'Inteligencia artificial y sus límites', content: (<>
+        <LP t={t}>Las conversaciones y consejos de tu planta son generados automáticamente por sistemas de inteligencia artificial a partir de las lecturas de los sensores y del contexto de la planta.</LP>
+        <LUL t={t} items={[
+          'El contenido generado puede contener imprecisiones y se ofrece con fines de acompañamiento y cuidado básico.',
+          'No sustituye la asesoría de un agrónomo, veterinario, médico u otro profesional.',
+          'Las decisiones que tomes con base en esos mensajes son de tu responsabilidad.',
+        ]}/>
+      </>)},
+
+      { id: 'disponibilidad', title: 'Disponibilidad y dependencias de terceros', content: (<>
+        <LP t={t}>Hacemos un esfuerzo razonable por mantener el Servicio disponible, pero no garantizamos un funcionamiento ininterrumpido. El Servicio puede verse afectado por:</LP>
+        <LUL t={t} items={[
+          'Cortes de tu conexión a internet o de la red eléctrica.',
+          'Mantenimientos programados o incidencias técnicas.',
+          'Fallos o cambios en servicios de terceros de los que dependemos (por ejemplo, el broker de mensajería o el proveedor de IA).',
+        ]}/>
+      </>)},
+
+      { id: 'garantia', title: 'Garantía del hardware', content: (<>
+        <LP t={t}>El dispositivo cuenta con la garantía legal aplicable frente a defectos de fabricación. La garantía no cubre daños causados por mal uso, manipulación indebida, accidentes, exposición inadecuada al agua o desgaste normal. Para reclamaciones, contáctanos con tu comprobante de compra.</LP>
+      </>)},
+
+      { id: 'responsabilidad', title: 'Limitación de responsabilidad', content: (<>
+        <LP t={t}>En la medida permitida por la ley, Gossip Garden no será responsable por:</LP>
+        <LUL t={t} items={[
+          'El estado de salud de tus plantas: el Servicio es una ayuda, no una garantía de que una planta sobreviva o crezca.',
+          'Daños indirectos, incidentales o pérdida de datos derivados del uso o la imposibilidad de usar el Servicio.',
+          'Interrupciones causadas por terceros o por factores fuera de nuestro control razonable.',
+        ]}/>
+        <LP t={t}>Nada en estos Términos limita responsabilidades que no puedan excluirse legalmente, incluidas las derivadas de la normativa de protección al consumidor.</LP>
+      </>)},
+
+      { id: 'terminacion', title: 'Suspensión y terminación', content: (<>
+        <LP t={t}>Puedes dejar de usar el Servicio y eliminar tu cuenta en cualquier momento. Podemos suspender o cancelar tu acceso si incumples estos Términos, si tu uso pone en riesgo el Servicio o a otros usuarios, o si la ley lo exige. Tras la terminación, ciertas disposiciones (como las de propiedad intelectual y limitación de responsabilidad) seguirán vigentes.</LP>
+      </>)},
+
+      { id: 'cambios', title: 'Cambios en los términos', content: (<>
+        <LP t={t}>Podemos modificar estos Términos para reflejar cambios en el Servicio o en la normativa. Publicaremos la versión vigente en esta página con su fecha de actualización. Si los cambios son sustanciales, te lo notificaremos. El uso continuado del Servicio tras la actualización implica la aceptación de los nuevos Términos.</LP>
+      </>)},
+
+      { id: 'ley', title: 'Ley aplicable y resolución de conflictos', content: (<>
+        <LP t={t}>Estos Términos se rigen por las leyes de la República de Colombia. Cualquier controversia se intentará resolver de buena fe; de no lograrse, se someterá a los jueces y tribunales competentes según la normativa aplicable, sin perjuicio de los derechos que la ley reconozca a los consumidores.</LP>
+      </>)},
+
+      { id: 'contacto', title: 'Contacto', content: (<>
+        <LP t={t}>Para cualquier consulta sobre estos Términos, escríbenos a hola@gossipgarden.co.</LP>
+      </>)},
+    ];
+
+    const App = () => (
+      <LegalPage t={t} kicker="LEGAL" title="Términos y Condiciones"
+        updated="24 de junio de 2026"
+        intro="Estos términos explican las reglas para usar tu maceta inteligente, la app y la comunidad de Gossip Garden. Los hemos escrito para que sean claros, pero siguen siendo un acuerdo legal entre tú y nosotros."
+        sections={sections}/>
+    );
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

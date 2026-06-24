@@ -1,4 +1,8 @@
-.claude/settings.local.json
+.claude/
 uploads/
 *.swp
 .DS_Store
+
+# Secretos / config con claves — generados desde .env, nunca commitear
+.env
+blog/components/supabase-config.js

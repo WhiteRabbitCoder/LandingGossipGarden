@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Publicación — Gossip Garden</title>
+  <link rel="icon" type="image/png" href="assets/icons/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+    h1,h2,h3,h4{text-shadow:.5px 0 0 currentColor,-.5px 0 0 currentColor,0 .4px 0 currentColor,0 -.4px 0 currentColor;letter-spacing:-.3px}
+    input,textarea{font-family:inherit}
+    input:focus,textarea:focus{box-shadow:2px 2px 0 #3D281733}
+    @media(max-width:768px){.gg-nav-d{display:none!important}.gg-nav-m{display:block!important}}
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+    #root>div{position:relative;z-index:2}
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="components/site-config.js"></script>
+  <script src="components/supabase-config.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
+  <script type="text/babel" src="components/crayon-v3.jsx?v=20260624h"></script>
+  <script type="text/babel" src="components/blog-footer.jsx?v=20260624h"></script>
+  <script type="text/babel" src="components/blog-data.jsx?v=20260624h"></script>
+  <script type="text/babel" src="components/blog-ui.jsx?v=20260624h"></script>
+  <script type="text/babel">
+    const t = { hf: 'Quicksand', bf: 'Nunito' };
+    const P = window.PALETTE;
+
+    const App = () => {
+      const id = new URLSearchParams(location.search).get('id');
+      const [post, setPost] = React.useState(undefined); // undefined = cargando, null = no existe
+      const [comments, setComments] = React.useState([]);
+      const [error, setError] = React.useState(null);
+      const [authOpen, setAuthOpen] = React.useState(false);
+      const user = window.useAuth();
+
+      const loadComments = React.useCallback(async () => {
+        const { data } = await window.fetchComments(id);
+        setComments(data || []);
+      }, [id]);
+
+      React.useEffect(() => {
+        if (!id) { setPost(null); return; }
+        (async () => {
+          const { data, error } = await window.fetchPost(id);
+          if (error || !data) { setPost(null); setError(error); return; }
+          setPost(data);
+          loadComments();
+        })();
+      }, [id, loadComments]);
+
+      const m = post && post.personality ? window.PERSONA_META[post.personality] : null;
+      const isForo = post && post.kind === 'foro';
+      const backHref = isForo ? 'foro.html' : 'index.html';
+      const backText = isForo ? '← Volver al foro' : '← Volver al blog';
+
+      return (
+        <div style={{ fontFamily: t.bf, position: 'relative' }}>
+          <CrayonDefs/>
+          <BlogMasthead t={t} section={post && post.kind}/>
+
+          <section style={{ padding: '34px clamp(20px,5vw,40px) 60px', maxWidth: 760, margin: '0 auto' }}>
+            <a href={backHref} style={{ textDecoration: 'none', display: 'inline-block', marginBottom: 20 }}>
+              <span style={{ fontFamily: t.bf, fontWeight: 700, fontSize: 14, color: P.heart }}>{backText}</span>
+            </a>
+
+            {post === undefined && (
+              <p style={{ fontFamily: t.bf, color: P.inkSoft, opacity: .7 }}>Cargando…</p>
+            )}
+
+            {post === null && (
+              <CrayonCard fill={P.cream} stroke={P.ink} sw={2.5} radius={22} padding={32} style={{ textAlign: 'center' }}>
+                <h2 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 24, color: P.ink, marginBottom: 8 }}>Publicación no encontrada</h2>
+                <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, marginBottom: 18 }}>
+                  {window.BLOG_CONFIGURED ? 'Puede que se haya eliminado o el enlace sea incorrecto.' : 'Conecta Supabase para ver las publicaciones (docs/BLOG-SETUP.md).'}
+                </p>
+                <a href="index.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir al blog</CrayonButton></a>
+              </CrayonCard>
+            )}
+
+            {post && (
+              <>
+                <Reveal>
+                  <CrayonCard fill={m ? m.bg : P.cream} stroke={P.ink} sw={3} radius={26} padding={0} hoverLift={false} style={{ overflow: 'hidden' }}>
+                    {post.image_url && (
+                      <div style={{ borderBottom: `2px solid ${P.ink}`, background: `${m ? m.color : P.leaf}2e`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px,4vw,40px)' }}>
+                        <img src={post.image_url} alt="" style={{ maxWidth: '100%', maxHeight: 380, objectFit: 'contain', display: 'block' }}/>
+                      </div>
+                    )}
+                    <div style={{ padding: 'clamp(20px,4vw,34px)' }}>
+                      <div style={{ marginBottom: 14 }}><CategoryLabel post={post} t={t}/></div>
+                      <h1 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 'clamp(26px,4vw,40px)', lineHeight: 1.1, color: P.ink, letterSpacing: '-.5px', marginBottom: 16, filter: 'url(#cr-text)' }}>{window.postHeadline(post)}</h1>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+                        <Avatar name={post.author_name} size={44}/>
+                        <div>
+                          <div style={{ fontFamily: t.bf, fontWeight: 800, fontSize: 16, color: P.ink }}>{post.author_name}</div>
+                          <div style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, opacity: .7 }}>{window.timeAgo(post.created_at)} · {window.readingTime(post.body)} min de lectura</div>
+                        </div>
+                        {m && <span style={{ marginLeft: 'auto' }}><PersonaTag k={post.personality} active t={t}/></span>}
+                      </div>
+                      {post.plant_name && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
+                          <HandIcon type="leaf" size={15} color={P.leafDk}/>
+                          <span style={{ fontFamily: t.bf, fontSize: 13, fontWeight: 700, color: P.leafDk, letterSpacing: '.3px' }}>{post.plant_name}</span>
+                        </div>
+                      )}
+                      <p style={{ fontFamily: t.bf, fontSize: 16.5, color: P.inkSoft, lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: 0 }}>{post.body}</p>
+                      <div style={{ marginTop: 22, paddingTop: 14, borderTop: `1.5px dashed ${P.ink}33` }}>
+                        <LikeButton id={post.id} count={post.likes} t={t}/>
+                      </div>
+                    </div>
+                  </CrayonCard>
+                </Reveal>
+
+                {/* Comentarios */}
+                <section style={{ marginTop: 40 }}>
+                  <h2 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 24, color: P.ink, marginBottom: 6 }}>
+                    Comentarios <span style={{ color: P.inkSoft, opacity: .6, fontSize: 18 }}>({comments.length})</span>
+                  </h2>
+                  <CrayonUnderline color={P.leafDk} w="120px" h={4}/>
+                  <div style={{ marginTop: 22 }}>
+                    <CrayonCard fill={P.cream} stroke={P.ink} sw={2.5} radius={20} padding={20}>
+                      {user
+                        ? <CommentForm t={t} postId={post.id} user={user} onCreated={loadComments}/>
+                        : (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                            <span style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft }}>Inicia sesión para dejar un comentario.</span>
+                            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={() => setAuthOpen(true)}>Iniciar sesión</CrayonButton>
+                          </div>
+                        )}
+                    </CrayonCard>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <CommentTree comments={comments} t={t} postId={post.id} onReply={loadComments} user={user} onRequireAuth={() => setAuthOpen(true)}/>
+                  </div>
+                </section>
+              </>
+            )}
+          </section>
+
+          {authOpen && <AuthModal t={t} onClose={() => setAuthOpen(false)} onAuthed={() => setAuthOpen(false)}/>}
+
+          <Footer t={t}/>
+        </div>
+      );
+    };
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

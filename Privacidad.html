@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Política de Privacidad — Gossip Garden</title>
+  <link rel="icon" type="image/png" href="assets/icons/icon-crayon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#FAF1DA;color:#3D2817;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Quicksand',sans-serif}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+      background-image:url("data:image/svg+xml,%3Csvg width='320' height='320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='4' stitchTiles='stitch' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.78 0 0 0 0 0.55 0 0 0 0 0.25 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+    h1,h2,h3,h4{text-shadow:.5px 0 0 currentColor,-.5px 0 0 currentColor,0 .4px 0 currentColor,0 -.4px 0 currentColor;letter-spacing:-.3px}
+    a{color:inherit}
+    @media(max-width:768px){.gg-nav-d{display:none!important}.gg-nav-m{display:block!important}}
+    @media(min-width:769px){.gg-nav-m{display:none!important}}
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#FAF1DA}
+    ::-webkit-scrollbar-thumb{background:#C68A40;border-radius:4px}
+    #root>div{position:relative;z-index:2}
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
+  <script type="text/babel" src="components/crayon-v3.jsx?v=20260624g"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260624g"></script>
+  <script type="text/babel" src="components/legal.jsx?v=20260624g"></script>
+  <script type="text/babel">
+    const t = { hf: 'Quicksand', bf: 'Nunito' };
+
+    const sections = [
+      { id: 'responsable', title: 'Responsable del tratamiento', content: (<>
+        <LP t={t}>Gossip Garden ("Gossip Garden", "nosotros") es responsable del tratamiento de los datos personales que recopilamos a través de nuestro dispositivo (la "maceta inteligente"), la aplicación móvil, el sitio web y los servicios asociados (en conjunto, el "Servicio").</LP>
+        <LUL t={t} items={[
+          'Responsable: Gossip Garden.',
+          'Correo de contacto y privacidad: hola@gossipgarden.co.',
+          'Ámbito: usuarios del kit IoT, de la app y visitantes del sitio web.',
+        ]}/>
+        <LP t={t}>Tratamos tus datos conforme a la normativa colombiana de protección de datos personales (Ley 1581 de 2012 y el Decreto 1377 de 2013) y, cuando aplique por la ubicación del usuario, a normativas equivalentes.</LP>
+      </>)},
+
+      { id: 'datos', title: 'Qué datos recopilamos', content: (<>
+        <LSub t={t}>Datos de cuenta</LSub>
+        <LUL t={t} items={[
+          'Nombre, dirección de correo electrónico y contraseña (almacenada de forma cifrada).',
+          'Datos de tu perfil de jardinero (foto opcional, nombre que muestras en la comunidad).',
+        ]}/>
+        <LSub t={t}>Datos de tus plantas y dispositivos</LSub>
+        <LUL t={t} items={[
+          'Identificador del dispositivo ESP32 y datos de vinculación (firmware, estado de conexión).',
+          'Lecturas de los sensores: temperatura y humedad ambiente (DHT22), nivel de luz (GY-30/BH1750) y humedad del suelo (SEN0193).',
+          'Datos que tú declaras: tipo de planta, nombre que le pones y la personalidad asignada (Alegre, Dormilona, Dramática o Exigente).',
+        ]}/>
+        <LSub t={t}>Datos de interacción y comunidad</LSub>
+        <LUL t={t} items={[
+          'Mensajes y conversaciones que intercambias con tu planta a través de la IA.',
+          'Publicaciones, comentarios, reacciones e imágenes que compartes en el blog/comunidad.',
+        ]}/>
+        <LSub t={t}>Datos técnicos</LSub>
+        <LUL t={t} items={[
+          'Dirección IP, tipo de dispositivo, sistema operativo y datos de uso de la app/web.',
+          'Registros (logs) técnicos necesarios para diagnosticar fallos y mantener la seguridad.',
+        ]}/>
+      </>)},
+
+      { id: 'origen', title: 'Cómo y cuándo recopilamos los datos', content: (<>
+        <LP t={t}>Recopilamos datos de tres formas:</LP>
+        <LUL t={t} items={[
+          'Cuando los proporcionas directamente: al crear tu cuenta, configurar una planta o publicar en la comunidad.',
+          'De forma automática desde el dispositivo: la maceta envía las lecturas de sus sensores a nuestro backend a través del protocolo MQTT (broker HiveMQ) de manera periódica mientras esté encendida y conectada.',
+          'De forma automática desde la app y el sitio web: datos técnicos y de uso mediante tecnologías estándar (ver sección de cookies).',
+        ]}/>
+      </>)},
+
+      { id: 'finalidades', title: 'Para qué usamos tus datos', content: (<>
+        <LUL t={t} items={[
+          'Prestar el Servicio: vincular tu maceta, mostrar el estado de tu planta y enviarte alertas de cuidado (riego, luz, temperatura).',
+          'Generar la personalidad y las conversaciones: procesamos las lecturas de los sensores y el contexto de tu planta para que la IA redacte mensajes con el carácter elegido.',
+          'Operar la comunidad: publicar tu contenido, mostrar comentarios y reacciones.',
+          'Mejorar el producto: analizar el uso de forma agregada para corregir errores y desarrollar nuevas funciones.',
+          'Soporte y comunicación: responder a tus solicitudes y enviarte avisos importantes sobre el Servicio.',
+          'Seguridad y cumplimiento: prevenir fraude, abuso y cumplir obligaciones legales.',
+        ]}/>
+      </>)},
+
+      { id: 'base', title: 'Legitimación y autorización', content: (<>
+        <LP t={t}>Tratamos tus datos con base en:</LP>
+        <LUL t={t} items={[
+          'La ejecución del contrato: lo necesario para que el kit, la app y la cuenta funcionen.',
+          'Tu autorización: para finalidades específicas como la participación en la comunidad o comunicaciones promocionales, que puedes retirar en cualquier momento.',
+          'Nuestro interés legítimo: en mejorar el producto y garantizar la seguridad, siempre de forma proporcional y respetando tus derechos.',
+        ]}/>
+      </>)},
+
+      { id: 'ia', title: 'Datos y la IA de personalidad', content: (<>
+        <LP t={t}>El corazón de Gossip Garden es una IA que convierte las lecturas de tus sensores en mensajes con personalidad. Para ello:</LP>
+        <LUL t={t} items={[
+          'Procesamos los datos de los sensores y el contexto de la planta para generar el texto de cada conversación.',
+          'Podemos apoyarnos en proveedores de modelos de lenguaje para producir esos mensajes; en ese caso compartimos únicamente la información mínima necesaria y bajo acuerdos de confidencialidad y tratamiento de datos.',
+          'No utilizamos el contenido de tus conversaciones privadas para entrenar modelos de terceros sin tu autorización.',
+        ]}/>
+        <LNote t={t} color={window.PALETTE.heart}>Las conversaciones de tu planta son contenido generado por IA con fines de acompañamiento y cuidado. No constituyen asesoría agronómica, médica ni profesional.</LNote>
+      </>)},
+
+      { id: 'conservacion', title: 'Cuánto tiempo conservamos los datos', content: (<>
+        <LUL t={t} items={[
+          'Lecturas de sensores (series temporales): se conservan durante 30 días y luego se eliminan o anonimizan automáticamente. Algunos resúmenes agregados pueden conservarse más tiempo de forma no identificable.',
+          'Datos de cuenta y de la comunidad: mientras tu cuenta esté activa. Si la eliminas, los borramos o anonimizamos en un plazo razonable, salvo obligación legal de conservarlos.',
+          'Registros técnicos: por el tiempo necesario para seguridad y diagnóstico.',
+        ]}/>
+      </>)},
+
+      { id: 'comparticion', title: 'Con quién compartimos los datos', content: (<>
+        <LP t={t}>No vendemos tus datos personales. Solo los compartimos con:</LP>
+        <LUL t={t} items={[
+          'Proveedores de infraestructura: alojamiento del backend (FastAPI sobre contenedores), bases de datos (PostgreSQL para cuentas y comunidad; MongoDB para series de sensores) y el broker de mensajería MQTT (HiveMQ).',
+          'Proveedores de IA: para generar las conversaciones, con la información mínima necesaria.',
+          'Autoridades: cuando exista una obligación legal o un requerimiento válido.',
+        ]}/>
+        <LP t={t}>Todos nuestros proveedores actúan como encargados del tratamiento bajo contrato y solo pueden usar los datos para prestarnos el servicio.</LP>
+      </>)},
+
+      { id: 'transferencias', title: 'Transferencias internacionales', content: (<>
+        <LP t={t}>Algunos de nuestros proveedores pueden procesar datos en servidores ubicados fuera de tu país. Cuando esto ocurra, adoptamos las garantías adecuadas (cláusulas contractuales y medidas de seguridad equivalentes) para proteger tu información conforme a la normativa aplicable.</LP>
+      </>)},
+
+      { id: 'seguridad', title: 'Seguridad de la información', content: (<>
+        <LP t={t}>Aplicamos medidas técnicas y organizativas razonables para proteger tus datos, entre ellas:</LP>
+        <LUL t={t} items={[
+          'Cifrado de las comunicaciones (TLS) entre el dispositivo, la app y el backend.',
+          'Almacenamiento de contraseñas mediante funciones de hash.',
+          'Controles de acceso por roles y segmentación de la base de datos.',
+          'Monitoreo y registros para detectar accesos no autorizados.',
+        ]}/>
+        <LP t={t}>Ningún sistema es 100% infalible; en caso de un incidente de seguridad que te afecte, te notificaremos conforme a la ley.</LP>
+      </>)},
+
+      { id: 'derechos', title: 'Tus derechos', content: (<>
+        <LP t={t}>Como titular de los datos puedes ejercer en cualquier momento tus derechos a:</LP>
+        <LUL t={t} items={[
+          'Conocer, actualizar y rectificar tus datos.',
+          'Solicitar prueba de la autorización otorgada.',
+          'Ser informado sobre el uso que damos a tus datos.',
+          'Revocar la autorización y/o solicitar la supresión cuando proceda.',
+          'Solicitar una copia de tus datos (portabilidad), cuando sea técnicamente posible.',
+          'Presentar quejas ante la Superintendencia de Industria y Comercio (SIC).',
+        ]}/>
+        <LP t={t}>Para ejercerlos, escríbenos a hola@gossipgarden.co indicando tu solicitud. Responderemos en los plazos legales.</LP>
+      </>)},
+
+      { id: 'menores', title: 'Menores de edad', content: (<>
+        <LP t={t}>El Servicio está dirigido a personas mayores de edad. No recopilamos de forma intencionada datos de menores sin la autorización de sus padres o tutores. Si detectamos que hemos recibido datos de un menor sin la debida autorización, los eliminaremos.</LP>
+      </>)},
+
+      { id: 'cookies', title: 'Cookies y tecnologías similares', content: (<>
+        <LP t={t}>El sitio web y la app pueden usar cookies y tecnologías de almacenamiento local para recordar tus preferencias, mantener tu sesión y entender el uso del Servicio de forma agregada. Puedes gestionar las cookies desde la configuración de tu navegador; deshabilitarlas puede afectar algunas funciones.</LP>
+        <LP t={t}>En la comunidad, por ejemplo, usamos almacenamiento local para recordar las publicaciones a las que ya diste "me gusta".</LP>
+      </>)},
+
+      { id: 'cambios', title: 'Cambios en esta política', content: (<>
+        <LP t={t}>Podemos actualizar esta Política de Privacidad para reflejar cambios en el Servicio o en la normativa. Publicaremos la versión vigente en esta página con su fecha de actualización y, si los cambios son relevantes, te avisaremos por los canales habituales.</LP>
+      </>)},
+
+      { id: 'contacto', title: 'Contacto', content: (<>
+        <LP t={t}>Si tienes preguntas sobre esta política o sobre el tratamiento de tus datos, contáctanos en hola@gossipgarden.co. Atenderemos tu solicitud lo antes posible.</LP>
+      </>)},
+    ];
+
+    const App = () => (
+      <LegalPage t={t} kicker="PRIVACIDAD" title="Política de Privacidad"
+        updated="24 de junio de 2026"
+        intro="En Gossip Garden tu planta habla, pero tus datos no. Aquí te explicamos de forma clara qué información recopilamos, para qué la usamos y qué control tienes sobre ella."
+        sections={sections}/>
+    );
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

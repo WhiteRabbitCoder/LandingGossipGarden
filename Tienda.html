@@ -372,17 +372,31 @@
       );
     };
 
-    const App = () => (
-      <div style={{fontFamily:t.bf,position:'relative'}}>
-        <CrayonDefs/>
-        <ShopNav/>
-        <ShopHero/>
-        <PotConfigurator/>
-        <Promises/>
-        <FAQ/>
-        <Footer t={t}/>
-      </div>
-    );
+    const App = () => {
+      React.useEffect(() => {
+        if (!location.hash) return;
+        const id = decodeURIComponent(location.hash.slice(1));
+        // Esperar a que React pinte la sección antes de hacer scroll al ancla.
+        let tries = 0;
+        const tryScroll = () => {
+          const el = document.getElementById(id);
+          if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+          if (tries++ < 20) setTimeout(tryScroll, 100);
+        };
+        setTimeout(tryScroll, 60);
+      }, []);
+      return (
+        <div style={{fontFamily:t.bf,position:'relative'}}>
+          <CrayonDefs/>
+          <ShopNav/>
+          <ShopHero/>
+          <PotConfigurator/>
+          <Promises/>
+          <FAQ/>
+          <Footer t={t}/>
+        </div>
+      );
+    };
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
   </script>

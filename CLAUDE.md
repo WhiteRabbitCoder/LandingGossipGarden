@@ -27,6 +27,10 @@ JSX is transpiled in-browser by `@babel/standalone`. All scripts use `type="text
 | `Personalidades.html` | Plant personalities detail page |
 | `Tienda.html` | Store / purchase page |
 | `Como funciona.html` | How it works page |
+| `Terminos.html` | Terms & Conditions (legal) |
+| `Privacidad.html` | Privacy Policy (legal) |
+| `blog/index.html` | Community blog feed — **separate deployable** (its own domain). See "Blog" below |
+| `blog/post.html` | Single blog post (`?id=…`) with nested comments |
 
 Each page loads React 18 + Babel from CDN, then includes JSX files as `<script type="text/babel">`. `index.html` also loads **GSAP + ScrollTrigger** from CDN (used by the hero) and appends a **cache-buster** query to the JSX `<script src>` (e.g. `sections-v3.jsx?v=…`) — bump it whenever you change a JSX file so browsers fetch the new code. Note: `index.html` must **not** set `html{scroll-behavior:smooth}` — it breaks GSAP's scroll snapping.
 
@@ -51,6 +55,25 @@ Each page loads React 18 + Babel from CDN, then includes JSX files as `<script t
 - `useTweaks(defaults)` hook — syncs values with host via `postMessage` (`__edit_mode_set_keys`) and persists to the `/*EDITMODE-BEGIN*/…/*EDITMODE-END*/` JSON block in the HTML file
 - `TweaksPanel` shell + controls: `TweakSelect`, `TweakSlider`, `TweakToggle`, `TweakColor`, `TweakNumber`, `TweakText`, `TweakRadio`
 
+### Blog (Supabase-backed, separate deployable)
+
+The community blog is a **self-contained mini-site under `blog/`**, meant to be deployed to its **own domain**. It does not share code with the root pages at runtime — it carries its own copy of `crayon-v3.jsx` and `assets/icons/`. It is the only part with a real backend: **Supabase** (Postgres + Storage), used anonymously — no login. Public read + anonymous insert protected by RLS.
+
+- Two sections (tabs `SectionTabs`): **`blog/index.html`** = Blog (editorial articles, `kind='blog'`, only admins can post) and **`blog/foro.html`** = Foro (community, `kind='foro'`, any logged-in user posts). **`blog/post.html`** (`?id=…`) shows either, with nested comments.
+- Posts have a `kind` column (`blog`/`foro`). Admin gating: a `public.admins` table + `public.is_admin()` (security definer) back an RLS insert policy that only lets admins create `kind='blog'` rows; the frontend mirrors the allowlist in `window.ADMIN_EMAILS` (site-config) via `isAdmin(user)` to show/hide the "Escribir artículo" button.
+- **`blog/components/site-config.js`** — plain script exposing `window.MAIN_SITE_URL` (main site domain, links back) and `window.ADMIN_EMAILS` (blog authors).
+- **`blog/components/supabase-config.js`** — plain script exposing `window.SUPABASE_URL` / `window.SUPABASE_ANON_KEY`. **Generated** from root `.env` by `scripts/gen-config.sh`; both `.env` and this file are git-ignored. Committed templates: `.env.example` and `blog/components/supabase-config.example.js`. Secret vars (`SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL`) live only in `.env` and never reach the browser.
+- **`blog/components/blog-data.jsx`** — data layer: creates `window.ggDB` (Supabase client, `null` if unconfigured) and helpers (`fetchPosts`, `fetchPost`, `createPost`, `fetchComments`, `createComment`, `countComments`, `likePost`/`hasLiked` (anti-double-like via `localStorage`), `uploadImage` (Storage bucket `plant-photos`), `timeAgo`/`readingTime`/`postHeadline`). Auth (Supabase Auth, email+password): `signUp`/`signIn`/`signOut`/`userName` and the `useAuth()` hook (returns `undefined` loading / `null` guest / user). `window.BLOG_CONFIGURED` gates the UI; when false helpers return a `configError` and the UI shows `ConfigNotice`.
+- **`blog/components/blog-ui.jsx`** — crayon-styled components: `BlogMasthead` (big centered logo + links to `MAIN_SITE_URL`, replaces the old fixed nav), `PERSONA_META`/`PERSONA_KEYS`, `PersonaTag`, `Avatar`, `LikeButton`, `PostCard`/`FeaturedCard` (magazine layout, images shown `contain` on a tinted panel), `SectionHeading`, `CategoryLabel`, `TrendingList`, `PostForm`, `CommentForm`, `CommentTree`, `AuthModal` + `AccountControl`, `ConfigNotice`. **Posting and commenting require login** (RLS: insert restricted to `authenticated`; likes stay public via the `security definer` `increment_likes`). Posts have a `title` column (used as headline).
+- **`blog/components/blog-footer.jsx`** — blog-specific `Footer` (so the blog does NOT depend on the root `sections-v3.jsx`).
+- Load order (blog pages): supabase-js + `site-config.js` + `supabase-config.js` (head) → `crayon-v3.jsx` → `blog-footer.jsx` → `blog-data.jsx` → `blog-ui.jsx` → inline app. No GSAP, no `sections-v3.jsx`.
+- The root site's footer "Blog" link (in `sections-v3.jsx`) points to the blog's domain (placeholder `https://blog.gossipgarden.co`).
+- Setup (tables, RLS, Storage bucket, keys): see `docs/BLOG-SETUP.md`.
+
+### Legal pages
+
+`Terminos.html` and `Privacidad.html` share **`components/legal.jsx`**, which exports the layout primitives `LegalPage` (nav + hero + auto-generated table of contents + sections + `Footer`), `LegalNav`, and the typography helpers `LP` (paragraph), `LUL` (bulleted list), `LSub` (subheading), `LNote` (highlight card). Each page just defines a `sections = [{ id, title, content }]` array and renders `<LegalPage … sections={sections}/>`. Content is project-specific (sensor data, IoT/MQTT, AI personality, community) and references Colombian data-protection law (Ley 1581 de 2012). Linked from the footer "Legal" column; contact is `mailto:hola@gossipgarden.co`.
+
 ### Module system
 
 There are **no ES modules**. Every file ends with `Object.assign(window, { ... })` to expose its exports globally. Load order in the HTML `<script>` tags matters: `components/crayon-v3.jsx` → `components/sections-v3.jsx` → `components/tweaks-panel.jsx` → inline app.
@@ -58,8 +81,13 @@ There are **no ES modules**. Every file ends with `Object.assign(window, { ... }
 ### Folder layout
 
 ```
-index.html, Personalidades.html, Tienda.html, Como funciona.html, style-guide.html
-components/   crayon-v3.jsx, sections-v3.jsx, tweaks-panel.jsx
+index.html, Personalidades.html, Tienda.html, Como funciona.html, Terminos.html, Privacidad.html, style-guide.html
+components/   crayon-v3.jsx, sections-v3.jsx, tweaks-panel.jsx, legal.jsx
+scripts/      gen-config.sh   (genera blog/components/supabase-config.js desde .env)
+blog/         (mini-sitio autocontenido, dominio aparte)
+  index.html, post.html
+  components/   crayon-v3.jsx (copia), site-config.js, supabase-config.js(.example), blog-data.jsx, blog-ui.jsx, blog-footer.jsx
+  assets/icons/ icon-crayon.png (copia)
 assets/
   icons/             icon-crayon.png (logo)
   materas/
@@ -71,7 +99,7 @@ assets/
   personalidades/
     collage/           {alegre,dormilona,dramatica,exigente}.webp — Personalidades section moodboard collage (index.html)
     legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by Personalidades.html and Tienda.html
-docs/         DESIGN-SYSTEM.md + product docs (marketing / technical)
+docs/         DESIGN-SYSTEM.md + product docs + BLOG-SETUP.md (Supabase setup for the blog)
 ```
 
 **Image convention:** pot art is delivered as PNG and pre-processed into **WebP** with a small Python+Pillow script (Pillow has no numpy here): trim transparent margins (or flood-fill a white bg from the edges), **center the pot cylinder** in the frame, then `save(..., "WEBP", quality≈90)`. The `<img>`/`<canvas>` drag + selection is disabled globally via CSS (`user-drag/user-select:none`) plus a `dragstart` preventer in `index.html`.

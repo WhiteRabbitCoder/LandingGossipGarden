@@ -479,37 +479,6 @@ const Features = ({ t }) => {
 
 /* ═══ PERSONALITIES ═══ */
 // Comic speech-bubble shapes — one per personality (cloud, spark, burst…).
-const _star = (pts, rxO, ryO, rxI, ryI, cx=50, cy=30) => {
-  let d='';
-  for (let i=0;i<pts*2;i++){
-    const out=i%2===0, a=Math.PI/pts*i-Math.PI/2;
-    const x=cx+Math.cos(a)*(out?rxO:rxI), y=cy+Math.sin(a)*(out?ryO:ryI);
-    d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';
-  }
-  return d+'Z';
-};
-// Scalloped "cloud" outline (bumps around an ellipse).
-const _cloud = (bumps, rx, ry, bulge, cx=50, cy=30) => {
-  const pts=[];
-  for (let i=0;i<bumps;i++){ const a=2*Math.PI*i/bumps-Math.PI/2; pts.push([cx+Math.cos(a)*rx, cy+Math.sin(a)*ry]); }
-  let d=`M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)} `;
-  for (let i=0;i<bumps;i++){
-    const p0=pts[i], p1=pts[(i+1)%bumps];
-    const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2, a=Math.atan2(my-cy,mx-cx);
-    d+=`Q${(mx+Math.cos(a)*bulge).toFixed(1)} ${(my+Math.sin(a)*bulge).toFixed(1)} ${p1[0].toFixed(1)} ${p1[1].toFixed(1)} `;
-  }
-  return d+'Z';
-};
-const BUBBLE = {
-  cloud:     { pad:'13px 22px', d:_cloud(9, 45, 21, 7) + ' M42 50 L49 64 L57 50 Z' },
-  chispa:    { pad:'14px 25px', d:_star(13, 49,31, 32,17) },
-  explosion: { pad:'15px 26px', d:_star(9, 50,33, 26,14) },
-  sparkly:   { pad:'11px 20px', d:'M12,8 Q5,8 5,18 L5,38 Q5,47 15,47 L26,47 L21,60 L33,47 L85,47 Q95,47 95,37 L95,18 Q95,8 85,8 Z',
-               sparkles:[{s:21,t:-13,l:-10},{s:14,t:-8,r:4},{s:16,b:-12,r:-8}] },
-  oval:      { pad:'10px 18px', d:'M50,4 C76,4 97,14 97,28 C97,42 76,51 50,51 C24,51 3,42 3,28 C3,14 24,4 50,4 Z M44,49 L50,63 L57,49 Z' },
-  rect:      { pad:'10px 17px', d:'M7,7 L93,7 L93,45 L57,45 L50,61 L43,45 L7,45 Z' },
-  rounded:   { pad:'9px 15px',  d:'M10,8 Q4,8 4,18 L4,38 Q4,48 14,48 L24,48 L20,58 L32,48 L86,48 Q96,48 96,38 L96,18 Q96,8 86,8 Z' },
-};
 // Little 4-point sparkle star (same as the hero's "sparkle" icon).
 const Sparkle = ({ size=16, style }) => (
   <svg width={size} height={size} viewBox="0 0 48 48" style={{position:'absolute',zIndex:2,pointerEvents:'none',...style}}>
@@ -520,6 +489,13 @@ const Sparkle = ({ size=16, style }) => (
 // Per-personality flourish that gives each plant its character.
 const Deco = ({ type, t }) => {
   const f = (t && t.hf) || 'Nunito';
+  if (type === 'stars') return (
+    <>
+      <Sparkle size={22} style={{top:-14,left:-12}}/>
+      <Sparkle size={15} style={{top:-6,right:2}}/>
+      <Sparkle size={17} style={{bottom:-10,right:-6}}/>
+    </>
+  );
   if (type === 'zzz') return (
     <div style={{position:'absolute',top:-20,right:-18,display:'flex',alignItems:'flex-end',gap:1,
       transform:'rotate(-8deg)',color:PALETTE.ink,fontFamily:f,fontWeight:800,lineHeight:1,pointerEvents:'none',zIndex:3}}>
@@ -538,18 +514,25 @@ const Deco = ({ type, t }) => {
   );
   return null;
 };
-const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, deco, t, children }) => {
-  const b = BUBBLE[shape] || BUBBLE.rounded;
+// Hand-traced comic speech bubbles (vectorized from the reference art, in
+// assets/borbujas/). `box` is the white interior region (% of the SVG) where
+// the message text is placed so it never spills onto the outline/spikes.
+const TRACED = {
+  ovalo:              { src:'assets/borbujas/ovalo.svg',            ar:228/173, box:{l:9,t:14,w:82,h:58} },
+  'nube-pensamiento': { src:'assets/borbujas/nube-pensamiento.svg', ar:202/187, box:{l:11,t:14,w:78,h:56} },
+  explosion:          { src:'assets/borbujas/explosion.svg',        ar:210/199, box:{l:21,t:28,w:58,h:42} },
+  estallido:          { src:'assets/borbujas/estallido.svg',        ar:198/182, box:{l:20,t:28,w:60,h:42} },
+};
+const TracedBubble = ({ shape='ovalo', width=140, deco, t, children }) => {
+  const b = TRACED[shape] || TRACED.ovalo;
   return (
-    <div style={{position:'relative',display:'inline-block',padding:b.pad}}>
-      <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:0}} viewBox="0 0 100 64" preserveAspectRatio="none">
-        <path d={b.d} fill={fill} stroke={color} strokeWidth="2" filter="url(#cr)"/>
-      </svg>
-      {(b.sparkles||[]).map((sp,i)=>(
-        <Sparkle key={i} size={sp.s} style={{top:sp.t,left:sp.l,right:sp.r,bottom:sp.b}}/>
-      ))}
+    <div style={{position:'relative',width,lineHeight:0}}>
+      <img src={b.src} alt="" style={{width:'100%',display:'block',pointerEvents:'none'}}/>
       <Deco type={deco} t={t}/>
-      <span style={{position:'relative',zIndex:1}}>{children}</span>
+      <div style={{position:'absolute',left:b.box.l+'%',top:b.box.t+'%',width:b.box.w+'%',height:b.box.h+'%',
+        display:'flex',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
+        {children}
+      </div>
     </div>
   );
 };
@@ -559,10 +542,10 @@ const FancyBubble = ({ shape='rounded', fill=PALETTE.cream, color=PALETTE.ink, d
 const Personalities = ({ t }) => {
   // area = celda en el mosaico (a/d son altas, b/c chicas apiladas en medio).
   const ppl = [
-    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/collage/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'sparkly',   deco:null,    rot:-4 },
-    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/collage/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'cloud',     deco:'zzz',   rot:3 },
-    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/collage/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion', deco:'excl',  rot:-3 },
-    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/collage/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'chispa',    deco:'anger', rot:4 },
+    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/collage/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'ovalo',            deco:'stars', rot:-4 },
+    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/collage/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'nube-pensamiento', deco:'zzz',   rot:3 },
+    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/collage/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion',        deco:'excl',  rot:-3 },
+    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/collage/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'estallido',        deco:'anger', rot:4 },
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center',overflow:'hidden'}}>
@@ -577,7 +560,7 @@ const Personalities = ({ t }) => {
         </p>
       </Reveal>
       <Reveal>
-        <div style={{position:'relative',maxWidth:960,margin:'56px auto 0'}}>
+        <div style={{position:'relative',maxWidth:960,margin:'150px auto 0'}}>
           {/* círculo de color detrás del collage */}
           <div style={{position:'absolute',width:'min(560px,86%)',aspectRatio:'1 / 1',borderRadius:'50%',
             background:'#F4D06F55',top:'46%',left:'60%',transform:'translate(-50%,-50%)',zIndex:0}}/>
@@ -585,16 +568,16 @@ const Personalities = ({ t }) => {
             gridTemplateColumns:'1.15fr 1fr 1.15fr',
             gridTemplateRows:'1fr 1fr',
             gridTemplateAreas:'"a b d" "a c d"',
-            gap:'clamp(24px,3vw,34px)',height:'clamp(440px,50vw,560px)'}}>
+            columnGap:'clamp(30px,3vw,44px)',rowGap:'clamp(100px,9.5vw,114px)',height:'clamp(540px,60vw,680px)'}}>
             {ppl.map((p,i)=>(
               /* Custom crayon tile (not CrayonCard) so the flex layout reaches the
                  content directly and the text can never overflow the fixed-height tile. */
               <div key={p.area} style={{gridArea:p.area,minHeight:0,position:'relative',filter:'drop-shadow(0 10px 18px rgba(61,40,23,0.18))'}}>
-                {/* speech bubble peeking above the tile */}
-                <div style={{position:'absolute',top:-24,left:'50%',transform:`translateX(-50%) rotate(${p.rot}deg)`,zIndex:5,pointerEvents:'none'}}>
-                  <FancyBubble shape={p.bubble} deco={p.deco} t={t} fill={PALETTE.cream} color={PALETTE.ink}>
-                    <span style={{fontFamily:t.bf,fontSize:10.5,fontWeight:700,color:PALETTE.ink,whiteSpace:'nowrap'}}>{p.speech}</span>
-                  </FancyBubble>
+                {/* speech bubble floating above the tile (lifted clear, sits in the gap) */}
+                <div style={{position:'absolute',top:0,left:'50%',transform:`translate(-50%,-78%) rotate(${p.rot}deg)`,zIndex:5,pointerEvents:'none'}}>
+                  <TracedBubble shape={p.bubble} deco={p.deco} t={t} width={140}>
+                    <span style={{fontFamily:t.bf,fontSize:10.5,fontWeight:700,color:PALETTE.ink,lineHeight:1.12}}>{p.speech}</span>
+                  </TracedBubble>
                 </div>
                 <div style={{position:'relative',height:'100%',borderRadius:24,padding:14,
                   display:'flex',flexDirection:'column',overflow:'hidden'}}>
@@ -603,13 +586,16 @@ const Personalities = ({ t }) => {
                     <rect x="2" y="2" width="96" height="96" rx="6" ry="6" fill={`${p.color}55`}
                       stroke={PALETTE.ink} strokeWidth="2.5" filter="url(#cr)" vectorEffect="non-scaling-stroke"/>
                   </svg>
-                  <div style={{position:'relative',zIndex:1,flex:1,minHeight:0,display:'flex',flexDirection:'column'}}>
-                    <div style={{flex:1,minHeight:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  {/* plant + text grouped and centered vertically so the plant scales
+                     with the card (proportional) and the text sits around the middle,
+                     not glued to the bottom. */}
+                  <div style={{position:'relative',zIndex:1,flex:1,minHeight:0,display:'flex',flexDirection:'column',justifyContent:'flex-start',paddingTop:'6%'}}>
+                    <div style={{height:'62%',minHeight:0,flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',marginBottom:12}}>
                       <img src={p.photo} alt={p.name}
                         style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain',
                           filter:'drop-shadow(0 4px 8px rgba(61,40,23,0.18))'}}/>
                     </div>
-                    <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:'clamp(16px,1.5vw,20px)',color:PALETTE.ink,margin:'4px 0 2px'}}>{p.name}</h3>
+                    <h3 style={{fontFamily:t.hf,fontWeight:800,fontSize:'clamp(16px,1.5vw,20px)',color:PALETTE.ink,margin:'0 0 2px'}}>{p.name}</h3>
                     <div style={{fontFamily:t.bf,fontSize:11,color:PALETTE.inkSoft,fontWeight:700,letterSpacing:'.5px'}}>{p.trait}</div>
                     <p style={{fontFamily:t.bf,fontSize:12,color:PALETTE.inkSoft,lineHeight:1.4,margin:'4px 0 0'}}>{p.desc}</p>
                   </div>
@@ -744,8 +730,8 @@ const Footer = ({ t }) => (
       </div>
       {[
         {t:'Producto',l:[{n:'Cómo funciona',h:'Como funciona.html'},{n:'Personalidades',h:'Personalidades.html'},{n:'Tienda',h:'Tienda.html'}]},
-        {t:'Recursos',l:[{n:'Blog',h:'#'},{n:'Guías',h:'#'},{n:'FAQ',h:'#'}]},
-        {t:'Legal',l:[{n:'Términos',h:'#'},{n:'Privacidad',h:'#'},{n:'Contacto',h:'#'}]}
+        {t:'Recursos',l:[{n:'Blog',h:'blog/index.html'},{n:'Guías',h:'#'},{n:'FAQ',h:'Tienda.html#faq'}]},
+        {t:'Legal',l:[{n:'Términos',h:'Terminos.html'},{n:'Privacidad',h:'Privacidad.html'},{n:'Contacto',h:'mailto:hola@gossipgarden.co'}]}
       ].map(col=>(
         <div key={col.t}>
           <h4 style={{fontFamily:t.hf,fontWeight:800,fontSize:13,color:PALETTE.ink,marginBottom:10,letterSpacing:'.3px'}}>{col.t}</h4>
