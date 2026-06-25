@@ -24,7 +24,8 @@
     .gg-ul path{stroke-dasharray:240;stroke-dashoffset:240;transition:stroke-dashoffset .55s cubic-bezier(.4,0,.2,1)}
     .gg-navlink:hover .gg-ul path{stroke-dashoffset:0}
     .gg-navlink.is-active .gg-ul path{stroke-dashoffset:0}
-    .gg-navlink.is-active:hover .gg-ul path{animation:ggDraw .6s cubic-bezier(.4,0,.2,1)}
+    .gg-nav-d:hover .gg-navlink.is-active .gg-ul path{stroke-dashoffset:240}
+    .gg-nav-d:hover .gg-navlink.is-active:hover .gg-ul path{stroke-dashoffset:0;animation:ggDraw .6s cubic-bezier(.4,0,.2,1)}
     @keyframes ggDraw{from{stroke-dashoffset:240}to{stroke-dashoffset:0}}
     ::-webkit-scrollbar{width:8px}
     ::-webkit-scrollbar-track{background:#FAF1DA}
@@ -38,7 +39,7 @@
 <body>
   <div id="root"></div>
   <script type="text/babel" src="components/crayon-v3.jsx"></script>
-  <script type="text/babel" src="components/sections-v3.jsx?v=20260624u"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260624x"></script>
   <script type="text/babel">
     const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
