@@ -98,6 +98,7 @@ assets/
     maceta360/         001–100.webp — hero turntable frames (scroll-scrubbed)
     sincara/           1–4.webp — faceless pots for the Variants section
     animadas/          1–4.webp — face pots cycled by PlantRotator (CTA)
+    caras/             {A,M,R,Y}{alegre,dormilona,dramatica,exigente}.png — face pots by color × personality (A=azul, M=morado, R=rosado, Y=amarillo); not wired into any page yet
   personalidades/
     collage/           {alegre,dormilona,dramatica,exigente}.webp — Personalidades section moodboard collage (index.html)
     legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by Personalidades.html and Tienda.html
