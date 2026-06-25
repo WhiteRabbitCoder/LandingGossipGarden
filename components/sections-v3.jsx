@@ -26,6 +26,8 @@ const Nav = ({ t }) => {
         .gg-ul path{stroke-dasharray:240;stroke-dashoffset:240;transition:stroke-dashoffset .55s cubic-bezier(.4,0,.2,1)}
         .gg-navlink:hover .gg-ul path{stroke-dashoffset:0}
         .gg-navlink.is-active .gg-ul path{stroke-dashoffset:0}
+        .gg-navlink.is-active:hover .gg-ul path{animation:ggDraw .6s cubic-bezier(.4,0,.2,1)}
+        @keyframes ggDraw{from{stroke-dashoffset:240}to{stroke-dashoffset:0}}
         .gg-brand{transition:transform .2s ease}
         .gg-brand:hover{transform:translateY(-1px) rotate(-1deg)}
       `}</style>
