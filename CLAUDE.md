@@ -98,11 +98,11 @@ assets/
     maceta360/         001–100.webp — hero turntable frames (scroll-scrubbed)
     sincara/           1–4.webp — faceless pots for the Variants section
     animadas/          1–4.webp — face pots cycled by PlantRotator (CTA)
-    caras/             {A,M,R,Y}{alegre,dormilona,dramatica,exigente}.png — face pots by color × personality (A=azul, M=morado, R=rosado, Y=amarillo); not wired into any page yet
-    simple/            {amarilla,azul,morada,rosada}Plana.png — faceless flat pots, one per color (for the Tienda)
+    caras/             {amarilla,azul,morada,rosada}-{alegre,asombrada,dormilona,enojada}.png — colored face pots by color × emotion; Tienda preview loads these (personality→emotion: alegre→alegre, dormilona→dormilona, dramatica→asombrada, exigente→enojada)
+    simple/            simple{Amarilo,Azul,Morado,Rosado}.png — faceless flat pots, one per color (Tienda color selector)
   personalidades/
-    collage/           {alegre,dormilona,dramatica,exigente}.webp — Personalidades section moodboard collage (index.html)
-    legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by Personalidades.html and Tienda.html
+    collage/           {alegre,dormilona,dramatica,exigente}.webp — Personalidades moodboard collage (index.html) + Tienda personality selector
+    legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by Personalidades.html
 docs/         DESIGN-SYSTEM.md + product docs + BLOG-SETUP.md (Supabase setup for the blog)
 ```
 

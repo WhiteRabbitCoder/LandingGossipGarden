@@ -136,21 +136,23 @@
       const [charId,  setCharId]  = React.useState('alegre');
 
       const pots = [
-        { id:'amarilla', label:'Amarilla', img:'assets/materas/simple/amarillaPlana.png', accent:'#F2D27A' },
-        { id:'azul',     label:'Azul',     img:'assets/materas/simple/azulPlana.png',     accent:'#B8C9E8' },
-        { id:'morada',   label:'Morada',   img:'assets/materas/simple/moradaPlana.png',   accent:'#C9B3E6' },
-        { id:'rosada',   label:'Rosada',   img:'assets/materas/simple/rosadaPlana.png',   accent:'#F0C0C8' },
+        { id:'amarilla', label:'Sunny',   img:'assets/materas/simple/simpleAmarilo.png', accent:'#F2D27A' },
+        { id:'azul',     label:'Cielo',   img:'assets/materas/simple/simpleAzul.png',     accent:'#B8C9E8' },
+        { id:'morada',   label:'Lavanda', img:'assets/materas/simple/simpleMorado.png',   accent:'#C9B3E6' },
+        { id:'rosada',   label:'Coral',   img:'assets/materas/simple/simpleRosado.png',   accent:'#F0C0C8' },
       ];
 
       const chars = [
-        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/personalidades/legacy/FELIZ.png',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
-        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/personalidades/legacy/DORMILON.png', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
-        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/personalidades/legacy/TRISTE.png',   speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
-        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/personalidades/legacy/BRAVA.png',    speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
+        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/personalidades/collage/alegre.webp',    emotion:'alegre',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
+        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/personalidades/collage/dormilona.webp', emotion:'dormilona', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
+        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/personalidades/collage/dramatica.webp', emotion:'asombrada', speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
+        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/personalidades/collage/exigente.webp',  emotion:'enojada',   speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
       ];
 
       const pot = pots.find(p => p.id === colorId);
       const ch  = chars.find(c => c.id === charId);
+      // Imagen combinada (maceta de color + cara) según selección — carpeta caras/
+      const comboImg = `assets/materas/caras/${colorId}-${ch.emotion}.png`;
 
       return (
         <section id="configurador" style={{padding:'0 clamp(20px,5vw,80px) 80px'}}>
@@ -271,19 +273,11 @@
                     </SpeechBubble>
                   </div>
 
-                  {/* pot */}
-                  <img key={'pot-'+colorId} src={pot.img}
-                    style={{height:'clamp(230px,28vw,310px)',width:'auto',objectFit:'contain',
+                  {/* maceta de color + cara, combinada según selección */}
+                  <img key={'combo-'+colorId+'-'+charId} src={comboImg}
+                    style={{height:'clamp(250px,30vw,340px)',width:'auto',objectFit:'contain',
                       filter:'drop-shadow(0 10px 26px rgba(61,40,23,0.18))',
                       animation:'floatA 4s ease-in-out infinite, fadeSwap 0.35s ease both'}}/>
-
-                  {/* emotion face */}
-                  <img key={'ch-'+charId} src={ch.img}
-                    style={{position:'absolute',bottom:-4,right:-10,
-                      height:'clamp(82px,10vw,108px)',width:'auto',objectFit:'contain',
-                      filter:'drop-shadow(0 4px 10px rgba(61,40,23,0.22))',
-                      transform:'rotate(5deg)',
-                      animation:'fadeSwap 0.3s ease both'}}/>
                 </div>
 
                 <div style={{textAlign:'center',borderTop:`1.5px dashed ${P.ink}28`,paddingTop:18}}>
