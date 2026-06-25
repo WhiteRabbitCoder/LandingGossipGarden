@@ -129,14 +129,14 @@
 
     /* ─── Configurator ─── */
     const PotConfigurator = () => {
-      const [colorId, setColorId] = React.useState('verde');
+      const [colorId, setColorId] = React.useState('amarilla');
       const [charId,  setCharId]  = React.useState('alegre');
 
       const pots = [
-        { id:'verde',   label:'Verde',   img:'assets/materas/colores/VERDE2.png',   accent:'#A8D5A2' },
-        { id:'azul',    label:'Azul',    img:'assets/materas/colores/AZUL2.png',    accent:'#B8C9E8' },
-        { id:'rosado',  label:'Rosado',  img:'assets/materas/colores/ROSADO2.png',  accent:'#F0C0C8' },
-        { id:'naranja', label:'Naranja', img:'assets/materas/colores/NARANJA2.png', accent:'#F0C090' },
+        { id:'amarilla', label:'Amarilla', img:'assets/materas/simple/amarillaPlana.png', accent:'#F2D27A' },
+        { id:'azul',     label:'Azul',     img:'assets/materas/simple/azulPlana.png',     accent:'#B8C9E8' },
+        { id:'morada',   label:'Morada',   img:'assets/materas/simple/moradaPlana.png',   accent:'#C9B3E6' },
+        { id:'rosada',   label:'Rosada',   img:'assets/materas/simple/rosadaPlana.png',   accent:'#F0C0C8' },
       ];
 
       const chars = [
