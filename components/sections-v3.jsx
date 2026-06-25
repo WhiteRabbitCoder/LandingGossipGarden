@@ -557,10 +557,10 @@ const TracedBubble = ({ shape='ovalo', width=140, deco, t, children }) => {
 const Personalities = ({ t }) => {
   // area = celda en el mosaico (a/d son altas, b/c chicas apiladas en medio).
   const ppl = [
-    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/collage/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'ovalo',            deco:'stars', rot:-4 },
-    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/collage/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'nube-pensamiento', deco:'zzz',   rot:3 },
-    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/collage/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion',        deco:'excl',  rot:-3 },
-    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/collage/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'estallido',        deco:'anger', rot:4 },
+    { area:'a', name:'Alegre',    color:'#F4D06F', photo:'assets/personalidades/collage/alegre.webp',    trait:'Luminosa',  desc:'Te saluda cada mañana con buen humor.', speech:'¡Salió el sol!',       bubble:'ovalo',            deco:'stars', rot:-4, bw:200, fs:20,   lift:-46, bleft:'30%', pop:'#EE9F33' },
+    { area:'b', name:'Dormilona', color:'#8FBEEE', photo:'assets/personalidades/collage/dormilona.webp', trait:'Tranquila', desc:'Calladita; rara vez pide algo.',        speech:'Cinco minutos más...',  bubble:'nube-pensamiento', deco:'zzz',   rot:3,  bw:140, fs:13.5, lift:-84, pop:'#4E8FD4' },
+    { area:'c', name:'Dramática', color:'#E0B8E0', photo:'assets/personalidades/collage/dramatica.webp', trait:'Intensa',   desc:'Lo siente todo y te lo cuenta.',        speech:'¡Esto es un drama!',    bubble:'explosion',        deco:'excl',  rot:-3, bw:174, fs:15,   lift:-60, pop:'#C75CB0' },
+    { area:'d', name:'Exigente',  color:'#A8C88A', photo:'assets/personalidades/collage/exigente.webp',  trait:'Directa',   desc:'Sabe lo que quiere y lo pide.',         speech:'Agua justa. Nada más.', bubble:'estallido',        deco:'anger', rot:4,  bw:138, fs:13.5, lift:-82, inside:true, btop:'6%', pop:'#5E9E38' },
   ];
   return (
     <section style={{padding:'clamp(60px,9vh,120px) clamp(20px,5vw,80px)',textAlign:'center',overflow:'hidden'}}>
@@ -583,15 +583,17 @@ const Personalities = ({ t }) => {
             gridTemplateColumns:'1.15fr 1fr 1.15fr',
             gridTemplateRows:'1fr 1fr',
             gridTemplateAreas:'"a b d" "a c d"',
-            columnGap:'clamp(30px,3vw,44px)',rowGap:'clamp(100px,9.5vw,114px)',height:'clamp(540px,60vw,680px)'}}>
+            columnGap:'clamp(30px,3vw,44px)',rowGap:'clamp(78px,8vw,96px)',height:'clamp(460px,52vw,580px)'}}>
             {ppl.map((p,i)=>(
               /* Custom crayon tile (not CrayonCard) so the flex layout reaches the
                  content directly and the text can never overflow the fixed-height tile. */
               <div key={p.area} style={{gridArea:p.area,minHeight:0,position:'relative',filter:'drop-shadow(0 10px 18px rgba(61,40,23,0.18))'}}>
                 {/* speech bubble floating above the tile (lifted clear, sits in the gap) */}
-                <div style={{position:'absolute',top:0,left:'50%',transform:`translate(-50%,-78%) rotate(${p.rot}deg)`,zIndex:5,pointerEvents:'none'}}>
-                  <TracedBubble shape={p.bubble} deco={p.deco} t={t} width={140}>
-                    <span style={{fontFamily:t.bf,fontSize:10.5,fontWeight:700,color:PALETTE.ink,lineHeight:1.12}}>{p.speech}</span>
+                <div style={{position:'absolute',top:p.inside?p.btop:0,left:p.bleft||'50%',transform:`translate(-50%,${p.inside?0:p.lift}%) rotate(${p.rot}deg)`,zIndex:5,pointerEvents:'none'}}>
+                  <TracedBubble shape={p.bubble} deco={p.deco} t={t} width={p.bw}>
+                    <span style={{fontFamily:t.bf,fontStyle:'italic',fontWeight:900,fontSize:p.fs,color:p.pop,lineHeight:1.04,letterSpacing:'.2px',
+                      WebkitTextStroke:`0.3px ${PALETTE.ink}`,
+                      textShadow:`-1px 0 0 ${PALETTE.ink},1px 0 0 ${PALETTE.ink},0 -1px 0 ${PALETTE.ink},0 1px 0 ${PALETTE.ink},1px 1px 0 ${PALETTE.ink},-1px 1px 0 ${PALETTE.ink},1px -1px 0 ${PALETTE.ink},-1px -1px 0 ${PALETTE.ink},2px 3px 3px rgba(61,40,23,.3)`}}>{p.speech}</span>
                   </TracedBubble>
                 </div>
                 <div style={{position:'relative',height:'100%',borderRadius:24,padding:14,
@@ -604,8 +606,8 @@ const Personalities = ({ t }) => {
                   {/* plant + text grouped and centered vertically so the plant scales
                      with the card (proportional) and the text sits around the middle,
                      not glued to the bottom. */}
-                  <div style={{position:'relative',zIndex:1,flex:1,minHeight:0,display:'flex',flexDirection:'column',justifyContent:'flex-start',paddingTop:'6%'}}>
-                    <div style={{height:'62%',minHeight:0,flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',marginBottom:12}}>
+                  <div style={{position:'relative',zIndex:1,flex:1,minHeight:0,display:'flex',flexDirection:'column',justifyContent:'center',paddingTop:'2%',paddingBottom:'3%'}}>
+                    <div style={{flex:'1 1 auto',minHeight:0,display:'flex',alignItems:'flex-end',justifyContent:'center',marginBottom:8}}>
                       <img src={p.photo} alt={p.name}
                         style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain',
                           filter:'drop-shadow(0 4px 8px rgba(61,40,23,0.18))'}}/>
