@@ -209,7 +209,7 @@ const RealPot = ({ size=140, mood='happy', tint='#A8D5A2' }) => {
         <path d="M16,76 L12,82" stroke={PALETTE.ink} strokeWidth="1.5" fill="none" filter="url(#cr)" opacity="0.5"/>
       </svg>
       {/* Real pot image, clipped/contained inside circle */}
-      <img src="assets/materas/hero/pot-real.png" alt=""
+      <img src="assets/pots/hero/pot-real.png" alt=""
         style={{position:'absolute',top:'8%',left:'10%',width:'80%',height:'80%',objectFit:'contain',
           filter:'drop-shadow(0 3px 6px rgba(61,40,23,0.25))'}}/>
       {/* Mood expression overlaid on pot body (lower portion) */}

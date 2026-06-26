@@ -56,7 +56,7 @@
   <div id="root"></div>
 
   <script type="text/babel" src="components/crayon-v3.jsx"></script>
-  <script type="text/babel" src="components/sections-v3.jsx?v=20260625e"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260625k"></script>
 
   <script type="text/babel">
     const t = { hf: 'Quicksand', bf: 'Nunito' };
@@ -72,8 +72,8 @@
       }, []);
       const links = [
         {l:'Inicio', href:'index.html'},
-        {l:'Cómo funciona', href:'Como funciona.html'},
-        {l:'Personalidades', href:'Personalidades.html'},
+        {l:'Cómo funciona', href:'how-it-works.html'},
+        {l:'Personalidades', href:'personalities.html'},
         {l:'Tienda', href:'#', active:true},
       ];
       return (
@@ -86,7 +86,9 @@
             <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
           </a>
           <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
-            {links.map(({l,href,active})=>(
+            {links.map(({l,href,active})=> l==='Tienda'
+              ? <a key={l} href={href} style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Tienda</CrayonButton></a>
+              : (
               <a key={l} href={href} className={active?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,
                 position:'relative',padding:'4px 2px 6px'}}>
                 {l}
@@ -136,23 +138,23 @@
       const [charId,  setCharId]  = React.useState('alegre');
 
       const pots = [
-        { id:'amarilla', label:'Sunny',   img:'assets/materas/simple/simpleAmarilo.png', accent:'#F2D27A' },
-        { id:'azul',     label:'Cielo',   img:'assets/materas/simple/simpleAzul.png',     accent:'#B8C9E8' },
-        { id:'morada',   label:'Lavanda', img:'assets/materas/simple/simpleMorado.png',   accent:'#C9B3E6' },
-        { id:'rosada',   label:'Coral',   img:'assets/materas/simple/simpleRosado.png',   accent:'#F0C0C8' },
+        { id:'amarilla', label:'Sunny',   img:'assets/pots/simple/simpleAmarilo.png', accent:'#F2D27A' },
+        { id:'azul',     label:'Cielo',   img:'assets/pots/simple/simpleAzul.png',     accent:'#B8C9E8' },
+        { id:'morada',   label:'Lavanda', img:'assets/pots/simple/simpleMorado.png',   accent:'#C9B3E6' },
+        { id:'rosada',   label:'Coral',   img:'assets/pots/simple/simpleRosado.png',   accent:'#F0C0C8' },
       ];
 
       const chars = [
-        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/personalidades/collage/alegre.webp',    emotion:'alegre',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
-        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/personalidades/collage/dormilona.webp', emotion:'dormilona', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
-        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/personalidades/collage/dramatica.webp', emotion:'asombrada', speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
-        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/personalidades/collage/exigente.webp',  emotion:'enojada',   speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
+        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/personalities/collage/alegre.webp',    emotion:'alegre',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
+        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/personalities/collage/dormilona.webp', emotion:'dormilona', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
+        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/personalities/collage/dramatica.webp', emotion:'asombrada', speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
+        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/personalities/collage/exigente.webp',  emotion:'enojada',   speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
       ];
 
       const pot = pots.find(p => p.id === colorId);
       const ch  = chars.find(c => c.id === charId);
       // Imagen combinada (maceta de color + cara) según selección — carpeta caras/
-      const comboImg = `assets/materas/caras/${colorId}-${ch.emotion}.png`;
+      const comboImg = `assets/pots/faces/${colorId}-${ch.emotion}.png`;
 
       return (
         <section id="configurador" style={{padding:'0 clamp(20px,5vw,80px) 80px'}}>

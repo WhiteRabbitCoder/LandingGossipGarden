@@ -24,11 +24,11 @@ JSX is transpiled in-browser by `@babel/standalone`. All scripts use `type="text
 | File | Purpose |
 |---|---|
 | `index.html` | Main landing (entry point) |
-| `Personalidades.html` | Plant personalities detail page |
-| `Tienda.html` | Store / purchase page |
-| `Como funciona.html` | How it works page |
-| `Terminos.html` | Terms & Conditions (legal) |
-| `Privacidad.html` | Privacy Policy (legal) |
+| `personalities.html` | Plant personalities detail page |
+| `store.html` | Store / purchase page |
+| `how-it-works.html` | How it works page |
+| `terms.html` | Terms & Conditions (legal) |
+| `privacy.html` | Privacy Policy (legal) |
 | `blog/index.html` | Community blog feed — **separate deployable** (its own domain). See "Blog" below |
 | `blog/post.html` | Single blog post (`?id=…`) with nested comments |
 
@@ -45,11 +45,11 @@ Each page loads React 18 + Babel from CDN, then includes JSX files as `<script t
 
 **`components/sections-v3.jsx`** — All page sections for `index.html`: `Nav`, `ScrollStory`, `Features`, `Personalities`, `Variants`, `CTA`, `Footer`.
 - `ScrollStory` (hero) — a `400vh` container with a `100vh` sticky pane that crossfades through **4 beats**, one per personality (Alegre → Dormilona → Dramática → Exigente). Each beat = left text panel + center pot + right card.
-  - `Maceta360` — the centerpiece: a `<canvas>` that scrubs a **100-frame WebP turntable** (`assets/materas/maceta360/001…100.webp`) to scroll via **GSAP ScrollTrigger**. Falls back to the React `progress` value if GSAP is absent. High-quality `imageSmoothing` is re-set every draw (changing `canvas.width` resets ctx state).
+  - `Maceta360` — the centerpiece: a `<canvas>` that scrubs a **100-frame WebP turntable** (`assets/pots/maceta360/001…100.webp`) to scroll via **GSAP ScrollTrigger**. Falls back to the React `progress` value if GSAP is absent. High-quality `imageSmoothing` is re-set every draw (changing `canvas.width` resets ctx state).
   - **Wheel snapping**: a `wheel` listener hijacks scroll so one gesture advances exactly one beat (snap points `0, 1/3, 2/3, 1`). `FADE_START` (0.75) keeps each beat solid at those marks; at the first/last beat native scroll resumes so the page can exit.
   - Text/cards crossfade "through blank" (`Math.max(0,1-tE*2)` / `Math.max(0,tE*2-1)`) so two beats never overlap.
 - `Personalities` — moodboard **collage**: a CSS-grid mosaic (`grid-template-areas`, class `gg-pers-mosaic` with media queries in `index.html`) of `CrayonCard` tiles over a circle accent, with drop shadows.
-- `Variants` — 4 "sin cara" pots (`assets/materas/sincara/`); `PlantRotator` (inside `CTA`) crossfades 4 face pots (`assets/materas/animadas/`) on a timer.
+- `Variants` — 4 "sin cara" pots (`assets/pots/sincara/`); `PlantRotator` (inside `CTA`) crossfades 4 face pots (`assets/pots/animadas/`) on a timer.
 - `Footer` — stateful: the "Contacto" link opens `ContactModal`. `ContactModal` collects nombre/correo/asunto/mensaje and POSTs to **FormSubmit** (`https://formsubmit.co/ajax/${CONTACT_EMAIL}`) so messages arrive by email with no backend (`CONTACT_EMAIL` const near the Footer; first submission needs a one-time activation email). Footer links use the `.gg-foot-link` hover class (color→heart on hover; injected `<style>` because inline styles beat `:hover`). `CrayonSelect` is a custom crayon dropdown replacing native `<select>` inside the modal.
 - **Nav hover convention** (`.gg-navlink` + `.gg-ul`): each nav link holds an SVG of the hand-drawn crayon underline path (`M3,8 Q40,2 90,9 T196,5`, `leafDk`, `filter:url(#cr)`) that "draws in" on hover via `stroke-dashoffset` (active link `.is-active` stays drawn). The CSS lives in each page's `<head>` (`index.html` injects it from the `Nav`; the other pages' inline navs `Personalidades/Tienda/Como funciona` carry the same `.gg-navlink/.gg-ul` rules). When changing a nav, keep color out of the inline style so `:hover` can win.
 
@@ -61,7 +61,7 @@ Each page loads React 18 + Babel from CDN, then includes JSX files as `<script t
 
 The community blog is a **self-contained mini-site under `blog/`**, meant to be deployed to its **own domain**. It does not share code with the root pages at runtime — it carries its own copy of `crayon-v3.jsx` and `assets/icons/`. It is the only part with a real backend: **Supabase** (Postgres + Storage), used anonymously — no login. Public read + anonymous insert protected by RLS.
 
-- Two sections (tabs `SectionTabs`): **`blog/index.html`** = Blog (editorial articles, `kind='blog'`, only admins can post) and **`blog/foro.html`** = Foro (community, `kind='foro'`, any logged-in user posts). **`blog/post.html`** (`?id=…`) shows either, with nested comments.
+- Two sections (tabs `SectionTabs`): **`blog/index.html`** = Blog (editorial articles, `kind='blog'`, only admins can post) and **`blog/forum.html`** = Foro (community, `kind='foro'`, any logged-in user posts). **`blog/post.html`** (`?id=…`) shows either, with nested comments.
 - Posts have a `kind` column (`blog`/`foro`). Admin gating: a `public.admins` table + `public.is_admin()` (security definer) back an RLS insert policy that only lets admins create `kind='blog'` rows; the frontend mirrors the allowlist in `window.ADMIN_EMAILS` (site-config) via `isAdmin(user)` to show/hide the "Escribir artículo" button.
 - **`blog/components/site-config.js`** — plain script exposing `window.MAIN_SITE_URL` (main site domain, links back) and `window.ADMIN_EMAILS` (blog authors).
 - **`blog/components/supabase-config.js`** — plain script exposing `window.SUPABASE_URL` / `window.SUPABASE_ANON_KEY`. **Generated** from root `.env` by `scripts/gen-config.sh`; both `.env` and this file are git-ignored. Committed templates: `.env.example` and `blog/components/supabase-config.example.js`. Secret vars (`SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL`) live only in `.env` and never reach the browser.
@@ -74,7 +74,7 @@ The community blog is a **self-contained mini-site under `blog/`**, meant to be 
 
 ### Legal pages
 
-`Terminos.html` and `Privacidad.html` share **`components/legal.jsx`**, which exports the layout primitives `LegalPage` (nav + hero + auto-generated table of contents + sections + `Footer`), `LegalNav`, and the typography helpers `LP` (paragraph), `LUL` (bulleted list), `LSub` (subheading), `LNote` (highlight card). Each page just defines a `sections = [{ id, title, content }]` array and renders `<LegalPage … sections={sections}/>`. Content is project-specific (sensor data, IoT/MQTT, AI personality, community) and references Colombian data-protection law (Ley 1581 de 2012). Linked from the footer "Legal" column; contact is `mailto:hola@gossipgarden.co`.
+`terms.html` and `privacy.html` share **`components/legal.jsx`**, which exports the layout primitives `LegalPage` (nav + hero + auto-generated table of contents + sections + `Footer`), `LegalNav`, and the typography helpers `LP` (paragraph), `LUL` (bulleted list), `LSub` (subheading), `LNote` (highlight card). Each page just defines a `sections = [{ id, title, content }]` array and renders `<LegalPage … sections={sections}/>`. Content is project-specific (sensor data, IoT/MQTT, AI personality, community) and references Colombian data-protection law (Ley 1581 de 2012). Linked from the footer "Legal" column; contact is `mailto:hola@gossipgarden.co`.
 
 ### Module system
 
@@ -83,26 +83,26 @@ There are **no ES modules**. Every file ends with `Object.assign(window, { ... }
 ### Folder layout
 
 ```
-index.html, Personalidades.html, Tienda.html, Como funciona.html, Terminos.html, Privacidad.html, style-guide.html
+index.html, personalities.html, store.html, how-it-works.html, terms.html, privacy.html, style-guide.html
 components/   crayon-v3.jsx, sections-v3.jsx, tweaks-panel.jsx, legal.jsx
 scripts/      gen-config.sh   (genera blog/components/supabase-config.js desde .env)
 blog/         (mini-sitio autocontenido, dominio aparte)
-  index.html, post.html
+  index.html, forum.html, post.html
   components/   crayon-v3.jsx (copia), site-config.js, supabase-config.js(.example), blog-data.jsx, blog-ui.jsx, blog-footer.jsx
   assets/icons/ icon-crayon.png (copia)
 assets/
   icons/             icon-crayon.png (logo)
-  materas/
-    colores/           verde/azul/morado/naranja.png + VERDE2/AZUL2/ROSADO2/NARANJA2.png — color-variant pot art
+  pots/
+    colors/            verde/azul/morado/naranja.png + VERDE2/AZUL2/ROSADO2/NARANJA2.png — color-variant pot art
     hero/              pot-hero.png, pot-real.png — hero photo assets
-    maceta360/         001–100.webp — hero turntable frames (scroll-scrubbed)
-    sincara/           1–4.webp — faceless pots for the Variants section
-    animadas/          1–4.webp — face pots cycled by PlantRotator (CTA)
-    caras/             {amarilla,azul,morada,rosada}-{alegre,asombrada,dormilona,enojada}.png — colored face pots by color × emotion; Tienda preview loads these (personality→emotion: alegre→alegre, dormilona→dormilona, dramatica→asombrada, exigente→enojada)
+    pot360/            001–100.webp — hero turntable frames (scroll-scrubbed)
+    faceless/            1–4.webp — faceless pots for the Variants section
+    animated/           1–4.webp — face pots cycled by PlantRotator (CTA)
+    faces/               {amarilla,azul,morada,rosada}-{alegre,asombrada,dormilona,enojada}.png — colored face pots by color × emotion; Tienda preview loads these (personality→emotion: alegre→alegre, dormilona→dormilona, dramatica→asombrada, exigente→enojada)
     simple/            simple{Amarilo,Azul,Morado,Rosado}.png — faceless flat pots, one per color (Tienda color selector)
-  personalidades/
+  personalities/
     collage/           {alegre,dormilona,dramatica,exigente}.webp — Personalidades moodboard collage (index.html) + Tienda personality selector
-    legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by Personalidades.html
+    legacy/            FelizGirasol/Dramatica/TristeOrquidea/BravaCactus.png + FELIZ/TRISTE/BRAVA/DORMILON.png — used by personalities.html
 docs/         DESIGN-SYSTEM.md + product docs + BLOG-SETUP.md (Supabase setup for the blog)
 ```
 
@@ -117,7 +117,7 @@ Each page wires `useTweaks(TWEAK_DEFAULTS)` with `hf` (heading font) and `bf` (b
 - **No emojis** — all icons are hand-drawn SVGs via `HandIcon` or inline paths with `filter="url(#cr)"` for the crayon jitter effect
 - **Crayon filters must be in scope** — any new SVG element that needs the hand-drawn look needs `filter="url(#cr)"` (shapes) or `filter="url(#cr-text)"` (type); these filters are injected by `<CrayonDefs/>` at the app root
 - **PALETTE** is the single source of truth for all colors; never hardcode hex values that exist there
-- The `assets/materas/hero/pot-real.png` asset is a photo used as the hero; `assets/icons/icon-crayon.png` is the logo icon
+- The `assets/pots/hero/pot-real.png` asset is a photo used as the hero; `assets/icons/icon-crayon.png` is the logo icon
 
 ## Product context
 

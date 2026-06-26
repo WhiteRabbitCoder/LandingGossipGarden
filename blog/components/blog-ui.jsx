@@ -6,7 +6,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 const P = window.PALETTE;
 
-/* Personalidades: mismos colores que Personalidades.html */
+/* Personalidades: mismos colores que personalities.html */
 const PERSONA_META = {
   alegre:    { label: 'Alegre',    color: '#A8D5A2', bg: '#F0FAF0' },
   dormilona: { label: 'Dormilona', color: '#B8C9E8', bg: '#EEF2FA' },
@@ -17,7 +17,7 @@ const PERSONA_KEYS = ['alegre', 'dormilona', 'dramatica', 'exigente'];
 
 /* ─── Pestañas Blog | Foro ─────────────────────────────────────────────────── */
 const SectionTabs = ({ t, active }) => {
-  const tabs = [{ l: 'Blog', href: 'index.html', key: 'blog' }, { l: 'Foro', href: 'foro.html', key: 'foro' }];
+  const tabs = [{ l: 'Blog', href: 'index.html', key: 'blog' }, { l: 'Foro', href: 'forum.html', key: 'foro' }];
   return (
     <div style={{ display: 'flex', gap: 10 }}>
       {tabs.map(tab => {

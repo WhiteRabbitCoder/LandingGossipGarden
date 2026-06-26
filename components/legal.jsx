@@ -17,9 +17,9 @@ const LegalNav = ({ t }) => {
   }, []);
   const links = [
     { l: 'Inicio', href: 'index.html' },
-    { l: 'Cómo funciona', href: 'Como funciona.html' },
-    { l: 'Personalidades', href: 'Personalidades.html' },
-    { l: 'Tienda', href: 'Tienda.html' },
+    { l: 'Cómo funciona', href: 'how-it-works.html' },
+    { l: 'Personalidades', href: 'personalities.html' },
+    { l: 'Tienda', href: 'store.html' },
     { l: 'Blog', href: 'blog/index.html' },
   ];
   return (
@@ -34,7 +34,7 @@ const LegalNav = ({ t }) => {
         {links.map(({ l, href }) => (
           <a key={l} href={href} style={{ color: P.ink, textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: t.bf, padding: '4px 2px' }}>{l}</a>
         ))}
-        <a href="Tienda.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Comprar</CrayonButton></a>
+        <a href="store.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Comprar</CrayonButton></a>
       </div>
       <button className="gg-nav-m" onClick={() => setO(!o)} style={{ display: 'none', background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: P.ink }}>{o ? '×' : '≡'}</button>
       {o && <div style={{ position: 'absolute', top: 72, left: 0, right: 0, background: 'rgba(250,241,218,0.98)', padding: 24, display: 'flex', flexDirection: 'column', gap: 18, borderBottom: `2px solid ${P.ink}33` }}>

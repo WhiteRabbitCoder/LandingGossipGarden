@@ -11,17 +11,17 @@ const Footer = ({ t }) => {
   const cols = [
     { t: 'Producto', l: [
       { n: 'Inicio', h: MAIN || '#' },
-      { n: 'Cómo funciona', h: `${MAIN}/Como funciona.html` },
-      { n: 'Personalidades', h: `${MAIN}/Personalidades.html` },
-      { n: 'Tienda', h: `${MAIN}/Tienda.html` },
+      { n: 'Cómo funciona', h: `${MAIN}/how-it-works.html` },
+      { n: 'Personalidades', h: `${MAIN}/personalities.html` },
+      { n: 'Tienda', h: `${MAIN}/store.html` },
     ]},
     { t: 'Comunidad', l: [
       { n: 'Blog', h: 'index.html' },
-      { n: 'Foro', h: 'foro.html' },
+      { n: 'Foro', h: 'forum.html' },
     ]},
     { t: 'Legal', l: [
-      { n: 'Términos', h: `${MAIN}/Terminos.html` },
-      { n: 'Privacidad', h: `${MAIN}/Privacidad.html` },
+      { n: 'Términos', h: `${MAIN}/terms.html` },
+      { n: 'Privacidad', h: `${MAIN}/privacy.html` },
       { n: 'Contacto', action: 'contact' },
     ]},
   ];

@@ -39,7 +39,7 @@
 <body>
   <div id="root"></div>
   <script type="text/babel" src="components/crayon-v3.jsx"></script>
-  <script type="text/babel" src="components/sections-v3.jsx?v=20260625e"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260625k"></script>
   <script type="text/babel">
     const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
@@ -54,9 +54,9 @@
       }, []);
       const links = [
         {l:'Inicio', href:'index.html'},
-        {l:'Cómo funciona', href:'Como funciona.html'},
-        {l:'Personalidades', href:'Personalidades.html'},
-        {l:'Tienda', href:'Tienda.html'},
+        {l:'Cómo funciona', href:'how-it-works.html'},
+        {l:'Personalidades', href:'personalities.html'},
+        {l:'Tienda', href:'store.html'},
       ];
       return (
         <nav style={{position:'fixed',top:0,left:0,right:0,zIndex:100,height:72,
@@ -67,13 +67,14 @@
             <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
           </a>
           <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
-            {links.map(({l,href})=>(
+            {links.map(({l,href})=> l==='Tienda'
+              ? <a key={l} href={href} style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Tienda</CrayonButton></a>
+              : (
               <a key={l} href={href} className={l==='Personalidades'?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,position:'relative',padding:'4px 2px 6px'}}>
                 {l}
                 <svg className="gg-ul" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M3,8 Q40,2 90,9 T196,5" fill="none" stroke={P.leafDk} strokeWidth="3" strokeLinecap="round" filter="url(#cr)"/></svg>
               </a>
             ))}
-            <a href="Tienda.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Comprar</CrayonButton></a>
           </div>
           <button className="gg-nav-m" onClick={()=>setO(!o)} style={{display:'none',background:'none',border:'none',fontSize:24,cursor:'pointer',color:P.ink}}>{o?'×':'≡'}</button>
           {o && <div style={{position:'absolute',top:72,left:0,right:0,background:'rgba(250,241,218,0.98)',padding:24,display:'flex',flexDirection:'column',gap:18,borderBottom:`2px solid ${P.ink}33`}}>
@@ -124,7 +125,7 @@
                   ))}
                 </div>
               </div>
-              <a href="Tienda.html" style={{textDecoration:'none'}}>
+              <a href="store.html" style={{textDecoration:'none'}}>
                 <CrayonButton fill={color} stroke={P.ink}>Quiero esta planta</CrayonButton>
               </a>
             </div>
@@ -136,7 +137,7 @@
     const personalities = [
       {
         name:'Alegre', plant:'Girasol', color:'#A8D5A2', bg:'#F0FAF0',
-        photo:'assets/personalidades/legacy/FelizGirasol.png',
+        photo:'assets/personalities/cards/alegre.webp',
         tagline:'Extrovertida · Luminosa · Activa',
         desc:'Un girasol vive mirando al sol. Extrovertido por naturaleza, siempre orientado hacia la luz y dispuesto a compartir cómo se siente. Si plantas un girasol, espera mensajes frecuentes llenos de energía — la maceta es su hogar, el carácter es suyo.',
         traits:['Muy comunicativa','Amante del sol','Agradecida','Tolerante','Social'],
@@ -148,7 +149,7 @@
       },
       {
         name:'Dormilona', plant:'Suculenta', color:'#B8C9E8', bg:'#EEF2FA',
-        photo:'assets/personalidades/legacy/Dramatica.png',
+        photo:'assets/personalities/cards/dormilona.webp',
         tagline:'Tranquila · Paciente · Discreta',
         desc:'Una suculenta acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque realmente lo necesita. No exige atención constante — perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
         traits:['Poco exigente','Sombra-friendly','Mensajes breves','Tranquila','Independiente'],
@@ -160,7 +161,7 @@
       },
       {
         name:'Dramática', plant:'Orquídea', color:'#E0B8E0', bg:'#FAF0FA',
-        photo:'assets/personalidades/legacy/TristeOrquidea.png',
+        photo:'assets/personalities/cards/dramatica.webp',
         tagline:'Sensible · Intensa · Espectacular',
         desc:'Una orquídea es caprichosa con la luz, la temperatura y el riego. Cualquier cambio lo nota y lo comunica al instante. No entiende las medias tintas. Pero cuando está bien cuidada, florece de una manera que no tiene rival.',
         traits:['Muy expresiva','Alta demanda','Emocional','Fiel','Entretenida'],
@@ -172,7 +173,7 @@
       },
       {
         name:'Exigente', plant:'Cactus', color:'#F5C2C2', bg:'#FDF0F0',
-        photo:'assets/personalidades/legacy/BravaCactus.png',
+        photo:'assets/personalities/cards/exigente.webp',
         tagline:'Directa · Resiliente · Independiente',
         desc:'Un cactus no necesita que lo mimen, pero sí que lo respeten. Sabe exactamente qué condiciones necesita y lo comunica sin rodeos. No pide más de lo necesario — pero cuando pide algo, va completamente en serio.',
         traits:['Directa','Constante','Alta autoestima','Sin rodeos','Leal'],
@@ -218,8 +219,8 @@
               </p>
               <p style={{fontFamily:t.bf,fontSize:11,color:P.inkSoft,marginTop:6,opacity:.6}}>*Algunas funciones avanzadas pueden cobrarse por separado.</p>
               <div style={{display:'flex',gap:14,justifyContent:'center',marginTop:22,flexWrap:'wrap'}}>
-                <a href="Tienda.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir a la tienda</CrayonButton></a>
-                <a href="Como funciona.html" style={{textDecoration:'none'}}><CrayonButton fill={P.cream} stroke={P.ink}>Cómo funciona</CrayonButton></a>
+                <a href="store.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir a la tienda</CrayonButton></a>
+                <a href="how-it-works.html" style={{textDecoration:'none'}}><CrayonButton fill={P.cream} stroke={P.ink}>Cómo funciona</CrayonButton></a>
               </div>
             </CrayonCard>
           </Reveal>
