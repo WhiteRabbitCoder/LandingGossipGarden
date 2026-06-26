@@ -76,9 +76,9 @@
   <!-- Block native image drag in every browser (incl. Firefox, which ignores user-drag) -->
   <script>document.addEventListener('dragstart', function(e){ if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });</script>
 
-  <script type="text/babel" src="components/crayon-v3.jsx?v=20260624x"></script>
-  <script type="text/babel" src="components/sections-v3.jsx?v=20260625k"></script>
-  <script type="text/babel" src="components/tweaks-panel.jsx?v=20260624x"></script>
+  <script type="text/babel" src="components/crayon-v3.jsx?v=20260626f"></script>
+  <script type="text/babel" src="components/sections-v3.jsx?v=20260626f"></script>
+  <script type="text/babel" src="components/tweaks-panel.jsx?v=20260626f"></script>
 
   <script type="text/babel">
     const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -88,7 +88,8 @@
 
     const App = () => {
       const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
-      const t = { hf: tweaks.hf, bf: tweaks.bf };
+      const lang = useLang();
+      const t = { hf: tweaks.hf, bf: tweaks.bf, lang };
       return (
         <div style={{ fontFamily: tweaks.bf, position: 'relative' }}>
           <CrayonDefs/>
@@ -99,6 +100,9 @@
           <Variants t={t}/>
           <CTA t={t}/>
           <Footer t={t}/>
+
+          <ChatWidget t={t}/>
+          <LangSwitcher t={t}/>
 
           <TweaksPanel>
             <TweakSection title="Tipografía">
