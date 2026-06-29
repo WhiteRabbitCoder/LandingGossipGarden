@@ -39,10 +39,11 @@
   <script type="text/babel" src="components/blog-data.jsx?v=20260624x"></script>
   <script type="text/babel" src="components/blog-ui.jsx?v=20260624x"></script>
   <script type="text/babel">
-    const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
 
     const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
       const id = new URLSearchParams(location.search).get('id');
       const [post, setPost] = React.useState(undefined); // undefined = cargando, null = no existe
       const [comments, setComments] = React.useState([]);
@@ -68,7 +69,7 @@
       const m = post && post.personality ? window.PERSONA_META[post.personality] : null;
       const isForo = post && post.kind === 'foro';
       const backHref = isForo ? 'forum.html' : 'index.html';
-      const backText = isForo ? '← Volver al foro' : '← Volver al blog';
+      const backText = isForo ? L(lang,'← Volver al foro','← Back to forum') : L(lang,'← Volver al blog','← Back to blog');
 
       return (
         <div style={{ fontFamily: t.bf, position: 'relative' }}>
@@ -81,16 +82,16 @@
             </a>
 
             {post === undefined && (
-              <p style={{ fontFamily: t.bf, color: P.inkSoft, opacity: .7 }}>Cargando…</p>
+              <p style={{ fontFamily: t.bf, color: P.inkSoft, opacity: .7 }}>{L(lang,'Cargando…','Loading…')}</p>
             )}
 
             {post === null && (
               <CrayonCard fill={P.cream} stroke={P.ink} sw={2.5} radius={22} padding={32} style={{ textAlign: 'center' }}>
-                <h2 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 24, color: P.ink, marginBottom: 8 }}>Publicación no encontrada</h2>
+                <h2 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 24, color: P.ink, marginBottom: 8 }}>{L(lang,'Publicación no encontrada','Post not found')}</h2>
                 <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, marginBottom: 18 }}>
-                  {window.BLOG_CONFIGURED ? 'Puede que se haya eliminado o el enlace sea incorrecto.' : 'Conecta Supabase para ver las publicaciones (docs/BLOG-SETUP.md).'}
+                  {window.BLOG_CONFIGURED ? L(lang,'Puede que se haya eliminado o el enlace sea incorrecto.','It may have been removed or the link is incorrect.') : L(lang,'Conecta Supabase para ver las publicaciones (docs/BLOG-SETUP.md).','Connect Supabase to view posts (docs/BLOG-SETUP.md).')}
                 </p>
-                <a href="index.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir al blog</CrayonButton></a>
+                <a href="index.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{L(lang,'Ir al blog','Go to the blog')}</CrayonButton></a>
               </CrayonCard>
             )}
 
@@ -110,7 +111,7 @@
                         <Avatar name={post.author_name} size={44}/>
                         <div>
                           <div style={{ fontFamily: t.bf, fontWeight: 800, fontSize: 16, color: P.ink }}>{post.author_name}</div>
-                          <div style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, opacity: .7 }}>{window.timeAgo(post.created_at)} · {window.readingTime(post.body)} min de lectura</div>
+                          <div style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, opacity: .7 }}>{window.timeAgo(post.created_at)} · {window.readingTime(post.body)} {L(lang,'min de lectura','min read')}</div>
                         </div>
                         {m && <span style={{ marginLeft: 'auto' }}><PersonaTag k={post.personality} active t={t}/></span>}
                       </div>
@@ -131,7 +132,7 @@
                 {/* Comentarios */}
                 <section style={{ marginTop: 40 }}>
                   <h2 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 24, color: P.ink, marginBottom: 6 }}>
-                    Comentarios <span style={{ color: P.inkSoft, opacity: .6, fontSize: 18 }}>({comments.length})</span>
+                    {L(lang,'Comentarios','Comments')} <span style={{ color: P.inkSoft, opacity: .6, fontSize: 18 }}>({comments.length})</span>
                   </h2>
                   <CrayonUnderline color={P.leafDk} w="120px" h={4}/>
                   <div style={{ marginTop: 22 }}>
@@ -140,8 +141,8 @@
                         ? <CommentForm t={t} postId={post.id} user={user} onCreated={loadComments}/>
                         : (
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                            <span style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft }}>Inicia sesión para dejar un comentario.</span>
-                            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={() => setAuthOpen(true)}>Iniciar sesión</CrayonButton>
+                            <span style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft }}>{L(lang,'Inicia sesión para dejar un comentario.','Sign in to leave a comment.')}</span>
+                            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={() => setAuthOpen(true)}>{L(lang,'Iniciar sesión','Sign in')}</CrayonButton>
                           </div>
                         )}
                     </CrayonCard>
@@ -157,6 +158,7 @@
           {authOpen && <AuthModal t={t} onClose={() => setAuthOpen(false)} onAuthed={() => setAuthOpen(false)}/>}
 
           <Footer t={t}/>
+          <LangSwitcher t={t}/>
         </div>
       );
     };

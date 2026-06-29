@@ -46,10 +46,11 @@
   <script type="text/babel" src="components/blog-data.jsx?v=20260624x"></script>
   <script type="text/babel" src="components/blog-ui.jsx?v=20260624x"></script>
   <script type="text/babel">
-    const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
 
     const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
       const [posts, setPosts] = React.useState(null); // null = cargando
       const [error, setError] = React.useState(null);
       const [filter, setFilter] = React.useState(null);
@@ -73,14 +74,14 @@
 
       const onCreated = () => { setShowForm(false); load(filter); };
 
-      const today = new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const today = new Date().toLocaleDateString(lang === 'en' ? 'en' : 'es', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
       const featured = posts && posts.length ? posts[0] : null;
       const rest = posts && posts.length ? posts.slice(1) : [];
 
       return (
         <div style={{ fontFamily: t.bf, position: 'relative' }}>
           <CrayonDefs/>
-          <BlogMasthead t={t} section="blog" dateText={today} subtitle="Artículos y guías del equipo de Gossip Garden."/>
+          <BlogMasthead t={t} section="blog" dateText={today} subtitle={L(lang,'Artículos y guías del equipo de Gossip Garden.','Articles and guides from the Gossip Garden team.')}/>
 
           {/* Barra de acciones: filtros + (solo admin) escribir artículo */}
           <div style={{ maxWidth: 1180, margin: '0 auto', padding: '22px clamp(20px,5vw,48px) 0', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
@@ -88,14 +89,14 @@
               <span onClick={() => setFilter(null)} style={{
                 fontFamily: t.bf, fontSize: 12, fontWeight: 700, padding: '5px 13px', borderRadius: 20,
                 background: filter === null ? P.pot : `${P.pot}55`, border: `1.5px solid ${P.ink}`, color: P.ink,
-                cursor: 'pointer', userSelect: 'none', boxShadow: filter === null ? `2px 2px 0 ${P.ink}` : 'none' }}>Todas</span>
+                cursor: 'pointer', userSelect: 'none', boxShadow: filter === null ? `2px 2px 0 ${P.ink}` : 'none' }}>{L(lang,'Todas','All')}</span>
               {window.PERSONA_KEYS.map(k => <PersonaTag key={k} k={k} active={filter === k} onClick={() => setFilter(filter === k ? null : k)} t={t}/>)}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
               <AccountControl t={t} user={user} onLogin={() => setAuthOpen(true)}/>
               {admin && (
                 <CrayonButton fill={showForm ? P.cream : P.heart} stroke={P.ink} color={showForm ? P.ink : P.cream} onClick={onWriteClick}>
-                  {showForm ? 'Cerrar' : '+ Escribir artículo'}
+                  {showForm ? L(lang,'Cerrar','Close') : L(lang,'+ Escribir artículo','+ Write article')}
                 </CrayonButton>
               )}
             </div>
@@ -110,7 +111,7 @@
           {/* Cuerpo: principal + tendencia */}
           <div className="gg-main" style={{ paddingTop: 34 }}>
             <main>
-              <SectionHeading t={t}>Lo último</SectionHeading>
+              <SectionHeading t={t}>{L(lang,'Lo último','Latest')}</SectionHeading>
 
               {posts === null && (
                 <div className="gg-cards">
@@ -121,7 +122,7 @@
               {posts && posts.length === 0 && (
                 <div style={{ padding: '20px 0 40px' }}>
                   <p style={{ fontFamily: t.bf, fontSize: 16, color: P.inkSoft, opacity: .8 }}>
-                    {window.BLOG_CONFIGURED ? 'Aún no hay artículos publicados.' : 'Conecta Supabase para ver los artículos.'}
+                    {window.BLOG_CONFIGURED ? L(lang,'Aún no hay artículos publicados.','No articles published yet.') : L(lang,'Conecta Supabase para ver los artículos.','Connect Supabase to see the articles.')}
                   </p>
                 </div>
               )}
@@ -135,14 +136,15 @@
             </main>
 
             <aside className="gg-side">
-              <SectionHeading t={t}>Tendencia</SectionHeading>
+              <SectionHeading t={t}>{L(lang,'Tendencia','Trending')}</SectionHeading>
               {posts === null
-                ? <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .6 }}>Cargando…</p>
+                ? <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .6 }}>{L(lang,'Cargando…','Loading…')}</p>
                 : <TrendingList posts={posts} t={t}/>}
             </aside>
           </div>
 
           <Footer t={t}/>
+          <LangSwitcher t={t}/>
         </div>
       );
     };

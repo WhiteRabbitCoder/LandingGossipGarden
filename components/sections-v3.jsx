@@ -1083,4 +1083,4 @@ const LangSwitcher = ({ t }) => {
   );
 };
 
-Object.assign(window, { Nav, ScrollStory, Features, Personalities, Variants, CTA, Footer, ContactModal, ChatWidget, LangSwitcher, AlegreCard, DormilonaCard, DramaticaCard, ExigenteCard });
+Object.assign(window, { L, useLang, Nav, ScrollStory, Features, Personalities, Variants, CTA, Footer, ContactModal, ChatWidget, LangSwitcher, AlegreCard, DormilonaCard, DramaticaCard, ExigenteCard });

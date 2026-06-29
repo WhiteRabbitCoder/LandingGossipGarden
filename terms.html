@@ -34,123 +34,125 @@
   <script type="text/babel" src="components/sections-v3.jsx?v=20260625k"></script>
   <script type="text/babel" src="components/legal.jsx?v=20260624x"></script>
   <script type="text/babel">
-    const t = { hf: 'Quicksand', bf: 'Nunito' };
-
-    const sections = [
-      { id: 'aceptacion', title: 'Aceptación de los términos', content: (<>
-        <LP t={t}>Estos Términos y Condiciones (los "Términos") regulan el uso del kit de maceta inteligente, la aplicación móvil, el sitio web y los servicios asociados de Gossip Garden (en conjunto, el "Servicio"). Al comprar el producto, crear una cuenta o usar el Servicio, aceptas estos Términos en su totalidad.</LP>
-        <LP t={t}>Si no estás de acuerdo con ellos, por favor no utilices el Servicio.</LP>
+    const makeSections = (t) => [
+      { id: 'aceptacion', title: L(t.lang,'Aceptación de los términos','Acceptance of the terms'), content: (<>
+        <LP t={t}>{L(t.lang,'Estos Términos y Condiciones (los "Términos") regulan el uso del kit de maceta inteligente, la aplicación móvil, el sitio web y los servicios asociados de Gossip Garden (en conjunto, el "Servicio"). Al comprar el producto, crear una cuenta o usar el Servicio, aceptas estos Términos en su totalidad.','These Terms and Conditions (the "Terms") govern the use of the smart pot kit, the mobile app, the website and the associated services of Gossip Garden (together, the "Service"). By purchasing the product, creating an account or using the Service, you accept these Terms in full.')}</LP>
+        <LP t={t}>{L(t.lang,'Si no estás de acuerdo con ellos, por favor no utilices el Servicio.','If you do not agree with them, please do not use the Service.')}</LP>
       </>)},
 
-      { id: 'servicio', title: 'Descripción del servicio', content: (<>
-        <LP t={t}>Gossip Garden es un sistema de monitoreo de plantas que combina hardware y software:</LP>
+      { id: 'servicio', title: L(t.lang,'Descripción del servicio','Service description'), content: (<>
+        <LP t={t}>{L(t.lang,'Gossip Garden es un sistema de monitoreo de plantas que combina hardware y software:','Gossip Garden is a plant-monitoring system that combines hardware and software:')}</LP>
         <LUL t={t} items={[
-          'Una maceta con un microcontrolador ESP32 y sensores de temperatura y humedad ambiente, luz y humedad del suelo.',
-          'Una aplicación y un servicio en la nube que reciben las lecturas de los sensores y muestran el estado de tu planta.',
-          'Una capa de inteligencia artificial que asigna a cada planta una personalidad y genera conversaciones según sus necesidades.',
-          'Una comunidad en línea donde puedes compartir publicaciones sobre tus plantas.',
+          L(t.lang,'Una maceta con un microcontrolador ESP32 y sensores de temperatura y humedad ambiente, luz y humedad del suelo.','A pot with an ESP32 microcontroller and sensors for temperature, ambient humidity, light and soil moisture.'),
+          L(t.lang,'Una aplicación y un servicio en la nube que reciben las lecturas de los sensores y muestran el estado de tu planta.','An app and a cloud service that receive the sensor readings and show your plant\'s status.'),
+          L(t.lang,'Una capa de inteligencia artificial que asigna a cada planta una personalidad y genera conversaciones según sus necesidades.','An artificial-intelligence layer that gives each plant a personality and generates conversations based on its needs.'),
+          L(t.lang,'Una comunidad en línea donde puedes compartir publicaciones sobre tus plantas.','An online community where you can share posts about your plants.'),
         ]}/>
-        <LP t={t}>El Servicio depende de tu conexión a internet, de una red Wi-Fi compatible y de servicios de terceros (como el broker de mensajería). Podemos actualizar, mejorar o modificar funciones del Servicio con el tiempo.</LP>
+        <LP t={t}>{L(t.lang,'El Servicio depende de tu conexión a internet, de una red Wi-Fi compatible y de servicios de terceros (como el broker de mensajería). Podemos actualizar, mejorar o modificar funciones del Servicio con el tiempo.','The Service depends on your internet connection, a compatible Wi-Fi network and third-party services (such as the messaging broker). We may update, improve or modify features of the Service over time.')}</LP>
       </>)},
 
-      { id: 'cuenta', title: 'Registro y cuenta', content: (<>
+      { id: 'cuenta', title: L(t.lang,'Registro y cuenta','Registration and account'), content: (<>
         <LUL t={t} items={[
-          'Debes proporcionar información veraz al crear tu cuenta y mantenerla actualizada.',
-          'Eres responsable de mantener la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.',
-          'Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.',
-          'Debes ser mayor de edad para registrarte y usar el Servicio.',
+          L(t.lang,'Debes proporcionar información veraz al crear tu cuenta y mantenerla actualizada.','You must provide accurate information when creating your account and keep it up to date.'),
+          L(t.lang,'Eres responsable de mantener la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.','You are responsible for keeping your password confidential and for all activity carried out from your account.'),
+          L(t.lang,'Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.','You must notify us immediately if you detect unauthorized use of your account.'),
+          L(t.lang,'Debes ser mayor de edad para registrarte y usar el Servicio.','You must be of legal age to register and use the Service.'),
         ]}/>
       </>)},
 
-      { id: 'hardware', title: 'Uso del dispositivo', content: (<>
-        <LP t={t}>La maceta inteligente es un dispositivo electrónico de uso doméstico. Al usarla, te comprometes a:</LP>
+      { id: 'hardware', title: L(t.lang,'Uso del dispositivo','Use of the device'), content: (<>
+        <LP t={t}>{L(t.lang,'La maceta inteligente es un dispositivo electrónico de uso doméstico. Al usarla, te comprometes a:','The smart pot is an electronic device for home use. By using it, you agree to:')}</LP>
         <LUL t={t} items={[
-          'Seguir las instrucciones de instalación y de uso, incluyendo las relativas al agua y la electricidad.',
-          'No manipular, abrir ni modificar el hardware ni su firmware de forma que comprometa su seguridad.',
-          'Utilizar únicamente accesorios y fuentes de alimentación compatibles.',
+          L(t.lang,'Seguir las instrucciones de instalación y de uso, incluyendo las relativas al agua y la electricidad.','Follow the installation and usage instructions, including those regarding water and electricity.'),
+          L(t.lang,'No manipular, abrir ni modificar el hardware ni su firmware de forma que comprometa su seguridad.','Not tamper with, open or modify the hardware or its firmware in a way that compromises its safety.'),
+          L(t.lang,'Utilizar únicamente accesorios y fuentes de alimentación compatibles.','Use only compatible accessories and power sources.'),
         ]}/>
-        <LNote t={t} color={window.PALETTE.heart}>El dispositivo combina componentes electrónicos con agua y tierra. Un uso inadecuado puede causar daños. Manténlo fuera del alcance de niños pequeños y no sumerjas la parte electrónica.</LNote>
+        <LNote t={t} color={window.PALETTE.heart}>{L(t.lang,'El dispositivo combina componentes electrónicos con agua y tierra. Un uso inadecuado puede causar daños. Manténlo fuera del alcance de niños pequeños y no sumerjas la parte electrónica.','The device combines electronic components with water and soil. Improper use may cause damage. Keep it out of reach of small children and do not submerge the electronic part.')}</LNote>
       </>)},
 
-      { id: 'suscripcion', title: 'Compras, suscripciones y funciones de pago', content: (<>
-        <LP t={t}>La compra del kit incluye el dispositivo y el acceso a las funciones básicas de la app. Algunas funciones avanzadas pueden ofrecerse mediante una suscripción o un pago adicional, lo cual se te informará claramente antes de contratarlas.</LP>
+      { id: 'suscripcion', title: L(t.lang,'Compras, suscripciones y funciones de pago','Purchases, subscriptions and paid features'), content: (<>
+        <LP t={t}>{L(t.lang,'La compra del kit incluye el dispositivo y el acceso a las funciones básicas de la app. Algunas funciones avanzadas pueden ofrecerse mediante una suscripción o un pago adicional, lo cual se te informará claramente antes de contratarlas.','Buying the kit includes the device and access to the app\'s basic features. Some advanced features may be offered through a subscription or an additional payment, which will be clearly disclosed to you before you sign up.')}</LP>
         <LUL t={t} items={[
-          'Los precios y el alcance de cada plan se indican en la tienda o en la app.',
-          'Las suscripciones pueden renovarse automáticamente salvo que las canceles antes de la fecha de renovación.',
-          'Las condiciones de reembolso se rigen por la política de la tienda y por la normativa de protección al consumidor aplicable.',
-        ]}/>
-      </>)},
-
-      { id: 'comunidad', title: 'Contenido del usuario y comunidad', content: (<>
-        <LP t={t}>La comunidad te permite publicar texto e imágenes ("Contenido de Usuario"). Al publicar:</LP>
-        <LUL t={t} items={[
-          'Declaras que tienes los derechos sobre el contenido que compartes y que no infringe derechos de terceros.',
-          'Nos concedes una licencia no exclusiva y gratuita para alojar y mostrar ese contenido dentro del Servicio, con el único fin de operar la comunidad.',
-          'Te comprometes a no publicar contenido ilegal, ofensivo, spam, datos personales de terceros sin permiso ni material que infrinja derechos de autor.',
-        ]}/>
-        <LP t={t}>Podemos moderar, ocultar o eliminar contenido que incumpla estas reglas, así como suspender cuentas que abusen del Servicio. La comunidad puede usarse de forma anónima, pero ello no exime del cumplimiento de estas normas.</LP>
-      </>)},
-
-      { id: 'propiedad', title: 'Propiedad intelectual', content: (<>
-        <LP t={t}>El Servicio, incluidos el software, el diseño, la marca "Gossip Garden", los textos, ilustraciones y las personalidades de las plantas, son propiedad de Gossip Garden o de sus licenciantes y están protegidos por la ley. No se te concede ningún derecho sobre ellos más allá del uso normal del Servicio.</LP>
-        <LP t={t}>Conservas la propiedad de tu Contenido de Usuario; solo nos otorgas la licencia descrita en la sección anterior.</LP>
-      </>)},
-
-      { id: 'ia', title: 'Inteligencia artificial y sus límites', content: (<>
-        <LP t={t}>Las conversaciones y consejos de tu planta son generados automáticamente por sistemas de inteligencia artificial a partir de las lecturas de los sensores y del contexto de la planta.</LP>
-        <LUL t={t} items={[
-          'El contenido generado puede contener imprecisiones y se ofrece con fines de acompañamiento y cuidado básico.',
-          'No sustituye la asesoría de un agrónomo, veterinario, médico u otro profesional.',
-          'Las decisiones que tomes con base en esos mensajes son de tu responsabilidad.',
+          L(t.lang,'Los precios y el alcance de cada plan se indican en la tienda o en la app.','Prices and the scope of each plan are shown in the store or in the app.'),
+          L(t.lang,'Las suscripciones pueden renovarse automáticamente salvo que las canceles antes de la fecha de renovación.','Subscriptions may renew automatically unless you cancel before the renewal date.'),
+          L(t.lang,'Las condiciones de reembolso se rigen por la política de la tienda y por la normativa de protección al consumidor aplicable.','Refund conditions are governed by the store policy and by the applicable consumer-protection regulations.'),
         ]}/>
       </>)},
 
-      { id: 'disponibilidad', title: 'Disponibilidad y dependencias de terceros', content: (<>
-        <LP t={t}>Hacemos un esfuerzo razonable por mantener el Servicio disponible, pero no garantizamos un funcionamiento ininterrumpido. El Servicio puede verse afectado por:</LP>
+      { id: 'comunidad', title: L(t.lang,'Contenido del usuario y comunidad','User content and community'), content: (<>
+        <LP t={t}>{L(t.lang,'La comunidad te permite publicar texto e imágenes ("Contenido de Usuario"). Al publicar:','The community lets you post text and images ("User Content"). When you post:')}</LP>
         <LUL t={t} items={[
-          'Cortes de tu conexión a internet o de la red eléctrica.',
-          'Mantenimientos programados o incidencias técnicas.',
-          'Fallos o cambios en servicios de terceros de los que dependemos (por ejemplo, el broker de mensajería o el proveedor de IA).',
+          L(t.lang,'Declaras que tienes los derechos sobre el contenido que compartes y que no infringe derechos de terceros.','You declare that you hold the rights to the content you share and that it does not infringe third-party rights.'),
+          L(t.lang,'Nos concedes una licencia no exclusiva y gratuita para alojar y mostrar ese contenido dentro del Servicio, con el único fin de operar la comunidad.','You grant us a non-exclusive, royalty-free license to host and display that content within the Service, solely to operate the community.'),
+          L(t.lang,'Te comprometes a no publicar contenido ilegal, ofensivo, spam, datos personales de terceros sin permiso ni material que infrinja derechos de autor.','You agree not to post illegal or offensive content, spam, third-party personal data without permission, or material that infringes copyright.'),
+        ]}/>
+        <LP t={t}>{L(t.lang,'Podemos moderar, ocultar o eliminar contenido que incumpla estas reglas, así como suspender cuentas que abusen del Servicio. La comunidad puede usarse de forma anónima, pero ello no exime del cumplimiento de estas normas.','We may moderate, hide or remove content that breaks these rules, as well as suspend accounts that abuse the Service. The community can be used anonymously, but that does not exempt you from complying with these rules.')}</LP>
+      </>)},
+
+      { id: 'propiedad', title: L(t.lang,'Propiedad intelectual','Intellectual property'), content: (<>
+        <LP t={t}>{L(t.lang,'El Servicio, incluidos el software, el diseño, la marca "Gossip Garden", los textos, ilustraciones y las personalidades de las plantas, son propiedad de Gossip Garden o de sus licenciantes y están protegidos por la ley. No se te concede ningún derecho sobre ellos más allá del uso normal del Servicio.','The Service, including the software, design, the "Gossip Garden" brand, the texts, illustrations and plant personalities, are owned by Gossip Garden or its licensors and are protected by law. You are granted no rights over them beyond the normal use of the Service.')}</LP>
+        <LP t={t}>{L(t.lang,'Conservas la propiedad de tu Contenido de Usuario; solo nos otorgas la licencia descrita en la sección anterior.','You retain ownership of your User Content; you only grant us the license described in the previous section.')}</LP>
+      </>)},
+
+      { id: 'ia', title: L(t.lang,'Inteligencia artificial y sus límites','Artificial intelligence and its limits'), content: (<>
+        <LP t={t}>{L(t.lang,'Las conversaciones y consejos de tu planta son generados automáticamente por sistemas de inteligencia artificial a partir de las lecturas de los sensores y del contexto de la planta.','Your plant\'s conversations and advice are generated automatically by artificial-intelligence systems based on the sensor readings and the plant\'s context.')}</LP>
+        <LUL t={t} items={[
+          L(t.lang,'El contenido generado puede contener imprecisiones y se ofrece con fines de acompañamiento y cuidado básico.','The generated content may contain inaccuracies and is provided for companionship and basic care purposes.'),
+          L(t.lang,'No sustituye la asesoría de un agrónomo, veterinario, médico u otro profesional.','It does not replace advice from an agronomist, veterinarian, doctor or other professional.'),
+          L(t.lang,'Las decisiones que tomes con base en esos mensajes son de tu responsabilidad.','Any decisions you make based on those messages are your responsibility.'),
         ]}/>
       </>)},
 
-      { id: 'garantia', title: 'Garantía del hardware', content: (<>
-        <LP t={t}>El dispositivo cuenta con la garantía legal aplicable frente a defectos de fabricación. La garantía no cubre daños causados por mal uso, manipulación indebida, accidentes, exposición inadecuada al agua o desgaste normal. Para reclamaciones, contáctanos con tu comprobante de compra.</LP>
-      </>)},
-
-      { id: 'responsabilidad', title: 'Limitación de responsabilidad', content: (<>
-        <LP t={t}>En la medida permitida por la ley, Gossip Garden no será responsable por:</LP>
+      { id: 'disponibilidad', title: L(t.lang,'Disponibilidad y dependencias de terceros','Availability and third-party dependencies'), content: (<>
+        <LP t={t}>{L(t.lang,'Hacemos un esfuerzo razonable por mantener el Servicio disponible, pero no garantizamos un funcionamiento ininterrumpido. El Servicio puede verse afectado por:','We make a reasonable effort to keep the Service available, but we do not guarantee uninterrupted operation. The Service may be affected by:')}</LP>
         <LUL t={t} items={[
-          'El estado de salud de tus plantas: el Servicio es una ayuda, no una garantía de que una planta sobreviva o crezca.',
-          'Daños indirectos, incidentales o pérdida de datos derivados del uso o la imposibilidad de usar el Servicio.',
-          'Interrupciones causadas por terceros o por factores fuera de nuestro control razonable.',
+          L(t.lang,'Cortes de tu conexión a internet o de la red eléctrica.','Outages of your internet connection or the power grid.'),
+          L(t.lang,'Mantenimientos programados o incidencias técnicas.','Scheduled maintenance or technical incidents.'),
+          L(t.lang,'Fallos o cambios en servicios de terceros de los que dependemos (por ejemplo, el broker de mensajería o el proveedor de IA).','Failures or changes in third-party services we rely on (for example, the messaging broker or the AI provider).'),
         ]}/>
-        <LP t={t}>Nada en estos Términos limita responsabilidades que no puedan excluirse legalmente, incluidas las derivadas de la normativa de protección al consumidor.</LP>
       </>)},
 
-      { id: 'terminacion', title: 'Suspensión y terminación', content: (<>
-        <LP t={t}>Puedes dejar de usar el Servicio y eliminar tu cuenta en cualquier momento. Podemos suspender o cancelar tu acceso si incumples estos Términos, si tu uso pone en riesgo el Servicio o a otros usuarios, o si la ley lo exige. Tras la terminación, ciertas disposiciones (como las de propiedad intelectual y limitación de responsabilidad) seguirán vigentes.</LP>
+      { id: 'garantia', title: L(t.lang,'Garantía del hardware','Hardware warranty'), content: (<>
+        <LP t={t}>{L(t.lang,'El dispositivo cuenta con la garantía legal aplicable frente a defectos de fabricación. La garantía no cubre daños causados por mal uso, manipulación indebida, accidentes, exposición inadecuada al agua o desgaste normal. Para reclamaciones, contáctanos con tu comprobante de compra.','The device comes with the applicable legal warranty against manufacturing defects. The warranty does not cover damage caused by misuse, improper handling, accidents, inadequate water exposure or normal wear. For claims, contact us with your proof of purchase.')}</LP>
       </>)},
 
-      { id: 'cambios', title: 'Cambios en los términos', content: (<>
-        <LP t={t}>Podemos modificar estos Términos para reflejar cambios en el Servicio o en la normativa. Publicaremos la versión vigente en esta página con su fecha de actualización. Si los cambios son sustanciales, te lo notificaremos. El uso continuado del Servicio tras la actualización implica la aceptación de los nuevos Términos.</LP>
+      { id: 'responsabilidad', title: L(t.lang,'Limitación de responsabilidad','Limitation of liability'), content: (<>
+        <LP t={t}>{L(t.lang,'En la medida permitida por la ley, Gossip Garden no será responsable por:','To the extent permitted by law, Gossip Garden shall not be liable for:')}</LP>
+        <LUL t={t} items={[
+          L(t.lang,'El estado de salud de tus plantas: el Servicio es una ayuda, no una garantía de que una planta sobreviva o crezca.','The health of your plants: the Service is an aid, not a guarantee that a plant will survive or grow.'),
+          L(t.lang,'Daños indirectos, incidentales o pérdida de datos derivados del uso o la imposibilidad de usar el Servicio.','Indirect or incidental damages or data loss arising from the use of, or inability to use, the Service.'),
+          L(t.lang,'Interrupciones causadas por terceros o por factores fuera de nuestro control razonable.','Interruptions caused by third parties or by factors beyond our reasonable control.'),
+        ]}/>
+        <LP t={t}>{L(t.lang,'Nada en estos Términos limita responsabilidades que no puedan excluirse legalmente, incluidas las derivadas de la normativa de protección al consumidor.','Nothing in these Terms limits liabilities that cannot be legally excluded, including those arising from consumer-protection regulations.')}</LP>
       </>)},
 
-      { id: 'ley', title: 'Ley aplicable y resolución de conflictos', content: (<>
-        <LP t={t}>Estos Términos se rigen por las leyes de la República de Colombia. Cualquier controversia se intentará resolver de buena fe; de no lograrse, se someterá a los jueces y tribunales competentes según la normativa aplicable, sin perjuicio de los derechos que la ley reconozca a los consumidores.</LP>
+      { id: 'terminacion', title: L(t.lang,'Suspensión y terminación','Suspension and termination'), content: (<>
+        <LP t={t}>{L(t.lang,'Puedes dejar de usar el Servicio y eliminar tu cuenta en cualquier momento. Podemos suspender o cancelar tu acceso si incumples estos Términos, si tu uso pone en riesgo el Servicio o a otros usuarios, o si la ley lo exige. Tras la terminación, ciertas disposiciones (como las de propiedad intelectual y limitación de responsabilidad) seguirán vigentes.','You may stop using the Service and delete your account at any time. We may suspend or cancel your access if you breach these Terms, if your use puts the Service or other users at risk, or if the law requires it. After termination, certain provisions (such as those on intellectual property and limitation of liability) will remain in force.')}</LP>
       </>)},
 
-      { id: 'contacto', title: 'Contacto', content: (<>
-        <LP t={t}>Para cualquier consulta sobre estos Términos, escríbenos a hola@gossipgarden.co.</LP>
+      { id: 'cambios', title: L(t.lang,'Cambios en los términos','Changes to the terms'), content: (<>
+        <LP t={t}>{L(t.lang,'Podemos modificar estos Términos para reflejar cambios en el Servicio o en la normativa. Publicaremos la versión vigente en esta página con su fecha de actualización. Si los cambios son sustanciales, te lo notificaremos. El uso continuado del Servicio tras la actualización implica la aceptación de los nuevos Términos.','We may modify these Terms to reflect changes in the Service or in regulations. We will publish the current version on this page with its update date. If the changes are substantial, we will notify you. Continued use of the Service after the update implies acceptance of the new Terms.')}</LP>
+      </>)},
+
+      { id: 'ley', title: L(t.lang,'Ley aplicable y resolución de conflictos','Governing law and dispute resolution'), content: (<>
+        <LP t={t}>{L(t.lang,'Estos Términos se rigen por las leyes de la República de Colombia. Cualquier controversia se intentará resolver de buena fe; de no lograrse, se someterá a los jueces y tribunales competentes según la normativa aplicable, sin perjuicio de los derechos que la ley reconozca a los consumidores.','These Terms are governed by the laws of the Republic of Colombia. Any dispute will first be addressed in good faith; if unresolved, it will be submitted to the competent courts under the applicable regulations, without prejudice to the rights granted to consumers by law.')}</LP>
+      </>)},
+
+      { id: 'contacto', title: L(t.lang,'Contacto','Contact'), content: (<>
+        <LP t={t}>{L(t.lang,'Para cualquier consulta sobre estos Términos, escríbenos a hola@gossipgarden.co.','For any questions about these Terms, email us at hola@gossipgarden.co.')}</LP>
       </>)},
     ];
 
-    const App = () => (
-      <LegalPage t={t} kicker="LEGAL" title="Términos y Condiciones"
-        updated="24 de junio de 2026"
-        intro="Estos términos explican las reglas para usar tu maceta inteligente, la app y la comunidad de Gossip Garden. Los hemos escrito para que sean claros, pero siguen siendo un acuerdo legal entre tú y nosotros."
-        sections={sections}/>
-    );
+    const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
+      return (
+      <LegalPage t={t} kicker="LEGAL" title={L(lang,'Términos y Condiciones','Terms & Conditions')}
+        updated={L(lang,'24 de junio de 2026','June 24, 2026')}
+        intro={L(lang,'Estos términos explican las reglas para usar tu maceta inteligente, la app y la comunidad de Gossip Garden. Los hemos escrito para que sean claros, pero siguen siendo un acuerdo legal entre tú y nosotros.','These terms explain the rules for using your smart pot, the app and the Gossip Garden community. We have written them to be clear, but they are still a legal agreement between you and us.')}
+        sections={makeSections(t)}/>
+      );
+    };
     ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
   </script>
 </body>

@@ -44,7 +44,7 @@
     const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
 
-    const PageNav = () => {
+    const PageNav = ({ t }) => {
       const [s, setS] = React.useState(false);
       const [o, setO] = React.useState(false);
       React.useEffect(() => {
@@ -53,10 +53,10 @@
         return () => window.removeEventListener('scroll', h);
       }, []);
       const links = [
-        {l:'Inicio', href:'index.html'},
-        {l:'Cómo funciona', href:'how-it-works.html'},
-        {l:'Personalidades', href:'personalities.html'},
-        {l:'Tienda', href:'store.html'},
+        {l:L(t.lang,'Inicio','Home'), href:'index.html'},
+        {l:L(t.lang,'Cómo funciona','How it works'), href:'how-it-works.html'},
+        {l:L(t.lang,'Personalidades','Personalities'), href:'personalities.html', active:true},
+        {l:L(t.lang,'Tienda','Store'), href:'store.html', store:true},
       ];
       return (
         <nav style={{position:'fixed',top:0,left:0,right:0,zIndex:100,height:72,
@@ -67,10 +67,10 @@
             <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
           </a>
           <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
-            {links.map(({l,href})=> l==='Tienda'
-              ? <a key={l} href={href} style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Tienda</CrayonButton></a>
+            {links.map(({l,href,store,active})=> store
+              ? <a key={href} href={href} style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{l}</CrayonButton></a>
               : (
-              <a key={l} href={href} className={l==='Personalidades'?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,position:'relative',padding:'4px 2px 6px'}}>
+              <a key={href} href={href} className={active?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,position:'relative',padding:'4px 2px 6px'}}>
                 {l}
                 <svg className="gg-ul" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M3,8 Q40,2 90,9 T196,5" fill="none" stroke={P.leafDk} strokeWidth="3" strokeLinecap="round" filter="url(#cr)"/></svg>
               </a>
@@ -85,7 +85,7 @@
     };
 
     /* Full personality card with traits, messages and cta */
-    const PersonalityDetail = ({ name, plant, color, bg, photo, tagline, desc, traits, messages, index }) => (
+    const PersonalityDetail = ({ name, plant, color, bg, photo, tagline, desc, traits, messages, index, t }) => (
       <Reveal delay={index * 120}>
         <CrayonCard fill={bg} stroke={P.ink} sw={2.5} radius={28} padding={0} style={{overflow:'visible'}}>
           <div style={{display:'grid',gridTemplateColumns:'280px 1fr',minHeight:360}} className="gg-pers-grid">
@@ -106,7 +106,7 @@
             <div style={{padding:'clamp(24px,3vw,40px)'}}>
               <p style={{fontFamily:t.bf,fontSize:15,color:P.inkSoft,lineHeight:1.65,marginBottom:24}}>{desc}</p>
               <div style={{marginBottom:22}}>
-                <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,letterSpacing:'1.5px',color:P.ink,opacity:.6,marginBottom:10}}>CARACTERÍSTICAS</div>
+                <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,letterSpacing:'1.5px',color:P.ink,opacity:.6,marginBottom:10}}>{L(t.lang,'CARACTERÍSTICAS','TRAITS')}</div>
                 <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
                   {traits.map((tr,i)=>(
                     <span key={i} style={{fontFamily:t.bf,fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:20,
@@ -115,7 +115,7 @@
                 </div>
               </div>
               <div style={{marginBottom:26}}>
-                <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,letterSpacing:'1.5px',color:P.ink,opacity:.6,marginBottom:10}}>ASÍ TE ESCRIBE</div>
+                <div style={{fontFamily:t.bf,fontSize:12,fontWeight:700,letterSpacing:'1.5px',color:P.ink,opacity:.6,marginBottom:10}}>{L(t.lang,'ASÍ TE ESCRIBE','HOW IT TEXTS YOU')}</div>
                 <div style={{display:'flex',flexDirection:'column',gap:8}}>
                   {messages.map((m,i)=>(
                     <div key={i} style={{display:'flex',alignItems:'flex-start',gap:8}}>
@@ -126,7 +126,7 @@
                 </div>
               </div>
               <a href="store.html" style={{textDecoration:'none'}}>
-                <CrayonButton fill={color} stroke={P.ink}>Quiero esta planta</CrayonButton>
+                <CrayonButton fill={color} stroke={P.ink}>{L(t.lang,'Quiero esta planta','I want this plant')}</CrayonButton>
               </a>
             </div>
           </div>
@@ -134,100 +134,105 @@
       </Reveal>
     );
 
-    const personalities = [
+    const makePersonalities = (lang) => [
       {
-        name:'Alegre', plant:'Girasol', color:'#A8D5A2', bg:'#F0FAF0',
+        name:L(lang,'Alegre','Cheerful'), plant:L(lang,'Girasol','Sunflower'), color:'#A8D5A2', bg:'#F0FAF0',
         photo:'assets/personalities/cards/alegre.webp',
-        tagline:'Extrovertida · Luminosa · Activa',
-        desc:'Un girasol vive mirando al sol. Extrovertido por naturaleza, siempre orientado hacia la luz y dispuesto a compartir cómo se siente. Si plantas un girasol, espera mensajes frecuentes llenos de energía — la maceta es su hogar, el carácter es suyo.',
-        traits:['Muy comunicativa','Amante del sol','Agradecida','Tolerante','Social'],
+        tagline:L(lang,'Extrovertida · Luminosa · Activa','Extroverted · Bright · Active'),
+        desc:L(lang,'Un girasol vive mirando al sol. Extrovertido por naturaleza, siempre orientado hacia la luz y dispuesto a compartir cómo se siente. Si plantas un girasol, espera mensajes frecuentes llenos de energía — la maceta es su hogar, el carácter es suyo.','A sunflower lives facing the sun. Extroverted by nature, always turned toward the light and eager to share how it feels. Plant a sunflower and expect frequent, energy-filled messages — the pot is its home, the character is all its own.'),
+        traits:[L(lang,'Muy comunicativa','Very chatty'),L(lang,'Amante del sol','Sun-lover'),L(lang,'Agradecida','Grateful'),L(lang,'Tolerante','Tolerant'),L(lang,'Social','Social')],
         messages:[
-          '¡Buenos días! El sol de hoy me tiene felicísima. ¿Ya despertaste?',
-          'Gracias por el agua de ayer. ¡Estoy creciendo!',
-          'Hoy hace tanto calor... ¿me puedes mover a la sombra un rato?',
+          L(lang,'¡Buenos días! El sol de hoy me tiene felicísima. ¿Ya despertaste?','Good morning! Today\'s sun has me over the moon. Are you up yet?'),
+          L(lang,'Gracias por el agua de ayer. ¡Estoy creciendo!','Thanks for the water yesterday. I\'m growing!'),
+          L(lang,'Hoy hace tanto calor... ¿me puedes mover a la sombra un rato?','It\'s so hot today... can you move me to the shade for a bit?'),
         ]
       },
       {
-        name:'Dormilona', plant:'Suculenta', color:'#B8C9E8', bg:'#EEF2FA',
+        name:L(lang,'Dormilona','Sleepy'), plant:L(lang,'Suculenta','Succulent'), color:'#B8C9E8', bg:'#EEF2FA',
         photo:'assets/personalities/cards/dormilona.webp',
-        tagline:'Tranquila · Paciente · Discreta',
-        desc:'Una suculenta acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque realmente lo necesita. No exige atención constante — perfecta para quienes prefieren una convivencia tranquila y sin urgencias.',
-        traits:['Poco exigente','Sombra-friendly','Mensajes breves','Tranquila','Independiente'],
+        tagline:L(lang,'Tranquila · Paciente · Discreta','Calm · Patient · Discreet'),
+        desc:L(lang,'Una suculenta acumula energía en silencio y rara vez pide ayuda. Cuando lo hace, es porque realmente lo necesita. No exige atención constante — perfecta para quienes prefieren una convivencia tranquila y sin urgencias.','A succulent stores energy quietly and rarely asks for help. When it does, it\'s because it truly needs it. It doesn\'t demand constant attention — perfect for those who prefer calm, unhurried company.'),
+        traits:[L(lang,'Poco exigente','Low-maintenance'),L(lang,'Sombra-friendly','Shade-friendly'),L(lang,'Mensajes breves','Short messages'),L(lang,'Tranquila','Calm'),L(lang,'Independiente','Independent')],
         messages:[
-          '...tengo un poco de sed. Cuando puedas.',
-          'Estoy bien. Solo necesitaba que lo supieras.',
-          'El silencio de hoy estuvo muy bien. Gracias.',
+          L(lang,'...tengo un poco de sed. Cuando puedas.','...I\'m a little thirsty. Whenever you can.'),
+          L(lang,'Estoy bien. Solo necesitaba que lo supieras.','I\'m fine. I just needed you to know.'),
+          L(lang,'El silencio de hoy estuvo muy bien. Gracias.','Today\'s quiet was lovely. Thank you.'),
         ]
       },
       {
-        name:'Dramática', plant:'Orquídea', color:'#E0B8E0', bg:'#FAF0FA',
+        name:L(lang,'Dramática','Dramatic'), plant:L(lang,'Orquídea','Orchid'), color:'#E0B8E0', bg:'#FAF0FA',
         photo:'assets/personalities/cards/dramatica.webp',
-        tagline:'Sensible · Intensa · Espectacular',
-        desc:'Una orquídea es caprichosa con la luz, la temperatura y el riego. Cualquier cambio lo nota y lo comunica al instante. No entiende las medias tintas. Pero cuando está bien cuidada, florece de una manera que no tiene rival.',
-        traits:['Muy expresiva','Alta demanda','Emocional','Fiel','Entretenida'],
+        tagline:L(lang,'Sensible · Intensa · Espectacular','Sensitive · Intense · Spectacular'),
+        desc:L(lang,'Una orquídea es caprichosa con la luz, la temperatura y el riego. Cualquier cambio lo nota y lo comunica al instante. No entiende las medias tintas. Pero cuando está bien cuidada, florece de una manera que no tiene rival.','An orchid is fussy about light, temperature and watering. It notices any change and says so instantly. It doesn\'t do half measures. But when well cared for, it blooms like nothing else.'),
+        traits:[L(lang,'Muy expresiva','Very expressive'),L(lang,'Alta demanda','High-maintenance'),L(lang,'Emocional','Emotional'),L(lang,'Fiel','Loyal'),L(lang,'Entretenida','Entertaining')],
         messages:[
-          '¿Llevas 3 horas sin mirarme?! ¡Esto es un abandono!',
-          'Me acabo de dar cuenta... te quiero mucho. No lo merezco.',
-          'EL AGUA. Necesito EL AGUA. Por favor. Ya.',
+          L(lang,'¿Llevas 3 horas sin mirarme?! ¡Esto es un abandono!','You haven\'t looked at me in 3 hours?! This is abandonment!'),
+          L(lang,'Me acabo de dar cuenta... te quiero mucho. No lo merezco.','I just realized... I love you so much. I don\'t deserve it.'),
+          L(lang,'EL AGUA. Necesito EL AGUA. Por favor. Ya.','WATER. I need WATER. Please. Now.'),
         ]
       },
       {
-        name:'Exigente', plant:'Cactus', color:'#F5C2C2', bg:'#FDF0F0',
+        name:L(lang,'Exigente','Demanding'), plant:L(lang,'Cactus','Cactus'), color:'#F5C2C2', bg:'#FDF0F0',
         photo:'assets/personalities/cards/exigente.webp',
-        tagline:'Directa · Resiliente · Independiente',
-        desc:'Un cactus no necesita que lo mimen, pero sí que lo respeten. Sabe exactamente qué condiciones necesita y lo comunica sin rodeos. No pide más de lo necesario — pero cuando pide algo, va completamente en serio.',
-        traits:['Directa','Constante','Alta autoestima','Sin rodeos','Leal'],
+        tagline:L(lang,'Directa · Resiliente · Independiente','Direct · Resilient · Independent'),
+        desc:L(lang,'Un cactus no necesita que lo mimen, pero sí que lo respeten. Sabe exactamente qué condiciones necesita y lo comunica sin rodeos. No pide más de lo necesario — pero cuando pide algo, va completamente en serio.','A cactus doesn\'t need pampering, but it does demand respect. It knows exactly what conditions it needs and says so bluntly. It never asks for more than necessary — but when it asks, it means it completely.'),
+        traits:[L(lang,'Directa','Direct'),L(lang,'Constante','Steady'),L(lang,'Alta autoestima','High self-esteem'),L(lang,'Sin rodeos','No-nonsense'),L(lang,'Leal','Loyal')],
         messages:[
-          '¿Ya me diste agua? Pregunto por las dudas.',
-          'La temperatura está 2 grados por debajo de lo óptimo. Solo lo comento.',
-          'Bien. Todo está bien. Continúa.',
+          L(lang,'¿Ya me diste agua? Pregunto por las dudas.','Did you water me already? Just checking.'),
+          L(lang,'La temperatura está 2 grados por debajo de lo óptimo. Solo lo comento.','The temperature is 2 degrees below optimal. Just mentioning it.'),
+          L(lang,'Bien. Todo está bien. Continúa.','Good. Everything\'s fine. Carry on.'),
         ]
       },
     ];
 
-    const App = () => (
+    const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
+      const personalities = makePersonalities(lang);
+      return (
       <div style={{fontFamily:t.bf,position:'relative'}}>
         <CrayonDefs/>
-        <PageNav/>
+        <PageNav t={t}/>
         <section style={{padding:'120px clamp(20px,5vw,80px) 50px',textAlign:'center'}}>
           <Reveal>
-            <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.heart,marginBottom:14}}>CUATRO CARACTERES</div>
+            <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.heart,marginBottom:14}}>{L(lang,'CUATRO CARACTERES','FOUR CHARACTERS')}</div>
             <h1 style={{fontFamily:t.hf,fontSize:'clamp(36px,6vw,68px)',fontWeight:900,color:P.ink,lineHeight:1.04,filter:'url(#cr-text)'}}>
-              ¿Con quién<br/>te identificas?
+              {L(lang,'¿Con quién','Who do you')}<br/>{L(lang,'te identificas?','relate to?')}
             </h1>
             <CrayonUnderline color={P.heart} w="300px" delay={300} h={6}/>
             <p style={{fontFamily:t.bf,fontSize:'clamp(15px,1.5vw,18px)',color:P.inkSoft,marginTop:18,maxWidth:540,marginLeft:'auto',marginRight:'auto',lineHeight:1.55}}>
-              Un girasol no se comporta igual que un cactus. El tipo de planta define el carácter — la maceta es solo su hogar.
-              Elige la que va contigo.
+              {L(lang,'Un girasol no se comporta igual que un cactus. El tipo de planta define el carácter — la maceta es solo su hogar. Elige la que va contigo.','A sunflower doesn\'t behave like a cactus. The kind of plant defines the character — the pot is just its home. Choose the one that fits you.')}
             </p>
           </Reveal>
         </section>
         <section style={{padding:'0 clamp(20px,5vw,60px) 80px',maxWidth:1140,margin:'0 auto'}}>
           <style>{`.gg-pers-grid{grid-template-columns:300px 1fr!important}@media(max-width:740px){.gg-pers-grid{grid-template-columns:1fr!important}.gg-pers-grid>div:first-child{border-radius:26px 26px 0 0!important}}`}</style>
           <div style={{display:'flex',flexDirection:'column',gap:32}}>
-            {personalities.map((p,i)=><PersonalityDetail key={i} {...p} index={i}/>)}
+            {personalities.map((p,i)=><PersonalityDetail key={i} {...p} index={i} t={t}/>)}
           </div>
         </section>
         <section style={{padding:'0 clamp(20px,5vw,80px) 80px',textAlign:'center'}}>
           <Reveal>
             <CrayonCard fill={`${P.leaf}25`} stroke={P.ink} sw={3} radius={28} padding={40} style={{maxWidth:660,margin:'0 auto'}}>
-              <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.leafDk,marginBottom:10}}>PASO SIGUIENTE</div>
-              <h2 style={{fontFamily:t.hf,fontSize:'clamp(24px,3.2vw,38px)',fontWeight:800,color:P.ink,marginBottom:8}}>Elige tu planta.</h2>
+              <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.leafDk,marginBottom:10}}>{L(lang,'PASO SIGUIENTE','NEXT STEP')}</div>
+              <h2 style={{fontFamily:t.hf,fontSize:'clamp(24px,3.2vw,38px)',fontWeight:800,color:P.ink,marginBottom:8}}>{L(lang,'Elige tu planta.','Choose your plant.')}</h2>
               <CrayonUnderline color={P.leafDk} w="160px" delay={200} h={4}/>
               <p style={{fontFamily:t.bf,fontSize:15,color:P.inkSoft,marginTop:14,lineHeight:1.5}}>
-                Cada maceta viene con la personalidad que elijas + semilla + sensores + acceso a la app*.
+                {L(lang,'Cada maceta viene con la personalidad que elijas + semilla + sensores + acceso a la app*.','Each pot comes with the personality you choose + seed + sensors + app access*.')}
               </p>
-              <p style={{fontFamily:t.bf,fontSize:11,color:P.inkSoft,marginTop:6,opacity:.6}}>*Algunas funciones avanzadas pueden cobrarse por separado.</p>
+              <p style={{fontFamily:t.bf,fontSize:11,color:P.inkSoft,marginTop:6,opacity:.6}}>{L(lang,'*Algunas funciones avanzadas pueden cobrarse por separado.','*Some advanced features may be charged separately.')}</p>
               <div style={{display:'flex',gap:14,justifyContent:'center',marginTop:22,flexWrap:'wrap'}}>
-                <a href="store.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir a la tienda</CrayonButton></a>
-                <a href="how-it-works.html" style={{textDecoration:'none'}}><CrayonButton fill={P.cream} stroke={P.ink}>Cómo funciona</CrayonButton></a>
+                <a href="store.html" style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{L(lang,'Ir a la tienda','Go to the store')}</CrayonButton></a>
+                <a href="how-it-works.html" style={{textDecoration:'none'}}><CrayonButton fill={P.cream} stroke={P.ink}>{L(lang,'Cómo funciona','How it works')}</CrayonButton></a>
               </div>
             </CrayonCard>
           </Reveal>
         </section>
         <Footer t={t}/>
+        <LangSwitcher t={t}/>
       </div>
-    );
+      );
+    };
     ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
   </script>
 </body>

@@ -8,16 +8,18 @@ const P = window.PALETTE;
 
 /* Personalidades: mismos colores que personalities.html */
 const PERSONA_META = {
-  alegre:    { label: 'Alegre',    color: '#A8D5A2', bg: '#F0FAF0' },
-  dormilona: { label: 'Dormilona', color: '#B8C9E8', bg: '#EEF2FA' },
-  dramatica: { label: 'Dramática', color: '#E0B8E0', bg: '#FAF0FA' },
-  exigente:  { label: 'Exigente',  color: '#F5C2C2', bg: '#FDF0F0' },
+  alegre:    { label: 'Alegre',    labelEn: 'Cheerful',  color: '#A8D5A2', bg: '#F0FAF0' },
+  dormilona: { label: 'Dormilona', labelEn: 'Sleepy',    color: '#B8C9E8', bg: '#EEF2FA' },
+  dramatica: { label: 'Dramática', labelEn: 'Dramatic',  color: '#E0B8E0', bg: '#FAF0FA' },
+  exigente:  { label: 'Exigente',  labelEn: 'Demanding', color: '#F5C2C2', bg: '#FDF0F0' },
 };
+/* etiqueta de personalidad según idioma activo */
+const personaLabel = (k, lang) => { const m = PERSONA_META[k]; return m ? L(lang, m.label, m.labelEn) : ''; };
 const PERSONA_KEYS = ['alegre', 'dormilona', 'dramatica', 'exigente'];
 
 /* ─── Pestañas Blog | Foro ─────────────────────────────────────────────────── */
 const SectionTabs = ({ t, active }) => {
-  const tabs = [{ l: 'Blog', href: 'index.html', key: 'blog' }, { l: 'Foro', href: 'forum.html', key: 'foro' }];
+  const tabs = [{ l: 'Blog', href: 'index.html', key: 'blog' }, { l: L(t.lang, 'Foro', 'Forum'), href: 'forum.html', key: 'foro' }];
   return (
     <div style={{ display: 'flex', gap: 10 }}>
       {tabs.map(tab => {
@@ -70,7 +72,7 @@ const PersonaTag = ({ k, active, onClick, t }) => {
       background: active ? m.color : `${m.color}80`, border: `1.5px solid ${P.ink}`, color: P.ink,
       cursor: clickable ? 'pointer' : 'default', userSelect: 'none', display: 'inline-block',
       boxShadow: active ? `2px 2px 0 ${P.ink}` : 'none', transition: 'all .15s' }}>
-      {m.label}
+      {L(t.lang, m.label, m.labelEn)}
     </span>
   );
 };
@@ -104,7 +106,7 @@ const LikeButton = ({ id, count, t }) => {
     setBusy(false);
   };
   return (
-    <button onClick={onLike} disabled={liked} title={liked ? 'Ya te gusta' : 'Me gusta'} style={{
+    <button onClick={onLike} disabled={liked} title={liked ? L(t.lang,'Ya te gusta','You like this') : L(t.lang,'Me gusta','Like')} style={{
       display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
       cursor: liked ? 'default' : 'pointer', fontFamily: t.bf, fontWeight: 700, color: P.inkSoft, padding: 4 }}>
       <svg width="22" height="22" viewBox="0 0 24 24">
@@ -119,10 +121,9 @@ const LikeButton = ({ id, count, t }) => {
 /* ─── Aviso de configuración faltante ─────────────────────────────────────── */
 const ConfigNotice = ({ t }) => (
   <CrayonCard fill={`${P.pot}22`} stroke={P.ink} sw={2.5} radius={22} padding={28} style={{ maxWidth: 620, margin: '0 auto' }}>
-    <h3 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 20, color: P.ink, marginBottom: 8 }}>El blog aún no está conectado</h3>
+    <h3 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 20, color: P.ink, marginBottom: 8 }}>{L(t.lang,'El blog aún no está conectado','The blog isn\'t connected yet')}</h3>
     <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, lineHeight: 1.6 }}>
-      Para que las publicaciones se compartan entre visitantes hay que configurar Supabase.
-      Sigue los pasos de <b>docs/BLOG-SETUP.md</b> y pega tus claves en <b>components/supabase-config.js</b>.
+      {L(t.lang,'Para que las publicaciones se compartan entre visitantes hay que configurar Supabase. Sigue los pasos de ','To share posts between visitors you need to configure Supabase. Follow the steps in ')}<b>docs/BLOG-SETUP.md</b>{L(t.lang,' y pega tus claves en ',' and paste your keys into ')}<b>components/supabase-config.js</b>.
     </p>
   </CrayonCard>
 );
@@ -139,20 +140,20 @@ const AuthModal = ({ t, onClose, onAuthed }) => {
   const fs = { width: '100%', fontFamily: t.bf, fontSize: 14.5, color: P.ink, background: P.cream, border: `2px solid ${P.ink}`, borderRadius: 14, padding: '10px 14px', outline: 'none' };
   const submit = async (e) => {
     e.preventDefault(); setMsg(null); setOk(null);
-    if (!email || !pass) { setMsg('Completa correo y contraseña.'); return; }
+    if (!email || !pass) { setMsg(L(t.lang,'Completa correo y contraseña.','Enter your email and password.')); return; }
     setBusy(true);
     if (mode === 'login') {
       const { error } = await window.signIn(email, pass);
       setBusy(false);
-      if (error) { setMsg('No se pudo entrar. Revisa tu correo y contraseña.'); return; }
+      if (error) { setMsg(L(t.lang,'No se pudo entrar. Revisa tu correo y contraseña.','Couldn\'t sign in. Check your email and password.')); return; }
       onAuthed && onAuthed();
     } else {
-      if (pass.length < 6) { setMsg('La contraseña debe tener al menos 6 caracteres.'); setBusy(false); return; }
+      if (pass.length < 6) { setMsg(L(t.lang,'La contraseña debe tener al menos 6 caracteres.','The password must be at least 6 characters.')); setBusy(false); return; }
       const { data, error } = await window.signUp(email, pass, name);
       setBusy(false);
-      if (error) { setMsg(error.message || 'No se pudo registrar.'); return; }
+      if (error) { setMsg(error.message || L(t.lang,'No se pudo registrar.','Couldn\'t sign up.')); return; }
       if (data && data.session) onAuthed && onAuthed();
-      else setOk('¡Cuenta creada! Revisa tu correo para confirmarla y luego inicia sesión.');
+      else setOk(L(t.lang,'¡Cuenta creada! Revisa tu correo para confirmarla y luego inicia sesión.','Account created! Check your email to confirm it and then sign in.'));
     }
   };
   return (
@@ -160,21 +161,21 @@ const AuthModal = ({ t, onClose, onAuthed }) => {
       <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 400 }}>
         <CrayonCard fill={P.cream} stroke={P.ink} sw={3} radius={24} padding={28} hoverLift={false}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-            <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 22, color: P.ink }}>{mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}</h3>
+            <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 22, color: P.ink }}>{mode === 'login' ? L(t.lang,'Iniciar sesión','Sign in') : L(t.lang,'Crear cuenta','Create account')}</h3>
             <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 26, lineHeight: 1, cursor: 'pointer', color: P.inkSoft }}>×</button>
           </div>
-          <p style={{ fontFamily: t.bf, fontSize: 13.5, color: P.inkSoft, opacity: .8, marginBottom: 16 }}>Necesitas una cuenta para publicar y comentar en El Jardín.</p>
+          <p style={{ fontFamily: t.bf, fontSize: 13.5, color: P.inkSoft, opacity: .8, marginBottom: 16 }}>{L(t.lang,'Necesitas una cuenta para publicar y comentar en El Jardín.','You need an account to post and comment in El Jardín.')}</p>
           <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {mode === 'register' && <input style={fs} placeholder="Tu nombre" value={name} maxLength={40} onChange={e => setName(e.target.value)} />}
-            <input style={fs} type="email" placeholder="Correo electrónico" value={email} onChange={e => setEmail(e.target.value)} />
-            <input style={fs} type="password" placeholder="Contraseña" value={pass} onChange={e => setPass(e.target.value)} />
-            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? 'Un momento…' : (mode === 'login' ? 'Entrar' : 'Registrarme')}</CrayonButton>
+            {mode === 'register' && <input style={fs} placeholder={L(t.lang,'Tu nombre','Your name')} value={name} maxLength={40} onChange={e => setName(e.target.value)} />}
+            <input style={fs} type="email" placeholder={L(t.lang,'Correo electrónico','Email')} value={email} onChange={e => setEmail(e.target.value)} />
+            <input style={fs} type="password" placeholder={L(t.lang,'Contraseña','Password')} value={pass} onChange={e => setPass(e.target.value)} />
+            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? L(t.lang,'Un momento…','One moment…') : (mode === 'login' ? L(t.lang,'Entrar','Sign in') : L(t.lang,'Registrarme','Sign up'))}</CrayonButton>
             {msg && <div style={{ fontFamily: t.bf, fontSize: 13, color: P.heart, fontWeight: 700 }}>{msg}</div>}
             {ok && <div style={{ fontFamily: t.bf, fontSize: 13, color: P.leafDk, fontWeight: 700 }}>{ok}</div>}
           </form>
           <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setMsg(null); setOk(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: t.bf, fontSize: 13, color: P.inkSoft, marginTop: 16, padding: 0 }}>
-            {mode === 'login' ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
-            <b style={{ color: P.heart }}>{mode === 'login' ? 'Regístrate' : 'Inicia sesión'}</b>
+            {mode === 'login' ? L(t.lang,'¿No tienes cuenta? ','No account yet? ') : L(t.lang,'¿Ya tienes cuenta? ','Already have an account? ')}
+            <b style={{ color: P.heart }}>{mode === 'login' ? L(t.lang,'Regístrate','Sign up') : L(t.lang,'Inicia sesión','Sign in')}</b>
           </button>
         </CrayonCard>
       </div>
@@ -224,7 +225,7 @@ const CrayonSelect = ({ t, value, options, onChange }) => {
 const ContactModal = ({ t, onClose }) => {
   const [nombre, setNombre] = React.useState('');
   const [email, setEmail] = React.useState('');
-  const [asunto, setAsunto] = React.useState('Soporte');
+  const [asunto, setAsunto] = React.useState(L(t.lang,'Soporte','Support'));
   const [mensaje, setMensaje] = React.useState('');
   const [hp, setHp] = React.useState('');
   const [busy, setBusy] = React.useState(false);
@@ -234,7 +235,7 @@ const ContactModal = ({ t, onClose }) => {
   const submit = async (e) => {
     e.preventDefault();
     if (hp) return;
-    if (!nombre.trim() || !email.trim() || mensaje.trim().length < 5) { setErr('Completa tu nombre, correo y un mensaje.'); return; }
+    if (!nombre.trim() || !email.trim() || mensaje.trim().length < 5) { setErr(L(t.lang,'Completa tu nombre, correo y un mensaje.','Enter your name, email and a message.')); return; }
     setBusy(true); setErr(null);
     try {
       const res = await fetch(`https://formsubmit.co/ajax/${window.CONTACT_EMAIL}`, {
@@ -242,8 +243,8 @@ const ContactModal = ({ t, onClose }) => {
         body: JSON.stringify({ nombre, email, asunto, mensaje, _subject: `Gossip Garden — Contacto (${asunto})`, _template: 'table', _captcha: 'false' }),
       });
       setBusy(false);
-      if (res.ok) setDone(true); else setErr('No se pudo enviar. Inténtalo de nuevo.');
-    } catch (e) { setBusy(false); setErr('No se pudo enviar. Revisa tu conexión.'); }
+      if (res.ok) setDone(true); else setErr(L(t.lang,'No se pudo enviar. Inténtalo de nuevo.','Couldn\'t send. Please try again.'));
+    } catch (e) { setBusy(false); setErr(L(t.lang,'No se pudo enviar. Revisa tu conexión.','Couldn\'t send. Check your connection.')); }
   };
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(61,40,23,.45)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
@@ -254,25 +255,25 @@ const ContactModal = ({ t, onClose }) => {
               <div style={{ width: 58, height: 58, margin: '0 auto 14px' }}>
                 <svg width="58" height="58" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={`${P.leaf}55`} stroke={P.ink} strokeWidth="2" filter="url(#cr)" /><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke={P.leafDk} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" filter="url(#cr)" /></svg>
               </div>
-              <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 22, color: P.ink, marginBottom: 8 }}>¡Mensaje enviado!</h3>
-              <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, lineHeight: 1.6, marginBottom: 18 }}>Gracias por escribirnos. Te responderemos al correo que nos diste lo antes posible.</p>
-              <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={onClose}>Cerrar</CrayonButton>
+              <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 22, color: P.ink, marginBottom: 8 }}>{L(t.lang,'¡Mensaje enviado!','Message sent!')}</h3>
+              <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, lineHeight: 1.6, marginBottom: 18 }}>{L(t.lang,'Gracias por escribirnos. Te responderemos al correo que nos diste lo antes posible.','Thanks for writing. We\'ll reply to the email you gave us as soon as possible.')}</p>
+              <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} onClick={onClose}>{L(t.lang,'Cerrar','Close')}</CrayonButton>
             </div>
           ) : (
             <>
               <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 18, background: 'none', border: 'none', fontSize: 28, lineHeight: 1, cursor: 'pointer', color: P.inkSoft, zIndex: 2 }}>×</button>
               <div style={{ marginBottom: 20 }}>
-                <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 26, color: P.ink }}>Contáctanos</h3>
-                <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, opacity: .85, marginTop: 8 }}>Cuéntanos en qué te ayudamos y te respondemos por correo.</p>
+                <h3 style={{ fontFamily: t.hf, fontWeight: 900, fontSize: 26, color: P.ink }}>{L(t.lang,'Contáctanos','Contact us')}</h3>
+                <p style={{ fontFamily: t.bf, fontSize: 14.5, color: P.inkSoft, opacity: .85, marginTop: 8 }}>{L(t.lang,'Cuéntanos en qué te ayudamos y te respondemos por correo.','Tell us how we can help and we\'ll reply by email.')}</p>
               </div>
               <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                <input style={fs} placeholder="Tu nombre" value={nombre} maxLength={60} onChange={e => setNombre(e.target.value)} />
-                <input style={fs} type="email" placeholder="Tu correo" value={email} maxLength={80} onChange={e => setEmail(e.target.value)} />
-                <CrayonSelect t={t} value={asunto} options={['Soporte', 'Ventas', 'Prensa', 'Otro']} onChange={setAsunto} />
-                <textarea style={{ ...fs, resize: 'vertical', minHeight: 100, lineHeight: 1.5 }} placeholder="Tu mensaje…" value={mensaje} maxLength={1500} onChange={e => setMensaje(e.target.value)} />
+                <input style={fs} placeholder={L(t.lang,'Tu nombre','Your name')} value={nombre} maxLength={60} onChange={e => setNombre(e.target.value)} />
+                <input style={fs} type="email" placeholder={L(t.lang,'Tu correo','Your email')} value={email} maxLength={80} onChange={e => setEmail(e.target.value)} />
+                <CrayonSelect t={t} value={asunto} options={[L(t.lang,'Soporte','Support'), L(t.lang,'Ventas','Sales'), L(t.lang,'Prensa','Press'), L(t.lang,'Otro','Other')]} onChange={setAsunto} />
+                <textarea style={{ ...fs, resize: 'vertical', minHeight: 100, lineHeight: 1.5 }} placeholder={L(t.lang,'Tu mensaje…','Your message…')} value={mensaje} maxLength={1500} onChange={e => setMensaje(e.target.value)} />
                 <input tabIndex={-1} autoComplete="off" value={hp} onChange={e => setHp(e.target.value)} style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} aria-hidden="true" />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 2 }}>
-                  <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? 'Enviando…' : 'Enviar mensaje'}</CrayonButton>
+                  <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? L(t.lang,'Enviando…','Sending…') : L(t.lang,'Enviar mensaje','Send message')}</CrayonButton>
                   {err && <span style={{ fontFamily: t.bf, fontSize: 13, color: P.heart, fontWeight: 700 }}>{err}</span>}
                 </div>
               </form>
@@ -287,12 +288,12 @@ const ContactModal = ({ t, onClose }) => {
 /* ─── Control de cuenta (barra de acciones / masthead) ────────────────────── */
 const AccountControl = ({ t, user, onLogin }) => {
   if (user === undefined) return null;
-  if (!user) return <CrayonButton fill={P.cream} stroke={P.ink} onClick={onLogin}>Iniciar sesión</CrayonButton>;
+  if (!user) return <CrayonButton fill={P.cream} stroke={P.ink} onClick={onLogin}>{L(t.lang,'Iniciar sesión','Sign in')}</CrayonButton>;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <Avatar name={window.userName(user)} size={30} />
       <span style={{ fontFamily: t.bf, fontWeight: 700, fontSize: 13.5, color: P.ink }}>{window.userName(user)}</span>
-      <button onClick={() => window.signOut()} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: t.bf, fontWeight: 700, fontSize: 12.5, color: P.heart, padding: '4px 2px' }}>Salir</button>
+      <button onClick={() => window.signOut()} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: t.bf, fontWeight: 700, fontSize: 12.5, color: P.heart, padding: '4px 2px' }}>{L(t.lang,'Salir','Sign out')}</button>
     </div>
   );
 };
@@ -307,7 +308,7 @@ const SectionHeading = ({ children, t }) => (
 /* ─── Etiqueta de categoría (personalidad) en versalitas ──────────────────── */
 const CategoryLabel = ({ post, t }) => {
   const m = post.personality ? PERSONA_META[post.personality] : null;
-  const label = m ? m.label : 'Comunidad';
+  const label = m ? L(t.lang, m.label, m.labelEn) : L(t.lang, 'Comunidad', 'Community');
   const color = m ? m.color : P.leaf;
   return (
     <span style={{ fontFamily: t.bf, fontSize: 11, fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase', color: P.inkSoft, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -320,9 +321,9 @@ const CategoryLabel = ({ post, t }) => {
 /* Metadatos compactos: autor · tiempo · lectura */
 const PostMeta = ({ post, t }) => (
   <div style={{ fontFamily: t.bf, fontSize: 12, color: P.inkSoft, opacity: .8, marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-    <span>Por <b style={{ color: P.ink }}>{post.author_name}</b></span>
+    <span>{L(t.lang,'Por','By')} <b style={{ color: P.ink }}>{post.author_name}</b></span>
     <span>·</span><span>{window.timeAgo(post.created_at)}</span>
-    <span>·</span><span>{window.readingTime(post.body)} min de lectura</span>
+    <span>·</span><span>{window.readingTime(post.body)} {L(t.lang,'min de lectura','min read')}</span>
   </div>
 );
 
@@ -352,7 +353,7 @@ const PostCard = ({ post, t }) => {
                 <svg width="19" height="19" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4v-4H4z" fill="none" stroke={P.inkSoft} strokeWidth="2" strokeLinejoin="round" filter="url(#cr)" /></svg>
                 {post.comment_count != null ? post.comment_count : '—'}
               </span>
-              <span style={{ marginLeft: 'auto', fontFamily: t.bf, fontWeight: 700, fontSize: 13, color: P.heart }}>Leer →</span>
+              <span style={{ marginLeft: 'auto', fontFamily: t.bf, fontWeight: 700, fontSize: 13, color: P.heart }}>{L(t.lang,'Leer →','Read →')}</span>
             </div>
           </div>
         </div>
@@ -380,7 +381,7 @@ const FeaturedCard = ({ post, t }) => {
             <PostMeta post={post} t={t} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 14 }}>
               <LikeButton id={post.id} count={post.likes} t={t} />
-              <span style={{ fontFamily: t.bf, fontWeight: 700, fontSize: 14, color: P.heart }}>Leer publicación →</span>
+              <span style={{ fontFamily: t.bf, fontWeight: 700, fontSize: 14, color: P.heart }}>{L(t.lang,'Leer publicación →','Read post →')}</span>
             </div>
           </div>
         </div>
@@ -394,7 +395,7 @@ const TrendingList = ({ posts, t }) => {
   const top = [...posts]
     .sort((a, b) => (b.likes || 0) - (a.likes || 0) || (b.comment_count || 0) - (a.comment_count || 0))
     .slice(0, 5);
-  if (!top.length) return <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .7 }}>Aún no hay tendencias.</p>;
+  if (!top.length) return <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .7 }}>{L(t.lang,'Aún no hay tendencias.','No trends yet.')}</p>;
   return (
     <div>
       {top.map((p, i) => (
@@ -403,7 +404,7 @@ const TrendingList = ({ posts, t }) => {
           <div style={{ minWidth: 0 }}>
             <CategoryLabel post={p} t={t} />
             <h4 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 16, lineHeight: 1.25, color: P.ink, margin: '5px 0 5px' }}>{window.postHeadline(p)}</h4>
-            <div style={{ fontFamily: t.bf, fontSize: 12, color: P.inkSoft, opacity: .8 }}>{(p.likes || 0)} me gusta · {window.readingTime(p.body)} min</div>
+            <div style={{ fontFamily: t.bf, fontSize: 12, color: P.inkSoft, opacity: .8 }}>{(p.likes || 0)} {L(t.lang,'me gusta','likes')} · {window.readingTime(p.body)} min</div>
           </div>
         </a>
       ))}
@@ -432,23 +433,23 @@ const PostForm = ({ t, onCreated, user, kind }) => {
   const pickFile = (e) => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
-    if (f.size > 5 * 1024 * 1024) { setErr('La imagen supera 5 MB.'); return; }
+    if (f.size > 5 * 1024 * 1024) { setErr(L(t.lang,'La imagen supera 5 MB.','The image exceeds 5 MB.')); return; }
     setErr(null); setFile(f); setPreview(URL.createObjectURL(f));
   };
   const submit = async (e) => {
     e.preventDefault();
     if (hp) return; // bot
-    if (body.trim().length < 3) { setErr('Escribe un poco más en tu publicación.'); return; }
+    if (body.trim().length < 3) { setErr(L(t.lang,'Escribe un poco más en tu publicación.','Write a bit more in your post.')); return; }
     setBusy(true); setErr(null);
     let image_url = null;
     if (file) {
       const up = await window.uploadImage(file);
-      if (up.error) { setErr('No se pudo subir la imagen. ' + (up.error.message || '')); setBusy(false); return; }
+      if (up.error) { setErr(L(t.lang,'No se pudo subir la imagen. ','Couldn\'t upload the image. ') + (up.error.message || '')); setBusy(false); return; }
       image_url = up.url;
     }
     const { data, error } = await window.createPost({ kind, title, author_name: window.userName(user), plant_name: plant, personality: persona, body, image_url });
     setBusy(false);
-    if (error) { setErr(error.message || 'No se pudo publicar.'); return; }
+    if (error) { setErr(error.message || L(t.lang,'No se pudo publicar.','Couldn\'t publish.')); return; }
     setTitle(''); setPlant(''); setPersona(null); setBody(''); setFile(null); setPreview(null);
     if (onCreated) onCreated(data);
   };
@@ -456,28 +457,28 @@ const PostForm = ({ t, onCreated, user, kind }) => {
   return (
     <CrayonCard fill={P.cream} stroke={P.ink} sw={3} radius={24} padding={'30px 34px'}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
-        <h3 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 20, color: P.ink }}>{kind === 'blog' ? 'Escribir artículo' : 'Comparte tu planta'}</h3>
-        <span style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, opacity: .8 }}>Publicas como <b style={{ color: P.ink }}>{window.userName(user)}</b></span>
+        <h3 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 20, color: P.ink }}>{kind === 'blog' ? L(t.lang,'Escribir artículo','Write article') : L(t.lang,'Comparte tu planta','Share your plant')}</h3>
+        <span style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, opacity: .8 }}>{L(t.lang,'Publicas como','Posting as')} <b style={{ color: P.ink }}>{window.userName(user)}</b></span>
       </div>
       <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <input style={{ ...fieldStyle(t), fontSize: 16, fontWeight: 700 }} placeholder="Título de tu publicación" value={title} maxLength={90} onChange={e => setTitle(e.target.value)} />
-        <input style={{ ...fieldStyle(t) }} placeholder="Nombre de tu planta (opcional)" value={plant} maxLength={40} onChange={e => setPlant(e.target.value)} />
+        <input style={{ ...fieldStyle(t), fontSize: 16, fontWeight: 700 }} placeholder={L(t.lang,'Título de tu publicación','Your post title')} value={title} maxLength={90} onChange={e => setTitle(e.target.value)} />
+        <input style={{ ...fieldStyle(t) }} placeholder={L(t.lang,'Nombre de tu planta (opcional)','Plant name (optional)')} value={plant} maxLength={40} onChange={e => setPlant(e.target.value)} />
         <div>
-          <div style={{ fontFamily: t.bf, fontSize: 12, fontWeight: 700, letterSpacing: '1px', color: P.ink, opacity: .6, marginBottom: 8 }}>PERSONALIDAD (OPCIONAL)</div>
+          <div style={{ fontFamily: t.bf, fontSize: 12, fontWeight: 700, letterSpacing: '1px', color: P.ink, opacity: .6, marginBottom: 8 }}>{L(t.lang,'PERSONALIDAD (OPCIONAL)','PERSONALITY (OPTIONAL)')}</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {PERSONA_KEYS.map(k => <PersonaTag key={k} k={k} active={persona === k} onClick={() => setPersona(persona === k ? null : k)} t={t} />)}
           </div>
         </div>
-        <textarea style={{ ...fieldStyle(t), resize: 'vertical', minHeight: 90, lineHeight: 1.5 }} placeholder="¿Cómo está tu planta hoy? ¿Qué te dijo?" value={body} maxLength={1000} onChange={e => setBody(e.target.value)} />
+        <textarea style={{ ...fieldStyle(t), resize: 'vertical', minHeight: 90, lineHeight: 1.5 }} placeholder={L(t.lang,'¿Cómo está tu planta hoy? ¿Qué te dijo?','How is your plant today? What did it tell you?')} value={body} maxLength={1000} onChange={e => setBody(e.target.value)} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
           <label style={{ fontFamily: t.bf, fontWeight: 700, fontSize: 13.5, color: P.ink, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <svg width="20" height="20" viewBox="0 0 24 24"><path d="M3 7h4l2-3h6l2 3h4v12H3z" fill="none" stroke={P.ink} strokeWidth="2" strokeLinejoin="round" filter="url(#cr)" /><circle cx="12" cy="13" r="3.5" fill="none" stroke={P.ink} strokeWidth="2" filter="url(#cr)" /></svg>
-            {file ? 'Cambiar foto' : 'Añadir foto'}
+            {file ? L(t.lang,'Cambiar foto','Change photo') : L(t.lang,'Añadir foto','Add photo')}
             <input type="file" accept="image/*" onChange={pickFile} style={{ display: 'none' }} />
           </label>
           {preview && <img src={preview} alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 10, border: `2px solid ${P.ink}` }} />}
           <div style={{ marginLeft: 'auto' }}>
-            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? 'Publicando…' : 'Publicar'}</CrayonButton>
+            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream} style={{ opacity: busy ? .6 : 1 }}>{busy ? L(t.lang,'Publicando…','Publishing…') : L(t.lang,'Publicar','Publish')}</CrayonButton>
           </div>
         </div>
         {/* honeypot anti-bots */}
@@ -495,19 +496,19 @@ const CommentForm = ({ t, postId, parentId, onCreated, compact, user }) => {
   const [err, setErr] = React.useState(null);
   const submit = async (e) => {
     e.preventDefault();
-    if (body.trim().length < 2) { setErr('Escribe tu comentario.'); return; }
+    if (body.trim().length < 2) { setErr(L(t.lang,'Escribe tu comentario.','Write your comment.')); return; }
     setBusy(true); setErr(null);
     const { data, error } = await window.createComment({ post_id: postId, parent_id: parentId || null, author_name: window.userName(user), body });
     setBusy(false);
-    if (error) { setErr(error.message || 'No se pudo comentar.'); return; }
+    if (error) { setErr(error.message || L(t.lang,'No se pudo comentar.','Couldn\'t comment.')); return; }
     setBody('');
     if (onCreated) onCreated(data);
   };
   return (
     <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: compact ? 10 : 0 }}>
-      <textarea style={{ ...fieldStyle(t), resize: 'vertical', minHeight: compact ? 60 : 80, lineHeight: 1.5 }} placeholder={parentId ? `Responde como ${window.userName(user)}…` : `Comenta como ${window.userName(user)}…`} value={body} maxLength={600} onChange={e => setBody(e.target.value)} />
+      <textarea style={{ ...fieldStyle(t), resize: 'vertical', minHeight: compact ? 60 : 80, lineHeight: 1.5 }} placeholder={parentId ? L(t.lang,`Responde como ${window.userName(user)}…`,`Reply as ${window.userName(user)}…`) : L(t.lang,`Comenta como ${window.userName(user)}…`,`Comment as ${window.userName(user)}…`)} value={body} maxLength={600} onChange={e => setBody(e.target.value)} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <CrayonButton fill={P.leaf} stroke={P.ink} style={{ opacity: busy ? .6 : 1 }}>{busy ? 'Enviando…' : (parentId ? 'Responder' : 'Comentar')}</CrayonButton>
+        <CrayonButton fill={P.leaf} stroke={P.ink} style={{ opacity: busy ? .6 : 1 }}>{busy ? L(t.lang,'Enviando…','Sending…') : (parentId ? L(t.lang,'Responder','Reply') : L(t.lang,'Comentar','Comment'))}</CrayonButton>
         {err && <span style={{ fontFamily: t.bf, fontSize: 13, color: P.heart, fontWeight: 700 }}>{err}</span>}
       </div>
     </form>
@@ -532,7 +533,7 @@ const CommentNode = ({ node, t, postId, depth, onReply, user, onRequireAuth }) =
             <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, lineHeight: 1.55, margin: 0, whiteSpace: 'pre-wrap' }}>{node.body}</p>
           </CrayonCard>
           <button onClick={onReplyClick} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: t.bf, fontWeight: 700, fontSize: 12.5, color: P.heart, padding: '6px 4px' }}>
-            {replying ? 'Cancelar' : 'Responder'}
+            {replying ? L(t.lang,'Cancelar','Cancel') : L(t.lang,'Responder','Reply')}
           </button>
           {replying && <div style={{ maxWidth: 480 }}><CommentForm t={t} postId={postId} parentId={node.id} compact user={user} onCreated={(c) => { setReplying(false); onReply(c); }} /></div>}
         </div>
@@ -555,7 +556,7 @@ function buildCommentTree(list) {
 
 const CommentTree = ({ comments, t, postId, onReply, user, onRequireAuth }) => {
   const roots = buildCommentTree(comments);
-  if (!roots.length) return <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .7, marginTop: 8 }}>Aún no hay comentarios. ¡Sé el primero!</p>;
+  if (!roots.length) return <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .7, marginTop: 8 }}>{L(t.lang,'Aún no hay comentarios. ¡Sé el primero!','No comments yet. Be the first!')}</p>;
   return <div>{roots.map(r => <CommentNode key={r.id} node={r} t={t} postId={postId} depth={0} onReply={onReply} user={user} onRequireAuth={onRequireAuth} />)}</div>;
 };
 

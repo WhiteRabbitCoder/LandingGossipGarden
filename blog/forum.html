@@ -44,10 +44,11 @@
   <script type="text/babel" src="components/blog-data.jsx?v=20260624x"></script>
   <script type="text/babel" src="components/blog-ui.jsx?v=20260624x"></script>
   <script type="text/babel">
-    const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
 
     const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
       const [posts, setPosts] = React.useState(null);
       const [error, setError] = React.useState(null);
       const [filter, setFilter] = React.useState(null);
@@ -68,12 +69,12 @@
       React.useEffect(() => { load(filter); }, [filter, load]);
 
       const onCreated = () => { setShowForm(false); load(filter); };
-      const today = new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const today = new Date().toLocaleDateString(lang === 'en' ? 'en' : 'es', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
       return (
         <div style={{ fontFamily: t.bf, position: 'relative' }}>
           <CrayonDefs/>
-          <BlogMasthead t={t} section="foro" dateText={today} subtitle="Comparte tus plantas y conversa con la comunidad."/>
+          <BlogMasthead t={t} section="foro" dateText={today} subtitle={L(lang,'Comparte tus plantas y conversa con la comunidad.','Share your plants and chat with the community.')}/>
 
           {/* Barra de acciones: filtros + escribir (cualquier usuario con sesión) */}
           <div style={{ maxWidth: 1180, margin: '0 auto', padding: '22px clamp(20px,5vw,48px) 0', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
@@ -81,13 +82,13 @@
               <span onClick={() => setFilter(null)} style={{
                 fontFamily: t.bf, fontSize: 12, fontWeight: 700, padding: '5px 13px', borderRadius: 20,
                 background: filter === null ? P.pot : `${P.pot}55`, border: `1.5px solid ${P.ink}`, color: P.ink,
-                cursor: 'pointer', userSelect: 'none', boxShadow: filter === null ? `2px 2px 0 ${P.ink}` : 'none' }}>Todas</span>
+                cursor: 'pointer', userSelect: 'none', boxShadow: filter === null ? `2px 2px 0 ${P.ink}` : 'none' }}>{L(lang,'Todas','All')}</span>
               {window.PERSONA_KEYS.map(k => <PersonaTag key={k} k={k} active={filter === k} onClick={() => setFilter(filter === k ? null : k)} t={t}/>)}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
               <AccountControl t={t} user={user} onLogin={() => setAuthOpen(true)}/>
               <CrayonButton fill={showForm ? P.cream : P.heart} stroke={P.ink} color={showForm ? P.ink : P.cream} onClick={onWriteClick}>
-                {showForm ? 'Cerrar' : '+ Escribir'}
+                {showForm ? L(lang,'Cerrar','Close') : L(lang,'+ Escribir','+ Write')}
               </CrayonButton>
             </div>
           </div>
@@ -101,7 +102,7 @@
           {/* Cuerpo: publicaciones + tendencia */}
           <div className="gg-main" style={{ paddingTop: 34 }}>
             <main>
-              <SectionHeading t={t}>Publicaciones de la comunidad</SectionHeading>
+              <SectionHeading t={t}>{L(lang,'Publicaciones de la comunidad','Community posts')}</SectionHeading>
 
               {posts === null && (
                 <div className="gg-cards">
@@ -112,7 +113,7 @@
               {posts && posts.length === 0 && (
                 <div style={{ padding: '20px 0 40px' }}>
                   <p style={{ fontFamily: t.bf, fontSize: 16, color: P.inkSoft, opacity: .8 }}>
-                    {window.BLOG_CONFIGURED ? 'Aún no hay publicaciones. ¡Sé el primero en compartir tu planta!' : 'Conecta Supabase para ver y crear publicaciones.'}
+                    {window.BLOG_CONFIGURED ? L(lang,'Aún no hay publicaciones. ¡Sé el primero en compartir tu planta!','No posts yet. Be the first to share your plant!') : L(lang,'Conecta Supabase para ver y crear publicaciones.','Connect Supabase to view and create posts.')}
                   </p>
                 </div>
               )}
@@ -125,14 +126,15 @@
             </main>
 
             <aside className="gg-side">
-              <SectionHeading t={t}>Tendencia</SectionHeading>
+              <SectionHeading t={t}>{L(lang,'Tendencia','Trending')}</SectionHeading>
               {posts === null
-                ? <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .6 }}>Cargando…</p>
+                ? <p style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, opacity: .6 }}>{L(lang,'Cargando…','Loading…')}</p>
                 : <TrendingList posts={posts} t={t}/>}
             </aside>
           </div>
 
           <Footer t={t}/>
+          <LangSwitcher t={t}/>
         </div>
       );
     };

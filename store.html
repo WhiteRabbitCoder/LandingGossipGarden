@@ -63,7 +63,7 @@
     const P = window.PALETTE;
 
     /* ─── Nav ─── */
-    const ShopNav = () => {
+    const ShopNav = ({ t }) => {
       const [s, setS] = React.useState(false);
       React.useEffect(() => {
         const h = () => setS(window.scrollY > 40);
@@ -71,10 +71,10 @@
         return () => window.removeEventListener('scroll', h);
       }, []);
       const links = [
-        {l:'Inicio', href:'index.html'},
-        {l:'Cómo funciona', href:'how-it-works.html'},
-        {l:'Personalidades', href:'personalities.html'},
-        {l:'Tienda', href:'#', active:true},
+        {l:L(t.lang,'Inicio','Home'), href:'index.html'},
+        {l:L(t.lang,'Cómo funciona','How it works'), href:'how-it-works.html'},
+        {l:L(t.lang,'Personalidades','Personalities'), href:'personalities.html'},
+        {l:L(t.lang,'Tienda','Store'), href:'#', active:true, store:true},
       ];
       return (
         <nav style={{position:'fixed',top:0,left:0,right:0,zIndex:100,height:72,
@@ -86,10 +86,10 @@
             <span style={{fontFamily:t.hf,fontWeight:800,fontSize:19,color:P.ink,lineHeight:1,filter:'url(#cr-text)'}}>Gossip<br/>Garden</span>
           </a>
           <div className="gg-nav-d" style={{display:'flex',alignItems:'center',gap:24}}>
-            {links.map(({l,href,active})=> l==='Tienda'
-              ? <a key={l} href={href} style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Tienda</CrayonButton></a>
+            {links.map(({l,href,active,store})=> store
+              ? <a key={href} href={href} style={{textDecoration:'none'}}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{l}</CrayonButton></a>
               : (
-              <a key={l} href={href} className={active?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,
+              <a key={href} href={href} className={active?'gg-navlink is-active':'gg-navlink'} style={{textDecoration:'none',fontSize:14,fontWeight:600,fontFamily:t.bf,
                 position:'relative',padding:'4px 2px 6px'}}>
                 {l}
                 <svg className="gg-ul" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M3,8 Q40,2 90,9 T196,5" fill="none" stroke={P.leafDk} strokeWidth="3" strokeLinecap="round" filter="url(#cr)"/></svg>
@@ -101,21 +101,21 @@
     };
 
     /* ─── Hero ─── */
-    const ShopHero = () => (
+    const ShopHero = ({ t }) => (
       <section style={{padding:'120px clamp(20px,5vw,80px) 48px',textAlign:'center'}}>
         <Reveal>
-          <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.heart,marginBottom:14}}>TIENDA OFICIAL</div>
+          <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.heart,marginBottom:14}}>{L(t.lang,'TIENDA OFICIAL','OFFICIAL STORE')}</div>
           <h1 style={{fontFamily:t.hf,fontSize:'clamp(40px,6.5vw,76px)',fontWeight:900,color:P.ink,lineHeight:1.0,filter:'url(#cr-text)'}}>
-            Arma tu maceta.
+            {L(t.lang,'Arma tu maceta.','Build your pot.')}
           </h1>
           <CrayonUnderline color={P.heart} w="300px" delay={300} h={6}/>
           <p style={{fontFamily:t.bf,fontSize:'clamp(15px,1.6vw,18px)',color:P.inkSoft,marginTop:18,maxWidth:500,marginLeft:'auto',marginRight:'auto',lineHeight:1.55}}>
-            Elige el color y el carácter. Tu planta, exactamente como la quieres.
+            {L(t.lang,'Elige el color y el carácter. Tu planta, exactamente como la quieres.','Choose the color and the character. Your plant, exactly how you want it.')}
           </p>
         </Reveal>
         <div style={{marginTop:28}}>
           <a href="#configurador" style={{textDecoration:'none'}}>
-            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Empezar a armar</CrayonButton>
+            <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{L(t.lang,'Empezar a armar','Start building')}</CrayonButton>
           </a>
         </div>
       </section>
@@ -133,22 +133,22 @@
     );
 
     /* ─── Configurator ─── */
-    const PotConfigurator = () => {
+    const PotConfigurator = ({ t }) => {
       const [colorId, setColorId] = React.useState('amarilla');
       const [charId,  setCharId]  = React.useState('alegre');
 
       const pots = [
-        { id:'amarilla', label:'Sunny',   img:'assets/pots/simple/simpleAmarilo.png', accent:'#F2D27A' },
-        { id:'azul',     label:'Cielo',   img:'assets/pots/simple/simpleAzul.png',     accent:'#B8C9E8' },
-        { id:'morada',   label:'Lavanda', img:'assets/pots/simple/simpleMorado.png',   accent:'#C9B3E6' },
-        { id:'rosada',   label:'Coral',   img:'assets/pots/simple/simpleRosado.png',   accent:'#F0C0C8' },
+        { id:'amarilla', label:L(t.lang,'Sunny','Sunny'),     img:'assets/pots/simple/simpleAmarilo.png', accent:'#F2D27A' },
+        { id:'azul',     label:L(t.lang,'Cielo','Sky'),       img:'assets/pots/simple/simpleAzul.png',     accent:'#B8C9E8' },
+        { id:'morada',   label:L(t.lang,'Lavanda','Lavender'),img:'assets/pots/simple/simpleMorado.png',   accent:'#C9B3E6' },
+        { id:'rosada',   label:L(t.lang,'Coral','Coral'),     img:'assets/pots/simple/simpleRosado.png',   accent:'#F0C0C8' },
       ];
 
       const chars = [
-        { id:'alegre',    label:'Alegre',    trait:'Extrovertida · Luminosa', img:'assets/personalities/collage/alegre.webp',    emotion:'alegre',    speech:'¡Hola! Me alegra conocerte', accent:'#F4D06F' },
-        { id:'dormilona', label:'Dormilona', trait:'Tranquila · Paciente',    img:'assets/personalities/collage/dormilona.webp', emotion:'dormilona', speech:'Cinco minutitos más...',     accent:'#B8C9E8' },
-        { id:'dramatica', label:'Dramática', trait:'Sensible · Intensa',      img:'assets/personalities/collage/dramatica.webp', emotion:'asombrada', speech:'¡Llevo horas sin luz!',      accent:'#E0B8E0' },
-        { id:'exigente',  label:'Exigente',  trait:'Directa · Resiliente',    img:'assets/personalities/collage/exigente.webp',  emotion:'enojada',   speech:'Agua justa. Nada más.',      accent:'#A8C88A' },
+        { id:'alegre',    label:L(t.lang,'Alegre','Cheerful'),    trait:L(t.lang,'Extrovertida · Luminosa','Extroverted · Bright'), img:'assets/personalities/collage/alegre.webp',    emotion:'alegre',    speech:L(t.lang,'¡Hola! Me alegra conocerte','Hi! Nice to meet you'), accent:'#F4D06F' },
+        { id:'dormilona', label:L(t.lang,'Dormilona','Sleepy'),   trait:L(t.lang,'Tranquila · Paciente','Calm · Patient'),    img:'assets/personalities/collage/dormilona.webp', emotion:'dormilona', speech:L(t.lang,'Cinco minutitos más...','Five more minutes...'),     accent:'#B8C9E8' },
+        { id:'dramatica', label:L(t.lang,'Dramática','Dramatic'), trait:L(t.lang,'Sensible · Intensa','Sensitive · Intense'),      img:'assets/personalities/collage/dramatica.webp', emotion:'asombrada', speech:L(t.lang,'¡Llevo horas sin luz!','I\'ve had no light for hours!'),      accent:'#E0B8E0' },
+        { id:'exigente',  label:L(t.lang,'Exigente','Demanding'), trait:L(t.lang,'Directa · Resiliente','Direct · Resilient'),    img:'assets/personalities/collage/exigente.webp',  emotion:'enojada',   speech:L(t.lang,'Agua justa. Nada más.','Just enough water. Nothing more.'),      accent:'#A8C88A' },
       ];
 
       const pot = pots.find(p => p.id === colorId);
@@ -166,7 +166,7 @@
 
               {/* Step 1: color */}
               <div style={{marginBottom:32}}>
-                <StepLabel n="1" label="COLOR DE MACETA"/>
+                <StepLabel n="1" label={L(t.lang,'COLOR DE MACETA','POT COLOR')}/>
                 <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
                   {pots.map(p => (
                     <button key={p.id} onClick={() => setColorId(p.id)}
@@ -196,7 +196,7 @@
 
               {/* Step 2: personality */}
               <div style={{marginBottom:32}}>
-                <StepLabel n="2" label="PERSONALIDAD"/>
+                <StepLabel n="2" label={L(t.lang,'PERSONALIDAD','PERSONALITY')}/>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
                   {chars.map(c => (
                     <button key={c.id} onClick={() => setCharId(c.id)}
@@ -225,15 +225,15 @@
 
               {/* Step 3: summary + CTA */}
               <div>
-                <StepLabel n="3" label="CONFIRMAR PEDIDO"/>
+                <StepLabel n="3" label={L(t.lang,'CONFIRMAR PEDIDO','CONFIRM ORDER')}/>
                 <CrayonCard fill={`${ch.accent}28`} stroke={P.ink} sw={2.5} radius={22} padding={24}>
                   <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14,gap:12}}>
                     <div>
                       <div style={{fontFamily:t.hf,fontSize:18,fontWeight:800,color:P.ink,lineHeight:1.2,marginBottom:4}}>
-                        Maceta {pot.label} · {ch.label}
+                        {L(t.lang,'Maceta','Pot')} {pot.label} · {ch.label}
                       </div>
                       <div style={{display:'flex',flexDirection:'column',gap:3}}>
-                        {['Sensores integrados','Semilla seleccionada','Acceso a la app'].map(item => (
+                        {[L(t.lang,'Sensores integrados','Built-in sensors'),L(t.lang,'Semilla seleccionada','Selected seed'),L(t.lang,'Acceso a la app','App access')].map(item => (
                           <div key={item} style={{display:'flex',alignItems:'center',gap:6}}>
                             <svg width="12" height="12" viewBox="0 0 16 16">
                               <circle cx="8" cy="8" r="6" fill={ch.accent} stroke={P.ink} strokeWidth="1.2" filter="url(#cr)"/>
@@ -250,10 +250,10 @@
                     </div>
                   </div>
                   <CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>
-                    Añadir al carrito
+                    {L(t.lang,'Añadir al carrito','Add to cart')}
                   </CrayonButton>
                   <div style={{fontFamily:t.bf,fontSize:11,color:P.inkSoft,marginTop:10,opacity:.7}}>
-                    Envío gratis · Garantía 1 año · 30 días de devolución
+                    {L(t.lang,'Envío gratis · Garantía 1 año · 30 días de devolución','Free shipping · 1-year warranty · 30-day returns')}
                   </div>
                 </CrayonCard>
               </div>
@@ -284,10 +284,10 @@
 
                 <div style={{textAlign:'center',borderTop:`1.5px dashed ${P.ink}28`,paddingTop:18}}>
                   <div style={{fontFamily:t.hf,fontWeight:800,fontSize:20,color:P.ink,marginBottom:2}}>
-                    Maceta {pot.label}
+                    {L(t.lang,'Maceta','Pot')} {pot.label}
                   </div>
                   <div style={{fontFamily:t.bf,fontSize:13,color:P.inkSoft}}>
-                    Personalidad {ch.label} · {ch.trait}
+                    {L(t.lang,'Personalidad','Personality')} {ch.label} · {ch.trait}
                   </div>
                 </div>
 
@@ -308,12 +308,12 @@
     };
 
     /* ─── Reassurance row ─── */
-    const Promises = () => {
+    const Promises = ({ t }) => {
       const items = [
-        {t:'Envío gratis', d:'En pedidos sobre $40, en 3-5 días.', icon:'M8,22 L40,22 L36,14 L12,14 Z M8,22 L8,32 L14,32 M40,22 L40,32 L34,32 M14,32 A4,4 0 0,1 22,32 M28,32 A4,4 0 0,1 36,32'},
-        {t:'30 días de prueba', d:'Si no te enamoras, te devolvemos el dinero.', icon:'M24,8 A16,16 0 1,1 8,24 M8,24 L4,20 M8,24 L12,20 M22,16 L22,26 L30,30'},
-        {t:'Semilla incluida', d:'Seleccionamos la semilla perfecta para tu personalidad.', icon:'M24,40 L24,22 M24,22 Q14,18 12,28 Q18,30 24,22 M24,22 Q34,18 36,28 Q30,30 24,22'},
-        {t:'Garantía 1 año', d:'Sensores y app cubiertos sin letra chica.', icon:'M24,8 L36,14 L36,26 Q36,36 24,42 Q12,36 12,26 L12,14 Z M18,24 L22,28 L30,18'},
+        {t:L(t.lang,'Envío gratis','Free shipping'), d:L(t.lang,'En pedidos sobre $40, en 3-5 días.','On orders over $40, in 3-5 days.'), icon:'M8,22 L40,22 L36,14 L12,14 Z M8,22 L8,32 L14,32 M40,22 L40,32 L34,32 M14,32 A4,4 0 0,1 22,32 M28,32 A4,4 0 0,1 36,32'},
+        {t:L(t.lang,'30 días de prueba','30-day trial'), d:L(t.lang,'Si no te enamoras, te devolvemos el dinero.','If you don\'t fall in love, we refund you.'), icon:'M24,8 A16,16 0 1,1 8,24 M8,24 L4,20 M8,24 L12,20 M22,16 L22,26 L30,30'},
+        {t:L(t.lang,'Semilla incluida','Seed included'), d:L(t.lang,'Seleccionamos la semilla perfecta para tu personalidad.','We pick the perfect seed for your personality.'), icon:'M24,40 L24,22 M24,22 Q14,18 12,28 Q18,30 24,22 M24,22 Q34,18 36,28 Q30,30 24,22'},
+        {t:L(t.lang,'Garantía 1 año','1-year warranty'), d:L(t.lang,'Sensores y app cubiertos sin letra chica.','Sensors and app covered, no fine print.'), icon:'M24,8 L36,14 L36,26 Q36,36 24,42 Q12,36 12,26 L12,14 Z M18,24 L22,28 L30,18'},
       ];
       return (
         <section style={{padding:'20px clamp(20px,5vw,80px) 60px'}}>
@@ -335,22 +335,22 @@
     };
 
     /* ─── FAQ ─── */
-    const FAQ = () => {
+    const FAQ = ({ t }) => {
       const [open, setOpen] = React.useState(0);
       const qs = [
-        {q:'¿Qué incluye la maceta?', a:'Cada maceta viene con sensores integrados (humedad, temperatura, luz), una semilla seleccionada según tu personalidad y sustrato premium. Incluye acceso a la app*; algunas funciones avanzadas pueden cobrarse por separado.'},
-        {q:'¿Necesito Wi-Fi?', a:'Sí, la maceta se conecta a tu red Wi-Fi para enviarte mensajes. Funciona con redes 2.4 GHz, las mismas que cualquier dispositivo smart-home.'},
-        {q:'¿Cuánto dura la batería?', a:'Aproximadamente 6 meses con uso normal. Te avisamos por la app cuando sea momento de cargarla — vía USB-C, en 2 horas queda lista.'},
-        {q:'¿Puedo cambiar la planta después?', a:'Por supuesto. La maceta funciona con cualquier planta de interior pequeña-mediana. Si la cambias, vuelve a vincularla en la app y aprenderá su nuevo perfil.'},
-        {q:'¿Cómo funciona el envío?', a:'Envío gratis en pedidos sobre $40, en 3-5 días hábiles. La semilla viaja protegida en empaque hermético — lista para germinar desde el primer día.'},
+        {q:L(t.lang,'¿Qué incluye la maceta?','What\'s included with the pot?'), a:L(t.lang,'Cada maceta viene con sensores integrados (humedad, temperatura, luz), una semilla seleccionada según tu personalidad y sustrato premium. Incluye acceso a la app*; algunas funciones avanzadas pueden cobrarse por separado.','Each pot comes with built-in sensors (moisture, temperature, light), a seed selected for your personality and premium soil. App access included*; some advanced features may be charged separately.')},
+        {q:L(t.lang,'¿Necesito Wi-Fi?','Do I need Wi-Fi?'), a:L(t.lang,'Sí, la maceta se conecta a tu red Wi-Fi para enviarte mensajes. Funciona con redes 2.4 GHz, las mismas que cualquier dispositivo smart-home.','Yes, the pot connects to your Wi-Fi to send you messages. It works on 2.4 GHz networks, the same as any smart-home device.')},
+        {q:L(t.lang,'¿Cuánto dura la batería?','How long does the battery last?'), a:L(t.lang,'Aproximadamente 6 meses con uso normal. Te avisamos por la app cuando sea momento de cargarla — vía USB-C, en 2 horas queda lista.','About 6 months with normal use. We\'ll let you know through the app when it\'s time to charge — via USB-C, it\'s ready in 2 hours.')},
+        {q:L(t.lang,'¿Puedo cambiar la planta después?','Can I change the plant later?'), a:L(t.lang,'Por supuesto. La maceta funciona con cualquier planta de interior pequeña-mediana. Si la cambias, vuelve a vincularla en la app y aprenderá su nuevo perfil.','Of course. The pot works with any small-to-medium indoor plant. If you change it, re-link it in the app and it\'ll learn its new profile.')},
+        {q:L(t.lang,'¿Cómo funciona el envío?','How does shipping work?'), a:L(t.lang,'Envío gratis en pedidos sobre $40, en 3-5 días hábiles. La semilla viaja protegida en empaque hermético — lista para germinar desde el primer día.','Free shipping on orders over $40, in 3-5 business days. The seed travels protected in airtight packaging — ready to germinate from day one.')},
       ];
       return (
         <section id="faq" style={{padding:'40px clamp(20px,5vw,80px) 80px'}}>
           <div style={{maxWidth:760,margin:'0 auto'}}>
             <Reveal>
               <div style={{textAlign:'center',marginBottom:36}}>
-                <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.pot,marginBottom:12}}>PREGUNTAS</div>
-                <h2 style={{fontFamily:t.hf,fontSize:'clamp(28px,4vw,42px)',fontWeight:800,color:P.ink}}>Lo que todos preguntan</h2>
+                <div style={{fontFamily:t.bf,fontSize:13,fontWeight:700,letterSpacing:'2px',color:P.pot,marginBottom:12}}>{L(t.lang,'PREGUNTAS','QUESTIONS')}</div>
+                <h2 style={{fontFamily:t.hf,fontSize:'clamp(28px,4vw,42px)',fontWeight:800,color:P.ink}}>{L(t.lang,'Lo que todos preguntan','What everyone asks')}</h2>
                 <CrayonUnderline color={P.pot} w="200px" delay={300} h={5}/>
               </div>
             </Reveal>
@@ -378,6 +378,8 @@
     };
 
     const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
       React.useEffect(() => {
         if (!location.hash) return;
         const id = decodeURIComponent(location.hash.slice(1));
@@ -393,12 +395,13 @@
       return (
         <div style={{fontFamily:t.bf,position:'relative'}}>
           <CrayonDefs/>
-          <ShopNav/>
-          <ShopHero/>
-          <PotConfigurator/>
-          <Promises/>
-          <FAQ/>
+          <ShopNav t={t}/>
+          <ShopHero t={t}/>
+          <PotConfigurator t={t}/>
+          <Promises t={t}/>
+          <FAQ t={t}/>
           <Footer t={t}/>
+          <LangSwitcher t={t}/>
         </div>
       );
     };

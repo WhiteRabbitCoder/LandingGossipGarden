@@ -9,20 +9,20 @@ const Footer = ({ t }) => {
   const [contactOpen, setContactOpen] = React.useState(false);
   const MAIN = (window.MAIN_SITE_URL || '').replace(/\/$/, '');
   const cols = [
-    { t: 'Producto', l: [
-      { n: 'Inicio', h: MAIN || '#' },
-      { n: 'Cómo funciona', h: `${MAIN}/how-it-works.html` },
-      { n: 'Personalidades', h: `${MAIN}/personalities.html` },
-      { n: 'Tienda', h: `${MAIN}/store.html` },
+    { t: L(t.lang, 'Producto', 'Product'), l: [
+      { n: L(t.lang, 'Inicio', 'Home'), h: MAIN || '#' },
+      { n: L(t.lang, 'Cómo funciona', 'How it works'), h: `${MAIN}/how-it-works.html` },
+      { n: L(t.lang, 'Personalidades', 'Personalities'), h: `${MAIN}/personalities.html` },
+      { n: L(t.lang, 'Tienda', 'Store'), h: `${MAIN}/store.html` },
     ]},
-    { t: 'Comunidad', l: [
+    { t: L(t.lang, 'Comunidad', 'Community'), l: [
       { n: 'Blog', h: 'index.html' },
-      { n: 'Foro', h: 'forum.html' },
+      { n: L(t.lang, 'Foro', 'Forum'), h: 'forum.html' },
     ]},
     { t: 'Legal', l: [
-      { n: 'Términos', h: `${MAIN}/terms.html` },
-      { n: 'Privacidad', h: `${MAIN}/privacy.html` },
-      { n: 'Contacto', action: 'contact' },
+      { n: L(t.lang, 'Términos', 'Terms'), h: `${MAIN}/terms.html` },
+      { n: L(t.lang, 'Privacidad', 'Privacy'), h: `${MAIN}/privacy.html` },
+      { n: L(t.lang, 'Contacto', 'Contact'), action: 'contact' },
     ]},
   ];
   return (
@@ -34,7 +34,7 @@ const Footer = ({ t }) => {
             <img src="assets/icons/icon-crayon.png" alt="" style={{ width: 42, height: 42, objectFit: 'contain' }} />
             <span style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 16, color: P.ink, lineHeight: 1, filter: 'url(#cr-text)' }}>Gossip<br />Garden</span>
           </a>
-          <p style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, lineHeight: 1.5, opacity: .8 }}>El jardín de todos. Comparte tus plantas.</p>
+          <p style={{ fontFamily: t.bf, fontSize: 12.5, color: P.inkSoft, lineHeight: 1.5, opacity: .8 }}>{L(t.lang, 'El jardín de todos. Comparte tus plantas.', 'Everyone\'s garden. Share your plants.')}</p>
         </div>
         {cols.map(col => (
           <div key={col.t}>

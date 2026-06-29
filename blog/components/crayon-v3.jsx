@@ -228,4 +228,54 @@ const RealPot = ({ size=140, mood='happy', tint='#A8D5A2' }) => {
   );
 };
 
-Object.assign(window, { CrayonDefs, Reveal, CrayonCard, CrayonButton, CrayonUnderline, HandIcon, CrayonPot, RealPot, SpeechBubble, PALETTE });
+/* ═══ i18n (copia autónoma para el blog; el sitio raíz lo define en sections-v3.jsx) ═══
+   L(lang, es, en) devuelve el string del idioma activo. La preferencia se guarda
+   en localStorage('gg_lang') y se comparte con el sitio raíz vía el evento 'gg-lang'. */
+const L = (lang, es, en) => (lang === 'en' ? en : es);
+function useLang() {
+  const [lang, setLang] = React.useState(() => { try { return localStorage.getItem('gg_lang') || 'es'; } catch (e) { return 'es'; } });
+  React.useEffect(() => {
+    const h = (e) => setLang((e && e.detail) || (() => { try { return localStorage.getItem('gg_lang') || 'es'; } catch (x) { return 'es'; } })());
+    window.addEventListener('gg-lang', h);
+    return () => window.removeEventListener('gg-lang', h);
+  }, []);
+  return lang;
+}
+
+const LangSwitcher = ({ t }) => {
+  const P = PALETTE;
+  const lang = useLang();
+  const choose = (l) => {
+    try { localStorage.setItem('gg_lang', l); } catch (e) {}
+    window.dispatchEvent(new CustomEvent('gg-lang', { detail: l }));
+  };
+  const langs = [
+    { id: 'es', flag: '🇪🇸', label: 'Español' },
+    { id: 'en', flag: '🇬🇧', label: 'English' },
+  ];
+  return (
+    <div style={{ position: 'fixed', left: 32, bottom: 32, zIndex: 220, display: 'flex', gap: 12 }}>
+      <style>{`
+        .gg-lang{transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+        .gg-lang:hover{transform:translateY(-4px) scale(1.07) rotate(-3deg)}
+        .gg-lang:active{transform:scale(.92)}
+        .gg-lang-on{animation:ggLangPop .45s cubic-bezier(.34,1.56,.64,1)}
+        @keyframes ggLangPop{0%{transform:scale(.7)}55%{transform:scale(1.18) rotate(5deg)}100%{transform:scale(1)}}
+      `}</style>
+      {langs.map(item => {
+        const on = lang === item.id;
+        return (
+          <button key={item.id + (on ? '-on' : '')} className={'gg-lang' + (on ? ' gg-lang-on' : '')} onClick={() => choose(item.id)} title={item.label} aria-label={item.label} aria-pressed={on}
+            style={{ position: 'relative', width: 52, height: 52, background: 'none', border: 'none', cursor: 'pointer', filter: 'drop-shadow(0 5px 12px rgba(61,40,23,0.22))' }}>
+            <svg viewBox="0 0 52 52" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+              <circle cx="26" cy="26" r="23" fill={on ? P.cream : P.bgDark} stroke={P.ink} strokeWidth={on ? 3 : 2} filter="url(#cr)" />
+            </svg>
+            <span style={{ position: 'relative', display: 'block', fontSize: 24, lineHeight: '52px', textAlign: 'center', opacity: on ? 1 : .65 }}>{item.flag}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+Object.assign(window, { L, useLang, LangSwitcher, CrayonDefs, Reveal, CrayonCard, CrayonButton, CrayonUnderline, HandIcon, CrayonPot, RealPot, SpeechBubble, PALETTE });

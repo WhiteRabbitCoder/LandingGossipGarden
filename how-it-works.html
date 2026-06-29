@@ -164,7 +164,7 @@
     const t = { hf: 'Quicksand', bf: 'Nunito' };
     const P = window.PALETTE;
 
-    const PageNav = ({ active }) => {
+    const PageNav = ({ active, t }) => {
       const [s, setS] = React.useState(false);
       const [o, setO] = React.useState(false);
       React.useEffect(() => {
@@ -173,10 +173,10 @@
         return () => window.removeEventListener('scroll', h);
       }, []);
       const links = [
-        { l: 'Inicio', href: 'index.html' },
-        { l: 'Cómo funciona', href: 'how-it-works.html' },
-        { l: 'Personalidades', href: 'personalities.html' },
-        { l: 'Tienda', href: 'store.html' },
+        { l: L(t.lang, 'Inicio', 'Home'), href: 'index.html' },
+        { l: L(t.lang, 'Cómo funciona', 'How it works'), href: 'how-it-works.html' },
+        { l: L(t.lang, 'Personalidades', 'Personalities'), href: 'personalities.html' },
+        { l: L(t.lang, 'Tienda', 'Store'), href: 'store.html', store: true },
       ];
       return (
         <nav style={{
@@ -189,10 +189,10 @@
             <span style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 19, color: P.ink, lineHeight: 1, filter: 'url(#cr-text)' }}>Gossip<br />Garden</span>
           </a>
           <div className="gg-nav-d" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            {links.map(({ l, href }) => l === 'Tienda'
-              ? <a key={l} href={href} style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Tienda</CrayonButton></a>
+            {links.map(({ l, href, store }) => store
+              ? <a key={href} href={href} style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{l}</CrayonButton></a>
               : (
-              <a key={l} href={href} className={l === active ? 'gg-navlink is-active' : 'gg-navlink'} style={{ textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: t.bf, position: 'relative', padding: '4px 2px 6px' }}>
+              <a key={href} href={href} className={href === active ? 'gg-navlink is-active' : 'gg-navlink'} style={{ textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: t.bf, position: 'relative', padding: '4px 2px 6px' }}>
                 {l}
                 <svg className="gg-ul" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M3,8 Q40,2 90,9 T196,5" fill="none" stroke={P.leafDk} strokeWidth="3" strokeLinecap="round" filter="url(#cr)" /></svg>
               </a>
@@ -244,11 +244,11 @@
     );
 
     /* ── One step of the journey ── */
-    const JourneyStep = ({ num, color, kicker, title, body, img, flip }) => (
+    const JourneyStep = ({ num, color, kicker, title, body, img, flip, t }) => (
       <div className={'gg-jstep' + (flip ? ' is-flip' : '')}>
         <div className="gg-jtext" style={{ padding: flip ? '0 0 0 clamp(8px,3vw,40px)' : '0 clamp(8px,3vw,40px) 0 0', textAlign: flip ? 'left' : 'right' }}>
           <div style={{ fontFamily: t.bf, fontSize: 11, fontWeight: 800, letterSpacing: '2.5px', color: P.leafDk, marginBottom: 8, textTransform: 'uppercase' }}>
-            Paso {num} · {kicker}
+            {L(t.lang, 'Paso', 'Step')} {num} · {kicker}
           </div>
           <h3 style={{ fontFamily: t.hf, fontWeight: 800, fontSize: 'clamp(22px,2.7vw,32px)', color: P.ink, lineHeight: 1.1, marginBottom: 12 }}>{title}</h3>
           <p style={{ fontFamily: t.bf, fontSize: 'clamp(14px,1.35vw,16px)', color: P.inkSoft, lineHeight: 1.65, maxWidth: 380, marginLeft: flip ? 0 : 'auto' }}>{body}</p>
@@ -261,15 +261,15 @@
     );
 
     /* ── The whole scroll-driven journey (camino) ── */
-    const Journey = () => {
+    const Journey = ({ t }) => {
       const rootRef = React.useRef(null);
 
       const steps = [
-        { num: '01', color: P.leaf, kicker: 'Bienvenida', title: 'Crea tu cuenta', img: 'assets/onboarding/login.jpeg', body: 'Entra con tu correo o con Google y empieza a ver qué murmuran tus plantas. Tu jardín digital queda listo en segundos.' },
-        { num: '02', color: P.pot, kicker: 'Primeros pasos', title: 'Tu jardín te espera', img: 'assets/onboarding/jardin.jpeg', body: 'Elige cómo empezar: con sensor para datos en vivo, o sin sensor si aún no lo tienes. La app te lleva de la mano paso a paso.' },
-        { num: '03', color: P.heart, kicker: 'Agrega tu planta', title: '¿Cómo la identificamos?', img: 'assets/onboarding/identificar.jpeg', body: 'Reconócela con la cámara o búscala por nombre en el catálogo. Tú eliges el método que te resulte más cómodo.' },
-        { num: '04', color: '#8FBEEE', kicker: 'Magia con IA', title: 'Apunta y reconoce', img: 'assets/onboarding/camara.jpeg', body: 'Toma una foto y la IA identifica tu especie al instante. Le asignamos sus cuidados ideales y una personalidad propia.' },
-        { num: '05', color: P.leafDk, kicker: 'Tu colección', title: 'Tu jardín cobra vida', img: 'assets/onboarding/coleccion.jpeg', body: 'Sigue el estado de cada planta, sus logros y sus mensajes. Comparte tu jardín y presume tu pulgar verde.' },
+        { num: '01', color: P.leaf, kicker: L(t.lang, 'Bienvenida', 'Welcome'), title: L(t.lang, 'Crea tu cuenta', 'Create your account'), img: 'assets/onboarding/login.jpeg', body: L(t.lang, 'Entra con tu correo o con Google y empieza a ver qué murmuran tus plantas. Tu jardín digital queda listo en segundos.', 'Sign in with your email or Google and start hearing what your plants are whispering. Your digital garden is ready in seconds.') },
+        { num: '02', color: P.pot, kicker: L(t.lang, 'Primeros pasos', 'First steps'), title: L(t.lang, 'Tu jardín te espera', 'Your garden awaits'), img: 'assets/onboarding/jardin.jpeg', body: L(t.lang, 'Elige cómo empezar: con sensor para datos en vivo, o sin sensor si aún no lo tienes. La app te lleva de la mano paso a paso.', 'Choose how to start: with a sensor for live data, or without one if you don\'t have it yet. The app guides you every step of the way.') },
+        { num: '03', color: P.heart, kicker: L(t.lang, 'Agrega tu planta', 'Add your plant'), title: L(t.lang, '¿Cómo la identificamos?', 'How do we identify it?'), img: 'assets/onboarding/identificar.jpeg', body: L(t.lang, 'Reconócela con la cámara o búscala por nombre en el catálogo. Tú eliges el método que te resulte más cómodo.', 'Recognize it with the camera or search it by name in the catalog. You pick whichever method feels easiest.') },
+        { num: '04', color: '#8FBEEE', kicker: L(t.lang, 'Magia con IA', 'AI magic'), title: L(t.lang, 'Apunta y reconoce', 'Point and recognize'), img: 'assets/onboarding/camara.jpeg', body: L(t.lang, 'Toma una foto y la IA identifica tu especie al instante. Le asignamos sus cuidados ideales y una personalidad propia.', 'Take a photo and the AI identifies your species instantly. We assign its ideal care and a personality of its own.') },
+        { num: '05', color: P.leafDk, kicker: L(t.lang, 'Tu colección', 'Your collection'), title: L(t.lang, 'Tu jardín cobra vida', 'Your garden comes alive'), img: 'assets/onboarding/coleccion.jpeg', body: L(t.lang, 'Sigue el estado de cada planta, sus logros y sus mensajes. Comparte tu jardín y presume tu pulgar verde.', 'Track each plant\'s status, achievements and messages. Share your garden and show off your green thumb.') },
       ];
 
       React.useEffect(() => {
@@ -347,30 +347,33 @@
             </div>
 
             {steps.map((s, i) => (
-              <JourneyStep key={i} {...s} flip={i % 2 === 1} />
+              <JourneyStep key={i} {...s} flip={i % 2 === 1} t={t} />
             ))}
           </div>
         </section>
       );
     };
 
-    const App = () => (
+    const App = () => {
+      const lang = useLang();
+      const t = { hf: 'Quicksand', bf: 'Nunito', lang };
+      return (
       <div style={{ fontFamily: t.bf, position: 'relative' }}>
         <CrayonDefs />
-        <PageNav active="Cómo funciona" />
+        <PageNav active="how-it-works.html" t={t} />
 
         {/* Hero */}
         <section style={{ padding: '116px clamp(20px,5vw,80px) 30px', textAlign: 'center' }}>
           <Reveal>
-            <div style={{ fontFamily: t.bf, fontSize: 13, fontWeight: 700, letterSpacing: '2px', color: P.leafDk, marginBottom: 14 }}>DE LA SEMILLA A LA CONVERSACIÓN</div>
+            <div style={{ fontFamily: t.bf, fontSize: 13, fontWeight: 700, letterSpacing: '2px', color: P.leafDk, marginBottom: 14 }}>{L(lang, 'DE LA SEMILLA A LA CONVERSACIÓN', 'FROM SEED TO CONVERSATION')}</div>
             <h1 style={{ fontFamily: t.hf, fontSize: 'clamp(36px,6vw,68px)', fontWeight: 900, color: P.ink, lineHeight: 1.04, filter: 'url(#cr-text)' }}>
-              Cómo funciona
+              {L(lang, 'Cómo funciona', 'How it works')}
             </h1>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
               <CrayonUnderline color={P.leafDk} w="260px" delay={300} h={6} />
             </div>
             <p style={{ fontFamily: t.bf, fontSize: 'clamp(15px,1.5vw,18px)', color: P.inkSoft, marginTop: 20, maxWidth: 540, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
-              Un paseo por la app, paso a paso: crea tu cuenta, agrega tus plantas y empieza a escuchar lo que tienen para decirte.
+              {L(lang, 'Un paseo por la app, paso a paso: crea tu cuenta, agrega tus plantas y empieza a escuchar lo que tienen para decirte.', 'A walk through the app, step by step: create your account, add your plants and start listening to what they have to say.')}
             </p>
           </Reveal>
 
@@ -404,31 +407,33 @@
         </section>
 
         {/* Journey / camino */}
-        <Journey />
+        <Journey t={t} />
 
         {/* CTA */}
         <section style={{ padding: '0 clamp(20px,5vw,80px) 80px', textAlign: 'center' }}>
           <Reveal>
             <CrayonCard fill={`${P.heart}25`} stroke={P.ink} sw={3} radius={28} padding={40} style={{ maxWidth: 680, margin: '0 auto' }}>
-              <div style={{ fontFamily: t.bf, fontSize: 13, fontWeight: 700, letterSpacing: '2px', color: P.heart, marginBottom: 10 }}>¿LISTA?</div>
-              <h2 style={{ fontFamily: t.hf, fontSize: 'clamp(26px,3.5vw,40px)', fontWeight: 800, color: P.ink, marginBottom: 8 }}>Conoce a tu próxima amiga.</h2>
+              <div style={{ fontFamily: t.bf, fontSize: 13, fontWeight: 700, letterSpacing: '2px', color: P.heart, marginBottom: 10 }}>{L(lang, '¿LISTA?', 'READY?')}</div>
+              <h2 style={{ fontFamily: t.hf, fontSize: 'clamp(26px,3.5vw,40px)', fontWeight: 800, color: P.ink, marginBottom: 8 }}>{L(lang, 'Conoce a tu próxima amiga.', 'Meet your next friend.')}</h2>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <CrayonUnderline color={P.heart} w="180px" delay={200} h={4} />
               </div>
               <p style={{ fontFamily: t.bf, fontSize: 15, color: P.inkSoft, marginTop: 14, lineHeight: 1.5 }}>
-                Elige tu personalidad en la tienda y recíbela en casa.
+                {L(lang, 'Elige tu personalidad en la tienda y recíbela en casa.', 'Choose your personality in the store and get it delivered to your door.')}
               </p>
               <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 24, flexWrap: 'wrap' }}>
-                <a href="personalities.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.leafDk} stroke={P.ink} color={P.cream}>Ver personalidades</CrayonButton></a>
-                <a href="store.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Ir a la tienda</CrayonButton></a>
+                <a href="personalities.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.leafDk} stroke={P.ink} color={P.cream}>{L(lang, 'Ver personalidades', 'View personalities')}</CrayonButton></a>
+                <a href="store.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{L(lang, 'Ir a la tienda', 'Go to the store')}</CrayonButton></a>
               </div>
             </CrayonCard>
           </Reveal>
         </section>
 
         <Footer t={t} />
+        <LangSwitcher t={t} />
       </div>
-    );
+      );
+    };
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>

@@ -163,21 +163,24 @@ function useAuth() {
   return user;
 }
 
-/* ─── UTILIDAD: fecha relativa en español ─────────────────────────────────── */
+/* ─── UTILIDAD: fecha relativa (ES/EN según gg_lang) ──────────────────────── */
+
+function ggLang() { try { return localStorage.getItem('gg_lang') || 'es'; } catch (e) { return 'es'; } }
 
 function timeAgo(iso) {
+  const en = ggLang() === 'en';
   const d = new Date(iso), now = new Date();
   const s = Math.floor((now - d) / 1000);
-  if (s < 60) return 'hace un momento';
-  const m = Math.floor(s / 60); if (m < 60) return `hace ${m} min`;
-  const h = Math.floor(m / 60); if (h < 24) return `hace ${h} h`;
-  const days = Math.floor(h / 24); if (days < 7) return `hace ${days} d`;
-  return d.toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (s < 60) return en ? 'just now' : 'hace un momento';
+  const m = Math.floor(s / 60); if (m < 60) return en ? `${m} min ago` : `hace ${m} min`;
+  const h = Math.floor(m / 60); if (h < 24) return en ? `${h} h ago` : `hace ${h} h`;
+  const days = Math.floor(h / 24); if (days < 7) return en ? `${days} d ago` : `hace ${days} d`;
+  return d.toLocaleDateString(en ? 'en' : 'es', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-/* Fecha larga estilo periódico: "24 de junio de 2026" */
+/* Fecha larga estilo periódico: "24 de junio de 2026" / "June 24, 2026" */
 function dateLong(iso) {
-  return new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' });
+  return new Date(iso).toLocaleDateString(ggLang() === 'en' ? 'en' : 'es', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 /* Tiempo de lectura estimado (~200 palabras/min) */

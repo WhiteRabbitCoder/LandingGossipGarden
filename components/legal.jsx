@@ -16,10 +16,10 @@ const LegalNav = ({ t }) => {
     return () => window.removeEventListener('scroll', h);
   }, []);
   const links = [
-    { l: 'Inicio', href: 'index.html' },
-    { l: 'Cómo funciona', href: 'how-it-works.html' },
-    { l: 'Personalidades', href: 'personalities.html' },
-    { l: 'Tienda', href: 'store.html' },
+    { l: L(t.lang, 'Inicio', 'Home'), href: 'index.html' },
+    { l: L(t.lang, 'Cómo funciona', 'How it works'), href: 'how-it-works.html' },
+    { l: L(t.lang, 'Personalidades', 'Personalities'), href: 'personalities.html' },
+    { l: L(t.lang, 'Tienda', 'Store'), href: 'store.html' },
     { l: 'Blog', href: 'blog/index.html' },
   ];
   return (
@@ -34,7 +34,7 @@ const LegalNav = ({ t }) => {
         {links.map(({ l, href }) => (
           <a key={l} href={href} style={{ color: P.ink, textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: t.bf, padding: '4px 2px' }}>{l}</a>
         ))}
-        <a href="store.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>Comprar</CrayonButton></a>
+        <a href="store.html" style={{ textDecoration: 'none' }}><CrayonButton fill={P.heart} stroke={P.ink} color={P.cream}>{L(t.lang, 'Comprar', 'Buy')}</CrayonButton></a>
       </div>
       <button className="gg-nav-m" onClick={() => setO(!o)} style={{ display: 'none', background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: P.ink }}>{o ? '×' : '≡'}</button>
       {o && <div style={{ position: 'absolute', top: 72, left: 0, right: 0, background: 'rgba(250,241,218,0.98)', padding: 24, display: 'flex', flexDirection: 'column', gap: 18, borderBottom: `2px solid ${P.ink}33` }}>
@@ -113,7 +113,7 @@ const LegalPage = ({ t, kicker, title, updated, intro, sections }) => {
           <div style={{ fontFamily: t.bf, fontSize: 13, fontWeight: 700, letterSpacing: '2px', color: P.heart, marginBottom: 12 }}>{kicker}</div>
           <h1 style={{ fontFamily: t.hf, fontSize: 'clamp(34px,5.5vw,58px)', fontWeight: 900, color: P.ink, lineHeight: 1.05, filter: 'url(#cr-text)' }}>{title}</h1>
           <CrayonUnderline color={P.heart} w="220px" delay={250} h={6} />
-          <p style={{ fontFamily: t.bf, fontSize: 13.5, color: P.inkSoft, opacity: .7, marginTop: 16 }}>Última actualización: {updated}</p>
+          <p style={{ fontFamily: t.bf, fontSize: 13.5, color: P.inkSoft, opacity: .7, marginTop: 16 }}>{L(t.lang, 'Última actualización:', 'Last updated:')} {updated}</p>
           {intro && <div style={{ marginTop: 18, maxWidth: 720 }}><LP t={t}>{intro}</LP></div>}
         </Reveal>
       </section>
@@ -121,7 +121,7 @@ const LegalPage = ({ t, kicker, title, updated, intro, sections }) => {
       <div className="gg-legal-layout">
         {/* Índice lateral con resaltado de la sección activa */}
         <aside className="gg-legal-toc">
-          <div style={{ fontFamily: t.bf, fontSize: 11, fontWeight: 800, letterSpacing: '1.5px', color: P.leafDk, marginBottom: 12, textTransform: 'uppercase' }}>Contenido</div>
+          <div style={{ fontFamily: t.bf, fontSize: 11, fontWeight: 800, letterSpacing: '1.5px', color: P.leafDk, marginBottom: 12, textTransform: 'uppercase' }}>{L(t.lang, 'Contenido', 'Contents')}</div>
           <nav style={{ display: 'flex', flexDirection: 'column' }}>
             {sections.map((s, i) => {
               const on = active === s.id;
@@ -155,7 +155,7 @@ const LegalPage = ({ t, kicker, title, updated, intro, sections }) => {
           <Reveal>
             <CrayonCard fill={P.cream} stroke={P.ink} sw={2.5} radius={18} padding={22} hoverLift={false}>
               <div style={{ fontFamily: t.bf, fontSize: 14, color: P.inkSoft, lineHeight: 1.6 }}>
-                ¿Dudas sobre este documento? Escríbenos a <a href="mailto:hola@gossipgarden.co" style={{ color: P.heart, fontWeight: 700 }}>hola@gossipgarden.co</a>.
+                {L(t.lang, '¿Dudas sobre este documento? Escríbenos a ', 'Questions about this document? Email us at ')}<a href="mailto:hola@gossipgarden.co" style={{ color: P.heart, fontWeight: 700 }}>hola@gossipgarden.co</a>.
               </div>
             </CrayonCard>
           </Reveal>
@@ -163,6 +163,7 @@ const LegalPage = ({ t, kicker, title, updated, intro, sections }) => {
       </div>
 
       <Footer t={t} />
+      <LangSwitcher t={t} />
     </div>
   );
 };
